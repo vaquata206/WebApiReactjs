@@ -7,7 +7,6 @@
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
-    "react-forms-validator": "^1.0.8",
     "react-loading": "^2.0.3",
     "react-overlay-loader": "0.0.3",
     "react-redux": "^5.0.6",
@@ -15,9 +14,11 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.8",
     "react-scripts": "1.0.17",
+    "react-validation": "^3.0.7",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "validator": "^10.11.0"
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",
