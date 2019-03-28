@@ -27,5 +27,5 @@ class Dashboard extends React.Component {
 }
 
 export default connect(
-    state => { debugger; return state.auth ? { user: state.auth.user } : { user: null }; }
+    state => state.auth ? { user: state.auth.user } : { user: null }
 )(Dashboard);
