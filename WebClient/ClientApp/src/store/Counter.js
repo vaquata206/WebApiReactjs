@@ -16,7 +16,6 @@ export const reducer = (state, action) => {
 
   if (action.type === decrementCountType) {
     return { ...state, count: state.count - 1 };
-  }
-
+    }
   return state;
 };

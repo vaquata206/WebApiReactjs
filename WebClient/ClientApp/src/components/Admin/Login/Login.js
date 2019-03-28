@@ -20,21 +20,21 @@ class Login extends React.Component {
         this.state = {
             username: "",
             password: "",
-            loading: false
+            loading: false,
+            loginMessage: ""
         };
         
         this.handleChange = this.handleChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.isValidationError = this.isValidationError.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ loading: false, loginMessage: nextProps.loginMessage });
     }
 
     handleChange(event) {
         let { name, value } = event.target;
         this.setState({ [name]: value });
-    }
-
-    isValidationError(flag) {
-        this.setState({ isFormValidationErrors: flag });
     }
 
     handleFormSubmit(event) {
@@ -44,15 +44,12 @@ class Login extends React.Component {
         if (this.checkBtn.context._errors.length === 0 ) {
             this.setState({ loading: true });
             this.props.requestLogin(username, password);
-            //you are ready to perform your action here like dispatch
-            // let { dispatch, login } = this.props;
-            // dispatch( login( { params:{},data:{ contact_no, password } } ) );
         }
     }
 
     render() {
-        let { username, password, submitted, loading } = this.state;
-
+        let { username, password, loginMessage } = this.state;
+        let loading = this.props.isLoggingIn;
         return (
             <div className="hold-transition login-page">
                 <div className="login-box">
@@ -88,6 +85,11 @@ class Login extends React.Component {
                                         validations={[required, maxLength50]}
                                     />
                                 </div>
+                                {
+                                    loginMessage ?
+                                        <span className="form-text text-danger">{loginMessage}</span> :
+                                        null
+                                }
                                 <div className="row">
                                     <div className="col-xs-4 col-xs-offset-8">
                                         <button type="submit" className="btn btn-primary btn-block btn-flat">Đăng nhập</button>
@@ -108,7 +110,7 @@ export default connect(
     state => {
         const { auth } = state;
         if (auth) {
-            return { user: auth.user, loginError: auth.loginError };
+            return { user: auth.user, loginMessage: auth.loginMessage, isLoggingIn: auth.isLoggingIn };
         }
 
         return { user: null };

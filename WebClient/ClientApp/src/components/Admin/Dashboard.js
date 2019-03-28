@@ -7,23 +7,25 @@ import Counter from '../../components/Counter';
 import FetchData from '../../components/FetchData';
 
 class Dashboard extends React.Component {
-    render() {
-        debugger
-        const { user } = this.props;
-        if (user) {
-            return (
-                <Layout>
-                    <Route exact path='/' component={Home} />
-                    <Route path='/counter' component={Counter} />
-                    <Route path='/fetchdata/:startDateIndex?' component={FetchData} />
-                </Layout>
-            );
-        } else {
-            return <Redirect to="/login" />;
+
+    componentWillMount() {
+        const { history, user } = this.props;
+        if (!user) {
+            history.push("/login");
         }
+    }
+
+    render() {
+        return (
+            <Layout>
+                <Route exact path='/' component={Home} />
+                <Route path='/counter' component={Counter} />
+                <Route path='/fetchdata/:startDateIndex?' component={FetchData} />
+            </Layout>
+        );
     }
 }
 
 export default connect(
-    state => state.auth ? { user: state.auth.user } : { user: null }
+    state => { debugger; return state.auth ? { user: state.auth.user } : { user: null }; }
 )(Dashboard);

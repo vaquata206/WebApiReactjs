@@ -1,13 +1,15 @@
 ﻿import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import * as Counter from './Counter';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Auth from './Auth';
 
 export default function configureStore(history, initialState) {
     const reducers = {
-        auth: Auth.reducer,
+        auth: persistReducer(Auth.persistConfig, Auth.reducer),
         counter: Counter.reducer,
         weatherForecasts: WeatherForecasts.reducer
     };
@@ -29,8 +31,16 @@ export default function configureStore(history, initialState) {
         routing: routerReducer
     });
 
+    const persistConfig = {
+        key: 'root',
+        storage: storage,
+        whitelist: ['auth']
+    };
+
+    const pReducer = persistReducer(persistConfig, rootReducer);
+
     return createStore(
-        rootReducer,
+        pReducer,
         initialState,
         compose(applyMiddleware(...middleware), ...enhancers)
     );

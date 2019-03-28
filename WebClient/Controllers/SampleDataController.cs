@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebClient.Controllers
 {
+    [Produces("application/json")]
     [Route("api/[controller]")]
+    [ApiController]
     public class SampleDataController : Controller
     {
         private static string[] Summaries = new[]
@@ -26,6 +28,17 @@ namespace WebClient.Controllers
             });
         }
 
+        [HttpPost("[action]")]
+        public IActionResult Login(Account account)
+        {
+            if (account.username == "superadmin" && account.password == "123456")
+            {
+                return this.Ok("123456");
+            }
+
+            return this.BadRequest();
+        }
+
         public class WeatherForecast
         {
             public string DateFormatted { get; set; }
@@ -39,6 +52,12 @@ namespace WebClient.Controllers
                     return 32 + (int)(TemperatureC / 0.5556);
                 }
             }
+        }
+
+        public class Account
+        {
+            public string username { get; set; }
+            public string password { get; set; }
         }
     }
 }
