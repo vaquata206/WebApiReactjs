@@ -1,16 +1,29 @@
-import React from 'react';
-import { Col, Grid, Row } from 'react-bootstrap';
-import NavMenu from './NavMenu';
+﻿import React from 'react';
+import { Link } from 'react-router-dom';
 
-export default props => (
-  <Grid fluid>
-    <Row>
-      <Col sm={3}>
-        <NavMenu />
-      </Col>
-      <Col sm={9}>
-        {props.children}
-      </Col>
-    </Row>
-  </Grid>
-);
+const logoContent = {
+    fontSize: "27px",
+    fontWeight: "bolder"
+};
+
+class Layout extends React.Component {
+    render() {
+        return (
+            <div className="hold-transition skin-blue sidebar-mini">
+                <div className="wrapper">
+                    <header className="main-header">
+                        <Link to="/" className="logo" >
+                            <span className="logo-mini">
+                                <img src="/images/logodn.jpg" alt="Logo" />
+                            </span>
+                            <img className="logo-image" src="/images/logodn.jpg" alt="Logo" />
+                            <span style={logoContent}>Đà Nẵng</span>
+                        </Link>
+                    </header>
+                    {this.props.children}
+                </div>
+            </div>
+        );
+    }
+}
+export default Layout;

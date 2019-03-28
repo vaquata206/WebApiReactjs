@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { connect } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import Home from '../../components/Home';
 import Counter from '../../components/Counter';

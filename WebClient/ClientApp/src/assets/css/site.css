@@ -1,4 +1,14 @@
-.btn{
+.logo .logo-image {
+    margin-top: -8px;
+    height: 45px;
+    width: auto !important
+}
+
+.logo .logo-mini {
+    width: 45px !important;
+}
+
+.btn {
     background-image: none;
 }
 
