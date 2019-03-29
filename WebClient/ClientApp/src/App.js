@@ -1,14 +1,14 @@
 ﻿import React from 'react';
 import { Route, Switch } from 'react-router';
 import Login from './components/Admin/Login/Login';
-import Dashboard from './components/Admin/Dashboard';
+import MainPage from './components/Admin/MainPage';
 
 class App extends React.Component {
     render() {
         return (
             <Switch>
                 <Route path='/login' component={Login} />
-                <Route path='/' component={Dashboard} />
+                <Route path='/' component={MainPage} />
             </Switch>
         );
     }

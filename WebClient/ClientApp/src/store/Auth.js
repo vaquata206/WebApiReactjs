@@ -37,6 +37,15 @@ function loginFailed() {
     };
 }
 
+function logout() {
+    return {
+        type: requestLogoutType,
+        user: null,
+        loginMessage: null,
+        isLoggingIn: false
+    };
+}
+
 export const actionCreators = {
     requestLogin: (username, password) => (dispatch) => {
         dispatch(loginRequest());
@@ -53,12 +62,18 @@ export const actionCreators = {
         }).then(checkStatus)
             .then(parseJSON)
             .then(json => {
-                dispatch(loginSuccess({ userName: "admin", userId: 1, token: json }));
+                dispatch(loginSuccess({ userName: "admin", department: "Phong AABB", userId: 1, token: json }));
                 history.push("/");
             })
             .catch(error => {
                 dispatch(loginFailed());
             });
+    },
+
+    requestLogout: () => (dispatch) => {
+        debugger
+        dispatch(logout());
+        history.push("/login");
     }
 };
 
@@ -76,6 +91,13 @@ export const reducer = (state, action) => {
         case requestLoginType:
             return {
                 ...state,
+                isLoggingIn: action.isLoggingIn
+            };
+        case requestLogoutType:
+            return {
+                ...state,
+                user: action.user,
+                loginMessage: action.loginMessage,
                 isLoggingIn: action.isLoggingIn
             };
         default:

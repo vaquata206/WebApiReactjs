@@ -1,12 +1,12 @@
 ﻿import React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import Layout from '../../components/Layout';
-import Home from '../../components/Home';
-import Counter from '../../components/Counter';
-import FetchData from '../../components/FetchData';
+import Layout from '../Layout';
+import Home from '../Home';
+import Counter from '../Counter';
+import FetchData from '../FetchData';
 
-class Dashboard extends React.Component {
+class MainPage extends React.Component {
 
     componentWillMount() {
         const { history, user } = this.props;
@@ -28,4 +28,4 @@ class Dashboard extends React.Component {
 
 export default connect(
     state => state.auth ? { user: state.auth.user } : { user: null }
-)(Dashboard);
+)(MainPage);
