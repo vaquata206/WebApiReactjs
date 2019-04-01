@@ -15,8 +15,10 @@ import registerServiceWorker from './registerServiceWorker';
 import history from './store/history';
 import { store, persistor } from './store/store';
 import { PersistGate } from 'redux-persist/lib/integration/react';
+import { setDefaultAPI } from './helpers/api';
 
 const rootElement = document.getElementById('root');
+setDefaultAPI();
 
 ReactDOM.render(
     <Provider store={store}>

@@ -1,3 +1,10 @@
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -5,31 +12,125 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using WebClient.Core;
+using WebClient.Extensions;
+using WebClient.Extentions;
+using WebClient.Repositories.Implements;
+using WebClient.Repositories.Interfaces;
+using WebClient.Services.Implements;
+using WebClient.Services.Interfaces;
 
 namespace WebClient
 {
+    /// <summary>
+    /// Start up class
+    /// </summary>
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="env">The IHosting Evironment</param>
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile(string.Format("appsettings.{0}.json", env.EnvironmentName), optional: true)
+                .AddEnvironmentVariables();
+            this.Configuration = builder.Build();
+
+            WebConfig.ApiSystemUrl = this.Configuration.GetSection("ApiSystem").Value;
+            WebConfig.ConnectionString = this.Configuration.GetSection("ConnectionString").Value;
+            WebConfig.WebRootPath = env.WebRootPath;
+            WebConfig.JWTKey = this.Configuration.GetSection("Jwt:Key").Value;
         }
 
-        public IConfiguration Configuration { get; }
+        /// <summary>
+        /// Application container
+        /// </summary>
+        public IContainer ApplicationContainer { get; private set; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        /// <summary>
+        /// The configuration root
+        /// </summary>
+        public IConfigurationRoot Configuration { get; private set; }
+
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services">Service collection</param>
+        /// <returns>Service provider</returns>
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                // options.Events = new JwtBearerEvents
+                // {
+                //    OnTokenValidated = context =>
+                //    {
+                //        return Task.CompletedTask;
+                //    }
+                // };
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(WebConfig.JWTKey))
+                };
+            });
+            services.AddHttpContextAccessor();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+
+            builder.RegisterType<AuthHelper>().SingleInstance();
+            
+            // Resgister Services
+            builder.RegisterType<AccountService>().As<IAccountService>();
+            builder.RegisterType<FeatureService>().As<IFeatureService>();
+            builder.RegisterType<EmployeeService>().As<IEmployeeService>();
+            builder.RegisterType<PermissionService>().As<IPermissionService>();
+            builder.RegisterType<PermissionFeatureService>().As<IPermissionFeatureService>();
+            builder.RegisterType<DepartmentService>().As<IDepartmentService>();
+            builder.RegisterType<EmployeePermissionService>().As<IEmployeePermissionService>();
+
+            // Register Repositories
+            builder.RegisterType<AccountRepository>().As<IAccountRepository>();
+            builder.RegisterType<FeatureRepository>().As<IFeatureRepository>();
+            builder.RegisterType<PermissionRepository>().As<IPermissionRepository>();
+            builder.RegisterType<PermissionFeatureRepository>().As<IPermissionFeatureRepository>();
+            builder.RegisterType<DepartmentRepository>().As<IDepartmentRepository>();
+            builder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>();
+            builder.RegisterType<EmployeePermissionRepository>().As<IEmployeePermissionRepository>();
+
+            this.ApplicationContainer = builder.Build();
+
+            // Create the IServiceProvider based on the container.
+            return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app">Application builder</param>
+        /// <param name="env">Hostring environment</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -46,6 +147,7 @@ namespace WebClient
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

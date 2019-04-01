@@ -1,6 +1,7 @@
 ﻿import storage from 'redux-persist/lib/storage';
 import history from './history';
 import { checkStatus, parseJSON } from '../helpers/utils';
+import axios from 'axios';
 
 const requestLoginType = "REQUEST_LOGIN";
 const requestLogoutType = "REQUEST_LOGOUT";
@@ -49,29 +50,18 @@ function logout() {
 export const actionCreators = {
     requestLogin: (username, password) => (dispatch) => {
         dispatch(loginRequest());
-        const url = 'api/SampleData/Login';
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        }).then(checkStatus)
-            .then(parseJSON)
-            .then(json => {
-                dispatch(loginSuccess({ userName: "admin", department: "Phong AABB", userId: 1, token: json }));
-                history.push("/");
-            })
-            .catch(error => {
-                dispatch(loginFailed());
-            });
+        axios.post("/api/account/login", {
+            username: username,
+            password: password
+        }).then(json => {
+            dispatch(loginSuccess(json.data));
+            history.push("/");
+        }).catch(error => {
+            dispatch(loginFailed());
+        });
     },
 
     requestLogout: () => (dispatch) => {
-        debugger
         dispatch(logout());
         history.push("/login");
     }
