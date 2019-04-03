@@ -2,7 +2,10 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { actionCreators } from '../store/Auth';
+import { actionCreators as authActionCreators } from '../store/Auth';
+import { actionCreators as menuActionCreators } from '../store/Menu';
+import axios from 'axios';
+import Menu from './Admin/Menu/Menu';
 
 const logoContent = {
     fontSize: "27px",
@@ -14,16 +17,34 @@ class Layout extends React.Component {
         super(props);
         this.state = {
             isSidebarCollapsed: false,
-            isShowProfile: false
+            isShowProfile: false,
+            menu: {}
         };
         this.handleHamburger = this.handleHamburger.bind(this);
         this.clickProfile = this.clickProfile.bind(this);
         this.logout = this.logout.bind(this);
+        this.findActivedItems = this.findActivedItems.bind(this);
+        this.activeMenuItems = this.activeMenuItems.bind(this);
+
+    }
+
+    componentWillMount() {
+        axios.get("api/feature/getmenu").then(response => {
+            this.setState({ menu: response.data });
+        });
+
+        // Home page is default;
+        this.props.ActiveMenuItems();
     }
 
     componentDidMount() {
         var heightContent = window.innerHeight - this.mainHeader.offsetHeight - this.mainFooter.offsetHeight;
         this.contentWrapper.setAttribute("style", "min-height: " + heightContent+"px;");
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        this.activeMenuItems(nextState.menu);
+        return true;
     }
 
     handleHamburger() {
@@ -38,9 +59,63 @@ class Layout extends React.Component {
         this.props.requestLogout();
     }
 
+    activeMenuItems(menu) {
+        const paths = window.location.pathname.replace(/(^\/+)|(\/+$)/g, "").split("/");
+        let controller;
+        let actionName;
+        let l = (paths || []).length;
+        l = l > 2 ? 2 : l;
+        switch (l) {
+            case 2:
+                actionName = paths[1] || null;
+                break;
+            case 1:
+                controller = paths[0] || null;
+                actionName = paths[1] || null;
+                break;
+            default:
+                controller = null;
+                actionName = null;
+        }
+
+        if (actionName === "index" || actionName === "#") {
+            actionName = "";
+        }
+
+        this.props.CloseMenuItem();
+        if (!controller && !actionName) {
+            this.props.ActiveMenuItems();
+        } else {
+            var items = this.findActivedItems(controller, actionName, menu);
+            if ((items || []).length > 0) {
+                this.props.ActiveMenuItems(items);
+            } else {
+                this.props.ActiveMenuItems([-1]);
+            }
+        }
+    }
+
+    findActivedItems(controller, actionName, menu) {
+        var activedItems = [];
+        (menu || []).forEach((value) => {
+            let l = [];
+            if ((value.children || []).length > 0) {
+                l = this.findActivedItems(controller, actionName, value.children);
+            }
+
+            if (l.length > 0 || !(value.controler_Name !== controller || value.action_Name !== actionName)) {
+                l.push(value.m_ID);
+            }
+
+            activedItems = activedItems.concat(l);
+        });
+
+        return activedItems;
+    }
+
     render() {
-        var pathName = window.location.pathname;
         let { userName, department } = this.props.user;
+        let menu = this.state.menu;
         return (
             <div className={"hold-transition skin-blue sidebar-mini" + (this.state.isSidebarCollapsed ? " sidebar-collapse":"")}>
                 <div className="wrapper">
@@ -63,12 +138,12 @@ class Layout extends React.Component {
                                 <ul className="nav navbar-nav">
                                     <li className={"dropdown user user-menu" + (this.state.isShowProfile?" open":"")}>
                                         <a className="dropdown-toggle" onClick={this.clickProfile}>
-                                            <img src="/images/user2-160x160.png" className="user-image" alt="User Image" />
+                                            <img src="/images/user2-160x160.png" className="user-image" alt="User" />
                                             <span className="hidden-xs">{userName}</span>
                                         </a>
                                         <ul className="dropdown-menu">
                                             <li className="user-header">
-                                                <img src="/images/user2-160x160.png" className="img-circle" alt="User Image" />
+                                                <img src="/images/user2-160x160.png" className="img-circle" alt="User" />
                                                 <p>
                                                     {userName}
                                                     <strong style={{ display: "block" }}>
@@ -90,19 +165,7 @@ class Layout extends React.Component {
                             </div>
                         </nav>
                     </header>
-                    <aside className="main-sidebar">
-                        <section className="sidebar">
-                            <ul className="sidebar-menu">
-                                <li className="header">Danh sách chức năng</li>
-                                <li className="active">
-                                    <Link to="/"><i className="fa fa-dashboard" /><span>Trang chủ</span></Link>
-                                </li>
-                                <li>
-                                    <Link to="/counter"><i className="fa fa-dashboard" /><span>counter</span></Link>
-                                </li>
-                            </ul>
-                        </section>
-                    </aside>
+                    <Menu menuItems={menu} />
                     <div className="content-wrapper" ref={c => this.contentWrapper = c}>
                         <section className="content-header">
                             <h1>Page 1</h1>
@@ -122,4 +185,4 @@ class Layout extends React.Component {
 }
 export default connect(
     state => state.auth ? { user: state.auth.user } : { user: null },
-    dispatch => bindActionCreators(actionCreators, dispatch))(Layout);
+    dispatch => bindActionCreators({ ...authActionCreators, ...menuActionCreators }, dispatch))(Layout);

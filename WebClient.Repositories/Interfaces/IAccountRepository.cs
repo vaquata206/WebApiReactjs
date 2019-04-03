@@ -28,7 +28,7 @@ namespace WebClient.Repositories.Interfaces
         /// <returns>account</returns>
         Task<Account> GetAccountByUsername(string username);
 
-        Task<bool> ChangePassword(string username, int idNhanVien, string matKhauCu, string matKhauMoi);
+        Task<bool> ChangePassword(string username, int idNguoiDung, string matKhauCu, string matKhauMoi);
 
         /// <summary>
         /// Gets employee's accounts

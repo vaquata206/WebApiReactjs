@@ -58,5 +58,12 @@ namespace WebClient.Services.Interfaces
         /// <param name="isModeUri">Is mode uri</param>
         /// <returns>true if the user is accessed</returns>
         Task<bool> IsAccessedToTheFeature(int userId, string path, bool isModeUri);
+
+        /// <summary>
+        /// Convert a tree features to array menus
+        /// </summary>
+        /// <param name="features">The features</param>
+        /// <returns>A menu list</returns>
+        IEnumerable<Menu> TreeFeaturesToMenu(IEnumerable<Feature> features);
     }   
 }

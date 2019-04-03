@@ -62,9 +62,9 @@ namespace WebClient.Services.Implements
             return await this.account.GetAccountByUsername(username);
         }
 
-        public async Task<bool> ChangePassword(string username, int idNhanvien, string matKhauCu, string matKhauMoi)
+        public async Task<bool> ChangePassword(string username, int idNguoiDung, string matKhauCu, string matKhauMoi)
         {
-            return await this.account.ChangePassword(username, idNhanvien, matKhauCu, matKhauMoi);
+            return await this.account.ChangePassword(username, idNguoiDung, matKhauCu, matKhauMoi);
         }
 
         /// <summary>

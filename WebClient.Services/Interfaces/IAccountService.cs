@@ -31,11 +31,11 @@ namespace WebClient.Services.Interfaces
         /// Change password
         /// </summary>
         /// <param name="username">the username</param>
-        /// <param name="idNhanvien">id nhanvien current</param>
+        /// <param name="idNguoiDung">id nhanvien current</param>
         /// <param name="matKhauCu">the current password</param>
         /// <param name="matKhauMoi">the new password</param>
         /// <returns>TRUE: success, FALSE: The current password fail.</returns>
-        Task<bool> ChangePassword(string username,int idNhanvien, string matKhauCu, string matKhauMoi);
+        Task<bool> ChangePassword(string username,int idNguoiDung, string matKhauCu, string matKhauMoi);
 
         /// <summary>
         /// Gets employee's accounts

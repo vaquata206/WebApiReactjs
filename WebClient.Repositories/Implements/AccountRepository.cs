@@ -78,13 +78,13 @@ namespace WebClient.Repositories.Implements
             return await this.DbConnection.QueryFirstOrDefaultAsync<Account>(query, param: dyParam, commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<bool> ChangePassword(string username, int idNhanVien, string matKhauCu, string matKhauMoi)
+        public async Task<bool> ChangePassword(string username, int idNguoiDung, string matKhauCu, string matKhauMoi)
         {
             using (var dbConnection = new OracleConnection(WebConfig.ConnectionString))
             {
                 var dyParam = new OracleDynamicParameters();
                 dyParam.Add("p_username", OracleDbType.Varchar2, ParameterDirection.Input, username);
-                dyParam.Add("p_id_nhanvien", OracleDbType.Int64, ParameterDirection.Input, idNhanVien);
+                dyParam.Add("p_id_nhanvien", OracleDbType.Int64, ParameterDirection.Input, idNguoiDung);
                 dyParam.Add("p_current_password", OracleDbType.Varchar2, ParameterDirection.Input, Common.MD5Hash(matKhauCu));
                 dyParam.Add("p_new_password", OracleDbType.Varchar2, ParameterDirection.Input, Common.MD5Hash(matKhauMoi));
                 dyParam.Add("rs", OracleDbType.Int16, ParameterDirection.Output);

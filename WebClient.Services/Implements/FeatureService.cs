@@ -177,6 +177,31 @@ namespace WebClient.Services.Implements
         }
 
         /// <summary>
+        /// Convert a tree features to array menus
+        /// </summary>
+        /// <param name="features">The features</param>
+        /// <returns>A menu list</returns>
+        public IEnumerable<Menu> TreeFeaturesToMenu(IEnumerable<Feature> features)
+        {
+            var list = new List<Menu>();
+            foreach(var i in features)
+            {
+                list.Add(new Menu
+                {
+                    M_ID = i.Id_ChucNang.ToString(),
+                    M_P_ID = (i.Id_ChucNang_Cha != 0) ? i.Id_ChucNang_Cha.ToString() : string.Empty,
+                    Controler_Name = i.Controller_Name,
+                    Action_Name = i.Action_Name,
+                    M_Name = i.Ten_ChucNang,
+                    Show = i.HienThi_Menu == 1,
+                    Children = i.Children != null? TreeFeaturesToMenu(i.Children): null
+                });
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// Convert a list to tree
         /// </summary>
         /// <param name="list">features</param>
@@ -203,5 +228,6 @@ namespace WebClient.Services.Implements
 
             return list;
         }
+
     }
 }

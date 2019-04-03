@@ -19,6 +19,21 @@ namespace WebClient.Extentions
     public class AuthHelper
     {
         /// <summary>
+        /// User code
+        /// </summary>
+        private const string TypeUserCode = "UserCode";
+
+        /// <summary>
+        /// User name
+        /// </summary>
+        private const string TypeUserName = "UserName";
+
+        /// <summary>
+        /// User id
+        /// </summary>
+        private const string TypeUserId = "UserId";
+
+        /// <summary>
         /// Employee Id
         /// </summary>
         private const string TypeEmployeeId = "EmployeeId";
@@ -66,7 +81,7 @@ namespace WebClient.Extentions
         {
             get
             {
-                return this.Claims.Where(x => x.Type == JwtRegisteredClaimNames.UniqueName).Select(x => x.Value).SingleOrDefault();
+                return this.Claims.Where(x => x.Type == TypeUserName).Select(x => x.Value).SingleOrDefault();
             }
         }
 
@@ -77,7 +92,7 @@ namespace WebClient.Extentions
         {
             get
             {
-                return int.Parse(this.Claims.Where(x => x.Type == JwtRegisteredClaimNames.NameId).Select(x => x.Value).SingleOrDefault());
+                return int.Parse(this.Claims.Where(x => x.Type == TypeUserId).Select(x => x.Value).SingleOrDefault());
             }
         }
 
@@ -112,8 +127,9 @@ namespace WebClient.Extentions
         {
             var claims = new[] 
             {
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserId.ToString()),
+                new Claim(TypeUserName, user.UserName),
+                new Claim(TypeUserCode, user.UserCode),
+                new Claim(TypeUserId, user.UserId.ToString()),
                 new Claim(TypeEmployeeId, user.EmployeeId.ToString()),
                 new Claim(TypeDepartmentId, user.DepartmentId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -127,7 +143,7 @@ namespace WebClient.Extentions
                 issuer: null,
                 audience: null,
                 claims: claimsIdentity.Claims,
-                expires: DateTime.Now.AddMinutes(30), // expire time là 30 phút
+                expires: DateTime.Now.AddMinutes(1), // expire time là 30 phút
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

@@ -1,6 +1,5 @@
 ﻿import storage from 'redux-persist/lib/storage';
 import history from './history';
-import { checkStatus, parseJSON } from '../helpers/utils';
 import axios from 'axios';
 
 const requestLoginType = "REQUEST_LOGIN";
@@ -38,7 +37,7 @@ function loginFailed() {
     };
 }
 
-function logout() {
+export function logout() {
     return {
         type: requestLogoutType,
         user: null,

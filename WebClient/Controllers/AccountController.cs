@@ -61,19 +61,47 @@ namespace WebClient.Controllers
                 token = AuthHelper.BuildToken(account),
                 username = account.UserName,
                 name = account.EmployeeName,
-                department = account.DepartmentName
+                department = account.DepartmentName,
+                usercode = account.UserCode
             });
         }
 
         /// <summary>
-        /// Test thoi
+        /// The API support WebClient/Another systems to know current token is available
         /// </summary>
-        /// <returns>khong biet</returns>
-        [HttpGet("[action]")]
-        [Permission]
+        /// <returns>Response statuscode is OK if the token is available</returns>
+        [HttpGet("/available")]
+        [Authorize]
         public IActionResult Test()
         {
-            return this.Ok("aaaa");
+            return this.Ok();
+        }
+
+        /// <summary>
+        /// Change password
+        /// </summary>
+        /// <param name="changePasswordVM">Chang password viewmodal</param>
+        /// <returns>Ok or bad request</returns>
+        [HttpPost("[action]")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM changePasswordVM)
+        {
+            var userName = this.authHelper.Username;
+            var userId = this.authHelper.UserId;
+            var isSuccess = await this.accountService.ChangePassword(
+                userName, 
+                userId, 
+                changePasswordVM.MatKhauCu, 
+                changePasswordVM.MatKhauMoi);
+
+            if (isSuccess)
+            {
+                return this.Ok();
+            }
+            else
+            {
+                return this.BadRequest("Mật khẩu không đúng");
+            }
         }
     }
 }

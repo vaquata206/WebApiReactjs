@@ -60,7 +60,6 @@ class Login extends React.Component {
                         <div className="login-box-body">
                             <p className="login-box-msg">Đăng nhập tài khoản để bắt đầu</p>
                             <Form onSubmit={this.handleFormSubmit} ref={c => this.form = c}>
-
                                 <div className="form-group has-feedback">
                                     <span className="glyphicon glyphicon-envelope form-control-feedback" />
                                     <Input

@@ -13,5 +13,6 @@ namespace WebClient.Core.Entities
         public string Action_Name { get; set; }
         public string Url { get; set; }
         public bool Show { get; set; }
+        public IEnumerable<Menu> Children { get; set; }
     }
 }

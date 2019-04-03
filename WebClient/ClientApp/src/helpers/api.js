@@ -1,19 +1,27 @@
 ﻿import axios from 'axios';
-import { checkStatus, parseJSON } from './utils';
+import { store } from '../store/store';
+import { logout } from '../store/Auth';
 
-export function setAuthorizationToken(token) {
-    if (token) {
-        axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-    } else {
-        delete axios.defaults.headers.common["Authorization"];
-    }
-}
+export function configAxios() {
+    // Add a request interceptor
+    axios.interceptors.request.use(function (config) {
+        const { auth } = store.getState();
+        if (auth && auth.user && auth.user.token) {
+            config.headers.common['Authorization'] = "Bearer " + auth.user.token;
+        }
 
-export function setDefaultAPI() {
+        return config;
+    }, function (error) {
+        return Promise.reject(error);
+    });
+
     axios.interceptors.response.use(function (response) {
         return response;
     }, function (error) {
-        debugger;
+        if (error.response.status === 401) {
+            store.dispatch(logout());
+        }
+
         return Promise.reject(error);
     });
 }

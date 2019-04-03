@@ -15,14 +15,14 @@ import registerServiceWorker from './registerServiceWorker';
 import history from './store/history';
 import { store, persistor } from './store/store';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { setDefaultAPI } from './helpers/api';
+import { configAxios } from './helpers/api';
 
 const rootElement = document.getElementById('root');
-setDefaultAPI();
-
+const st = store;
+configAxios();
 ReactDOM.render(
-    <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
+    <Provider store={st}>
+        <PersistGate loading={<div />} persistor={persistor}>
             <ConnectedRouter history={history}>
                 <App />
             </ConnectedRouter>
