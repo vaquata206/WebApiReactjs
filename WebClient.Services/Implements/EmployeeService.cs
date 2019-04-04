@@ -44,10 +44,16 @@ namespace WebClient.Services.Implements
             return employeVM;
         }
 
-        public async Task<EmployeeVM> UpdateInformationEmployee(EmployeeVM employViewModel)
+        /// <summary>
+        /// Update information employee
+        /// </summary>
+        /// <param name="employViewModel">Employee viewmodal</param>
+        /// <param name="userId">User Id</param>
+        /// <returns>Employee Viewmodal</returns>
+        public async Task<EmployeeVM> UpdateInformationEmployee(EmployeeVM employViewModel, int userId)
         {
             Employee emp = this._mapper.Map<Employee>(employViewModel);
-            emp = await this._employee.UpdateInformationEmployee(emp, employViewModel.Id_NhanVien);
+            emp = await this._employee.UpdateInformationEmployee(emp, userId);
             employViewModel = this._mapper.Map<EmployeeVM>(emp);
             return employViewModel;
         }

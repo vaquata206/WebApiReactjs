@@ -20,9 +20,13 @@ namespace WebClient.Services.Interfaces
         /// <returns>lst employees</returns>
         Task<IEnumerable<Employee>> GetAllEmployees();
 
-        /// <param name="employee">the employee VM</param>
+        /// <summary>
+        /// Update information employee
+        /// </summary>
+        /// <param name="employViewModel">the employee VM</param>
+        /// <param name="userId">User id</param>
         /// <returns>the employeeVM after updated</returns>
-        Task<EmployeeVM> UpdateInformationEmployee(EmployeeVM employViewModel);
+        Task<EmployeeVM> UpdateInformationEmployee(EmployeeVM employViewModel, int userId);
 
         /// <summary>
         /// Get a employee by its id

@@ -31,14 +31,21 @@ namespace WebClient.Controllers
         private IAccountService accountService;
 
         /// <summary>
+        /// Employee service
+        /// </summary>
+        private IEmployeeService employeeService;
+
+        /// <summary>
         /// A contrustor
         /// </summary>
         /// <param name="authHelper">Auth helper</param>
         /// <param name="accountService">Account service</param>
-        public AccountController(AuthHelper authHelper, IAccountService accountService)
+        /// <param name="employeeService">Employee service</param>
+        public AccountController(AuthHelper authHelper, IAccountService accountService, IEmployeeService employeeService)
         {
             this.authHelper = authHelper;
             this.accountService = accountService;
+            this.employeeService = employeeService;
         }
 
         /// <summary>
@@ -102,6 +109,19 @@ namespace WebClient.Controllers
             {
                 return this.BadRequest("Mật khẩu không đúng");
             }
+        }
+
+        /// <summary>
+        /// Update employee
+        /// </summary>
+        /// <param name="employeeVM">the newEmployee</param>
+        /// <returns>view profile</returns>
+        [HttpPost("[action]")]
+        [Authorize]
+        public async Task<IActionResult> SaveProfile(EmployeeVM employeeVM)
+        {
+            var employee = await this.employeeService.UpdateInformationEmployee(employeeVM, this.authHelper.UserId);
+            return this.Ok(employee);
         }
     }
 }
