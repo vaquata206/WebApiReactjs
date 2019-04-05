@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using WebClient.Core;
+using WebClient.Core.Entities;
 using WebClient.Extensions;
 using WebClient.Extentions;
 using WebClient.Repositories.Implements;
@@ -46,6 +48,8 @@ namespace WebClient
             WebConfig.ConnectionString = this.Configuration.GetSection("ConnectionString").Value;
             WebConfig.WebRootPath = env.WebRootPath;
             WebConfig.JWTKey = this.Configuration.GetSection("Jwt:Key").Value;
+            WebConfig.Applications = this.Configuration.GetSection("Applications").Get<List<Application>>();
+            WebConfig.RabbitMQ = this.Configuration.GetSection("RabbitMQ").Get<RabbitMQConfig>();
         }
 
         /// <summary>
@@ -76,6 +80,7 @@ namespace WebClient
 
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAuthentication(x =>
             {
@@ -107,11 +112,13 @@ namespace WebClient
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddSingleton<IRabbitMQService, RabbitMQService>();
+
             var builder = new ContainerBuilder();
             builder.Populate(services);
 
             builder.RegisterType<AuthHelper>().SingleInstance();
-            
+
             // Resgister Services
             builder.RegisterType<AccountService>().As<IAccountService>();
             builder.RegisterType<FeatureService>().As<IFeatureService>();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WebClient.Core.Entities;
 
 namespace WebClient.Core
 {
@@ -28,5 +29,15 @@ namespace WebClient.Core
         /// Jwt key
         /// </summary>
         public static string JWTKey;
+
+        /// <summary>
+        /// Applications
+        /// </summary>
+        public static IEnumerable<Application> Applications;
+
+        /// <summary>
+        /// RabbitMQ config
+        /// </summary>
+        public static RabbitMQConfig RabbitMQ;
     }
 }

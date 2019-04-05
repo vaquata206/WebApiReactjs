@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace WebClient.Core.Helper
 {
@@ -26,6 +29,11 @@ namespace WebClient.Core.Helper
             }
 
             return strBuilder.ToString();
+        }
+
+        public static object GetPropValue(object src, string propName)
+        {
+            return src.GetType().GetProperty(propName).GetValue(src, null);
         }
     }
 }

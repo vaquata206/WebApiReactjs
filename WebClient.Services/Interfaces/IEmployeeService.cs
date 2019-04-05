@@ -26,7 +26,7 @@ namespace WebClient.Services.Interfaces
         /// <param name="employViewModel">the employee VM</param>
         /// <param name="userId">User id</param>
         /// <returns>the employeeVM after updated</returns>
-        Task<EmployeeVM> UpdateInformationEmployee(EmployeeVM employViewModel, int userId);
+        Task<Employee> UpdateInformationEmployee(EmployeeVM employViewModel, int userId);
 
         /// <summary>
         /// Get a employee by its id

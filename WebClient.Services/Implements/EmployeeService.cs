@@ -14,6 +14,10 @@ namespace WebClient.Services.Implements
     public class EmployeeService : IEmployeeService
     {
         /// <summary>
+        /// RabbitMQ service
+        /// </summary>
+        private IRabbitMQService rabbitMQService;
+        /// <summary>
         /// employe service interface
         /// </summary>
         private IEmployeeRepository _employee;
@@ -22,9 +26,10 @@ namespace WebClient.Services.Implements
         /// </summary>
         private readonly IMapper _mapper;
         
-        public EmployeeService(IEmployeeRepository employee, IMapper mapper)
+        public EmployeeService(IEmployeeRepository employee, IRabbitMQService rabbitMQService, IMapper mapper)
         {
             this._employee = employee;
+            this.rabbitMQService = rabbitMQService;
             this._mapper = mapper;
         }
 
@@ -50,12 +55,18 @@ namespace WebClient.Services.Implements
         /// <param name="employViewModel">Employee viewmodal</param>
         /// <param name="userId">User Id</param>
         /// <returns>Employee Viewmodal</returns>
-        public async Task<EmployeeVM> UpdateInformationEmployee(EmployeeVM employViewModel, int userId)
+        public async Task<Employee> UpdateInformationEmployee(EmployeeVM employViewModel, int userId)
         {
             Employee emp = this._mapper.Map<Employee>(employViewModel);
             emp = await this._employee.UpdateInformationEmployee(emp, userId);
-            employViewModel = this._mapper.Map<EmployeeVM>(emp);
-            return employViewModel;
+            rabbitMQService.Publish(
+                content: emp,
+                sender: "aaa",
+                action: "update",
+                name: RabbitEntities.Employee
+                );
+
+            return emp;
         }
 
         /// <summary>
