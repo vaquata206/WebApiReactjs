@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
 using WebClient.Core.ViewModels;
@@ -50,23 +48,23 @@ namespace WebClient.Services.Interfaces
         /// <param name="accountVM">Account VM</param>
         /// <param name="currentUserId">Current user id</param>
         /// <returns>A void task</returns>
-        Task CreateAccount(AccountVM accountVM, int currentUserId);
+        Task<Account> CreateAccount(AccountVM accountVM, int currentUserId);
 
         /// <summary>
         /// Delete a account
         /// </summary>
-        /// <param name="accountId">Account id</param>
+        /// <param name="accountCode">Account code</param>
         /// <param name="currUserId">Current user id</param>
         /// <returns>A account</returns>
-        Task<Account> DeleteAccount(int accountId, int currUserId);
+        Task<Account> DeleteAccount(string accountCode, int currUserId);
 
         /// <summary>
         /// Reset password of a account
         /// </summary>
-        /// <param name="accountId">Acount id</param>
+        /// <param name="accountCode">Acount code</param>
         /// <param name="userId">currebt user</param>
         /// <returns></returns>
-        Task<string> ResetPassword(int accountId, int currUserId);
+        Task<string> ResetPassword(string accountCode, int currUserId);
 
         /// <summary>
         /// Gets accounts with tree node format

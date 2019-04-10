@@ -1,15 +1,9 @@
-﻿using Dapper.Contrib.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using WebClient.Core.Entities;
 
-namespace WebClient.Core.Entities
+namespace WebClient.Core.Messages
 {
-    [Table("DON_VI")]
-    public class Department : BaseEntity
+    public class DepartmentMessage : BaseEntity
     {
-        [ExplicitKey]
-        public int Id_DonVi { get; set; }
         public string Ma_DonVi { get; set; }
         public string Ten_DonVi { get; set; }
         public string Dia_Chi { get; set; }
@@ -19,7 +13,7 @@ namespace WebClient.Core.Entities
         public string TenNguoi_DaiDien { get; set; }
         public int Cap_DonVi { get; set; }
         public int Loai_DonVi { get; set; }
-        public int Id_DV_Cha { get; set; }
+        public string Ma_DV_Cha { get; set; }
         public int Trang_Thai { get; set; }
         public string Email { get; set; }
         public string SMTP_Email { get; set; }
@@ -27,7 +21,6 @@ namespace WebClient.Core.Entities
         public string Account_Email { get; set; }
         public string Pass_Email { get; set; }
 
-        [Computed]
-        public IEnumerable<Department> Children { get; set; }
+        public string Ma_DV_Cu { get; set; }
     }
 }

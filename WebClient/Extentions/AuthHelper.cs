@@ -143,7 +143,7 @@ namespace WebClient.Extentions
                 issuer: null,
                 audience: null,
                 claims: claimsIdentity.Claims,
-                expires: DateTime.Now.AddMinutes(1), // expire time là 30 phút
+                expires: DateTime.Now.AddMinutes(30), // expire time là 30 phút
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

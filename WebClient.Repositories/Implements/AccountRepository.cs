@@ -107,5 +107,36 @@ namespace WebClient.Repositories.Implements
             dyParam.Add("rs", OracleDbType.RefCursor, ParameterDirection.Output);
             return await this.DbConnection.QueryAsync<Account>(QueryResource.Account_GetAccountsByEmployeeId, dyParam, commandType: CommandType.StoredProcedure);
         }
+
+        /// <summary>
+        /// Get all account by employee id
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns>List account</returns>
+        public async Task<IEnumerable<Account>> GetAllAccountsByEmployeeId(int employeeId)
+        {
+            var dyParam = new OracleDynamicParameters();
+            dyParam.Add("p_employeeId", OracleDbType.Int64, ParameterDirection.Input, employeeId);
+            dyParam.Add("rs", OracleDbType.RefCursor, ParameterDirection.Output);
+            return await this.DbConnection.QueryAsync<Account>(QueryResource.Account_GetAllAccountsByEmployeeId, dyParam, commandType: CommandType.StoredProcedure);
+        }
+
+        /// <summary>
+        /// Get account by account code
+        /// </summary>
+        /// <param name="accountCode">Account code</param>
+        /// <returns>A Account instance</returns>
+        public async Task<Account> GetAccountByCode(string accountCode)
+        {
+            var dyParam = new OracleDynamicParameters();
+            dyParam.Add("p_ma_nguoidung", OracleDbType.Varchar2, ParameterDirection.Input, accountCode);
+            dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            return await this.DbConnection.QueryFirstOrDefaultAsync<Account>(
+                QueryResource.Account_GetAccountByCode,
+                param: dyParam,
+                commandType: CommandType.StoredProcedure
+                );
+        }
     }
 }

@@ -329,4 +329,10 @@
   <data name="Feature_IsAccessedFeature" xml:space="preserve">
     <value>ADMIN_FEATURE.IS_ACCESSED_FEATURE</value>
   </data>
+  <data name="Account_GetAllAccountsByEmployeeId" xml:space="preserve">
+    <value>BLDT_ACCOUNT.GETALLACCOUNTSBYEMPLOYEEID</value>
+  </data>
+  <data name="Account_GetAccountByCode" xml:space="preserve">
+    <value>BLDT_ACCOUNT.GETACCOUNTBYCODE</value>
+  </data>
 </root>

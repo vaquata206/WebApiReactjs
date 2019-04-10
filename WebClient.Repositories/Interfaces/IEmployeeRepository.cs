@@ -23,6 +23,13 @@ namespace WebClient.Repositories.Interfaces
         Task<Employee> GetEmployeeById(int idNhanVien);
 
         /// <summary>
+        /// Get employee by code
+        /// </summary>
+        /// <param name="userCode">User code</param>
+        /// <returns>A Employee</returns>
+        Task<Employee> GetEmployeeByCode(string userCode);
+
+        /// <summary>
         /// Get employees by department id
         /// </summary>
         /// <param name="deparmentId">Id of deparment</param>
@@ -38,8 +45,10 @@ namespace WebClient.Repositories.Interfaces
         /// <summary>
         /// delete employee
         /// </summary>
+        /// <param name="employee">Employee instance</param>
+        /// <param name="handler">Handler id</param>
         /// <returns>the task</returns>
-        Task DeteteEmployee(Employee employee);
+        Task<Employee> DeteteEmployee(Employee employee, int handler);
 
         /// <summary>
         /// insert new employee
@@ -47,6 +56,6 @@ namespace WebClient.Repositories.Interfaces
         /// <param name="employee">the new employee</param>
         /// <param name="curUser">the curr idnhanvien</param>
         /// <returns>the task</returns>
-        Task InsertEmployee(Employee employee, int curUser);
+        Task<Employee> InsertEmployee(Employee employee, int curUser);
     }
 }

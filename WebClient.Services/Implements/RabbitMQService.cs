@@ -29,10 +29,9 @@ namespace WebClient.Services.Implements
         /// Publish a message
         /// </summary>
         /// <param name="content"></param>
-        /// <param name="sender"></param>
         /// <param name="action"></param>
         /// <param name="name"></param>
-        public void Publish(object content, string sender, string action, string name)
+        public void Publish(object content, string action, string name)
         {
             if (this.IsDisconnected())
             {
@@ -43,7 +42,6 @@ namespace WebClient.Services.Implements
             var rabbitMessage = new RabbitMessage
             {
                 Content = content,
-                Sender = sender,
                 ActionType = action
             };
 

@@ -14,11 +14,25 @@ namespace WebClient.Repositories.Implements
     public class DepartmentRepository : BaseRepository<Department>, IDepartmentRepository
     {
         /// <summary>
+        /// Get department by department code
+        /// </summary>
+        /// <param name="departmentCode">Department code</param>
+        /// <returns>A department instance</returns>
+        public async Task<Department> GetDepartmentByCode(string departmentCode)
+        {
+            var query = "select * from don_vi where ma_donvi = :departmentCode";
+            return await this.DbConnection.QueryFirstOrDefaultAsync<Department>(
+                query,
+                param: new { departmentCode = departmentCode },
+                commandType: CommandType.Text);
+        }
+
+        /// <summary>
         /// Insert new Department
         /// </summary>
         /// <param name="department">the new Department</param>
         /// <returns>the task</returns>
-        public async Task AddDepartmentAsync(Department department)
+        public async Task<Department> AddDepartmentAsync(Department department)
         {
             try
             {
@@ -36,8 +50,9 @@ namespace WebClient.Repositories.Implements
                 dyParam.Add("p_ngay_khoitao", OracleDbType.Date, ParameterDirection.Input, department.Ngay_KhoiTao);
                 dyParam.Add("p_id_dv_cha", OracleDbType.Int64, ParameterDirection.Input, department.Id_DV_Cha);
                 dyParam.Add("p_cap_donvi", OracleDbType.Int64, ParameterDirection.Input, department.Cap_DonVi);
-                dyParam.Add("p_ghi_chu", OracleDbType.NVarchar2, ParameterDirection.Input, department.Ghi_Chu);
-                await this.DbConnection.QueryAsync(query, param: dyParam, commandType: CommandType.StoredProcedure);
+                dyParam.Add("p_ghi_chu", OracleDbType.Varchar2, ParameterDirection.Input, department.Ghi_Chu);
+                dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
+                return await this.DbConnection.QueryFirstOrDefaultAsync<Department>(query, param: dyParam, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {
@@ -49,12 +64,13 @@ namespace WebClient.Repositories.Implements
         /// Id of the Department that will be deleted
         /// </summary>
         /// <param name="iddonvi">Id of Department</param>
+        /// <param name="handler">Handler Id</param>
         /// <returns>return 0: exist department children and employees
         ///          return 1: exist department children
         ///          return 2: exist employees
         ///          return 3: delete success
         /// </returns>
-        public async Task<int> DeleteDepartmentAsync(int idDonVi)
+        public async Task<int> DeleteDepartmentAsync(int idDonVi, int handler)
         {
             try
             {
@@ -176,7 +192,7 @@ namespace WebClient.Repositories.Implements
         /// </summary>
         /// <param name="Department">The Department</param>
         /// <returns>the task</returns>
-        public async Task UpdateDepartmentAsync(Department department)
+        public async Task<Department> UpdateDepartmentAsync(Department department)
         {
             try
             {
@@ -194,8 +210,10 @@ namespace WebClient.Repositories.Implements
                 dyParam.Add("p_ngay_capnhap", OracleDbType.Date, ParameterDirection.Input, department.Ngay_CapNhat);
                 dyParam.Add("p_id_dv_cha", OracleDbType.Int64, ParameterDirection.Input, department.Id_DV_Cha);
                 dyParam.Add("p_cap_donvi", OracleDbType.Int64, ParameterDirection.Input, department.Cap_DonVi);
-                dyParam.Add("p_ghi_chu", OracleDbType.NVarchar2, ParameterDirection.Input, department.Ghi_Chu);
-                await this.DbConnection.QueryAsync(query, param: dyParam, commandType: CommandType.StoredProcedure);
+                dyParam.Add("p_ghi_chu", OracleDbType.Varchar2, ParameterDirection.Input, department.Ghi_Chu);
+                dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                return await this.DbConnection.QueryFirstOrDefaultAsync<Department>(query, param: dyParam, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {
@@ -232,7 +250,7 @@ namespace WebClient.Repositories.Implements
             }
         }
 
-        public async Task UpdateEmail(Department department)
+        public async Task<Department> UpdateEmail(Department department)
         {
             try
             {
@@ -245,7 +263,8 @@ namespace WebClient.Repositories.Implements
                 dyParam.Add("p_account_email", OracleDbType.Varchar2, ParameterDirection.Input, department.Account_Email);
                 dyParam.Add("p_pass_email", OracleDbType.Varchar2, ParameterDirection.Input, department.Pass_Email);
                 dyParam.Add("p_id_nv_capnhat", OracleDbType.Int64, ParameterDirection.Input, department.Id_NV_CapNhat);
-                await this.DbConnection.QueryAsync(query, param: dyParam, commandType: CommandType.StoredProcedure);
+                dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
+                return await this.DbConnection.QueryFirstOrDefaultAsync<Department>(query, param: dyParam, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {

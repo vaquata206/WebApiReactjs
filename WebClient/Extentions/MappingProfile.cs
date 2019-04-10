@@ -2,6 +2,7 @@
 using System.Globalization;
 using AutoMapper;
 using WebClient.Core.Entities;
+using WebClient.Core.Messages;
 using WebClient.Core.ViewModels;
 
 namespace WebClient.Extensions
@@ -17,8 +18,6 @@ namespace WebClient.Extensions
         public MappingProfile()
         {
             // employee
-            this.CreateMap<Employee, EmployeeVM>();
-            this.CreateMap<EmployeeVM, Employee>();
             this.CreateMap<Employee, EmployeeVM>()
                 .ForMember(dest => dest.MaNhanVien, opts => opts.MapFrom(src => src.Ma_NhanVien))
                 .ForMember(dest => dest.HoTen, opts => opts.MapFrom(src => src.Ho_Ten))
@@ -28,7 +27,6 @@ namespace WebClient.Extensions
                 .ForMember(dest => dest.SoCMND, opts => opts.MapFrom(src => src.So_CMND))
                 .ForMember(dest => dest.NgayCapCMND, opts => opts.MapFrom(src => src.NgayCap_CMND.HasValue ? src.NgayCap_CMND.Value.ToString(ConsHelper.FormatDate) : string.Empty))
                 .ForMember(dest => dest.NoiCapCMND, opts => opts.MapFrom(src => src.NoiCap_CMND))
-                .ForMember(dest => dest.IdDonVi, opts => opts.MapFrom(src => src.Id_DonVi))
                 .ForMember(dest => dest.GhiChu, opts => opts.MapFrom(src => src.Ghi_Chu));
             this.CreateMap<EmployeeVM, Employee>()
                 .ForMember(dest => dest.Ma_NhanVien, opts => opts.MapFrom(src => src.MaNhanVien))
@@ -39,12 +37,20 @@ namespace WebClient.Extensions
                 .ForMember(dest => dest.So_CMND, opts => opts.MapFrom(src => src.SoCMND))
                 .ForMember(dest => dest.NgayCap_CMND, opts => opts.MapFrom(src => DateTime.ParseExact(src.NgayCapCMND, ConsHelper.FormatDate, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.NoiCap_CMND, opts => opts.MapFrom(src => src.NoiCapCMND))
-                .ForMember(dest => dest.Id_DonVi, opts => opts.MapFrom(src => src.IdDonVi))
                 .ForMember(dest => dest.Ghi_Chu, opts => opts.MapFrom(src => src.GhiChu));
 
             // department
             this.CreateMap<Department, DepartmentVM>();
             this.CreateMap<DepartmentVM, Department>();
+
+            this.CreateMap<EmployeeMessage, Employee>();
+            this.CreateMap<Employee, EmployeeMessage>();
+
+            this.CreateMap<Department, DepartmentMessage>();
+            this.CreateMap<DepartmentMessage, Department>();
+
+            this.CreateMap<Account, AccountMessage>();
+            this.CreateMap<AccountMessage, Account>();
         }
     }
 }

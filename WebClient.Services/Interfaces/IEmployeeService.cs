@@ -44,10 +44,10 @@ namespace WebClient.Services.Interfaces
         /// <summary>
         /// delete employee by id
         /// </summary>
-        /// <param name="idNhanVien">idNhanvien</param>
+        /// <param name="userCode">User code</param>
         /// <param name="currUserId">Current user id</param>
         /// <returns>the Task</returns>
-        Task DeleteEmployeeById(int idNhanVien, int currUserId);
+        Task<Employee> DeleteEmployeeByCode(string userCode, int currUserId);
 
         /// <summary>
         /// save employee (insert or update)
@@ -55,6 +55,6 @@ namespace WebClient.Services.Interfaces
         /// <param name="employeeVM">the employee VM</param>
         /// <param name="curUser">the current idNhanvien</param>
         /// <returns>the task</returns>
-        Task SaveEmployee(EmployeeVM employeeVM,int curUser);
+        Task<Employee> SaveEmployee(EmployeeVM employeeVM,int curUser);
     }
 }

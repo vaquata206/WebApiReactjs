@@ -70,6 +70,15 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BLDT_ACCOUNT.GETACCOUNTBYCODE.
+        /// </summary>
+        internal static string Account_GetAccountByCode {
+            get {
+                return ResourceManager.GetString("Account_GetAccountByCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BLDT_ACCOUNT.GETACCOUNTBYUSERNAME.
         /// </summary>
         internal static string Account_GetAccountByUsername {
@@ -84,6 +93,15 @@ namespace WebClient.Repositories {
         internal static string Account_GetAccountsByEmployeeId {
             get {
                 return ResourceManager.GetString("Account_GetAccountsByEmployeeId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BLDT_ACCOUNT.GETALLACCOUNTSBYEMPLOYEEID.
+        /// </summary>
+        internal static string Account_GetAllAccountsByEmployeeId {
+            get {
+                return ResourceManager.GetString("Account_GetAllAccountsByEmployeeId", resourceCulture);
             }
         }
         

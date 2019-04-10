@@ -7,8 +7,6 @@ namespace WebClient.Core.ViewModels
 {
     public class DepartmentVM
     {
-        public int Id_DonVi { get; set; }
-        [Required]
         [MaxLength(60)]
         public string Ma_DonVi { get; set; }
 
@@ -39,7 +37,7 @@ namespace WebClient.Core.ViewModels
 
         public int Id_NV_CapNhat { get; set; }
 
-        public int Id_DV_Cha { get; set; }
+        public string Ma_DV_Cha { get; set; }
 
         [Required]
         public int Cap_DonVi { get; set; }

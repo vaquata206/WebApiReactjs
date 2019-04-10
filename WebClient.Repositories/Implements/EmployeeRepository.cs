@@ -1,11 +1,9 @@
-using Dapper;
-using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
-using WebClient.Core;
+using Dapper;
+using Oracle.ManagedDataAccess.Client;
 using WebClient.Core.Entities;
 using WebClient.Repositories.Interfaces;
 
@@ -67,6 +65,20 @@ namespace WebClient.Repositories.Implements
         }
 
         /// <summary>
+        /// Get employee by user code
+        /// </summary>
+        /// <param name="userCode">User code</param>
+        /// <returns>A Employee</returns>
+        public async Task<Employee> GetEmployeeByCode(string userCode)
+        {
+            var query = @"select * from nhan_vien where ma_nhanvien = :userCode";
+            return await this.DbConnection.QueryFirstOrDefaultAsync<Employee>(
+                query,
+                param: new { userCode = userCode },
+                commandType: CommandType.Text);
+        }
+
+        /// <summary>
         /// Get employees by department id
         /// </summary>
         /// <param name="deparmentId">Id of deparment</param>
@@ -100,16 +112,23 @@ namespace WebClient.Repositories.Implements
         /// <summary>
         /// delete employee
         /// </summary>
+        /// <param name="employee">Employee instance</param>
+        /// <param name="handler">Handler id</param>
         /// <returns>the task</returns>
-        public async Task DeteteEmployee(Employee employee)
+        public async Task<Employee> DeteteEmployee(Employee employee, int handler)
         {
             try
             {
                 var query = QueryResource.Employee_DeleteById;
                 var dyParam = new OracleDynamicParameters();
                 dyParam.Add("p_id_nhanvien", OracleDbType.Int64, ParameterDirection.Input, employee.Id_NhanVien);
-                dyParam.Add("p_id_nv_capnhat", OracleDbType.Int64, ParameterDirection.Input, employee.Id_NV_CapNhat);
-                await this.DbConnection.QueryAsync(query, param: dyParam, commandType: CommandType.StoredProcedure);
+                dyParam.Add("p_id_nv_capnhat", OracleDbType.Int64, ParameterDirection.Input, handler);
+                dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
+
+                return await this.DbConnection.QueryFirstOrDefaultAsync<Employee>(
+                    query, 
+                    param: dyParam, 
+                    commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {
@@ -123,7 +142,7 @@ namespace WebClient.Repositories.Implements
         /// <param name="employee">the new employee</param>
         /// <param name="curUser">the current idnhanvien</param>
         /// <returns>the task</returns>
-        public async Task InsertEmployee(Employee employee,int curUser)
+        public async Task<Employee> InsertEmployee(Employee employee,int curUser)
         {
             try
             {
@@ -144,8 +163,9 @@ namespace WebClient.Repositories.Implements
                 dyParam.Add("p_id_nv_khoitao", OracleDbType.Int64, ParameterDirection.Input, curUser);
                 dyParam.Add("p_ngay_khoitao", OracleDbType.Date, ParameterDirection.Input, DateTime.Now);
                 dyParam.Add("p_ghi_chu", OracleDbType.Varchar2, ParameterDirection.Input, employee.Ghi_Chu);
+                dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                await this.DbConnection.QueryAsync(query, param: dyParam, commandType: CommandType.StoredProcedure);
+                return await this.DbConnection.QueryFirstOrDefaultAsync<Employee>(query, param: dyParam, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {

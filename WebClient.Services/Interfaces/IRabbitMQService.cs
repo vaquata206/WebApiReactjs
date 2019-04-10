@@ -14,9 +14,8 @@ namespace WebClient.Services.Interfaces
         /// Publish a message
         /// </summary>
         /// <param name="content"></param>
-        /// <param name="sender"></param>
         /// <param name="action"></param>
         /// <param name="name"></param>
-        void Publish(object content, string sender, string action, string name);
+        void Publish(object content, string action, string name);
     }
 }

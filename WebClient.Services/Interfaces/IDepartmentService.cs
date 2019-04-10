@@ -31,20 +31,18 @@ namespace WebClient.Services.Interfaces
         /// <summary>
         /// Id of the Department that will be deleted
         /// </summary>
-        /// <param name="iddonvi">Id of Department</param>
-        /// <returns>return 0: exist department children and employees
-        ///          return 1: exist department children
-        ///          return 2: exist employees
-        ///          return 3: delete success
-        /// </returns>
-        Task<int> DeleteDepartmentAsync(int idDonVi);
+        /// <param name="departmentCode">code of Department</param>
+        /// <param name="handler">Handler Id</param>
+        /// <returns>Department instance</returns>
+        Task<Department> DeleteDepartmentAsync(string departmentCode, int handler);
 
         /// <summary>
-        /// Save a Department
+        /// Save department
         /// </summary>
-        /// <param name="department">The Department</param>
-        /// <returns>A task</returns>
-        Task SaveDepartment(DepartmentVM department);
+        /// <param name="departmentVM">Department VM</param>
+        /// <param name="handler">Handler ID</param>
+        /// <returns>Department instance</returns>
+        Task<Department> SaveDepartment(DepartmentVM department, int handler);
 
         /// <summary>
         /// get department VM by id donvi
@@ -75,7 +73,7 @@ namespace WebClient.Services.Interfaces
         /// <param name="employeeId">the employee id current</param>
         /// <param name="departmentId">the department id current</param>
         /// <returns>the task</returns>
-        Task UpdateEmail(EmailDepartmentVM emailDepartmentVM, int employeeId, int departmentId); 
+        Task<Department> UpdateEmail(EmailDepartmentVM emailDepartmentVM, int employeeId, int departmentId); 
 
         /// <summary>
         /// Gets children that are controlled by the account by parent Id

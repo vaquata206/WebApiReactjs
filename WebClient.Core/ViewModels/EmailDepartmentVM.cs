@@ -7,7 +7,7 @@ namespace WebClient.Core.ViewModels
 {
     public class EmailDepartmentVM
     {
-        public int Id_DonVi { get; set; }
+        public string Ma_DonVi { get; set; }
 
         [MaxLength(100)]
         public string Email { get; set; }

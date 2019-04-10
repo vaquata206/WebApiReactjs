@@ -9,6 +9,13 @@ namespace WebClient.Repositories.Interfaces
     public interface IDepartmentRepository : IBaseRepository<Department>
     {
         /// <summary>
+        /// Get department by department code
+        /// </summary>
+        /// <param name="departmentCode">Department code</param>
+        /// <returns>A department instance</returns>
+        Task<Department> GetDepartmentByCode(string departmentCode);
+
+        /// <summary>
         /// Gets children that are controlled by the account by parent Id
         /// </summary>
         /// <param name="parentId">parent department id</param>
@@ -45,27 +52,28 @@ namespace WebClient.Repositories.Interfaces
         /// <summary>
         /// Id of the Department that will be deleted
         /// </summary>
-        /// <param name="iddonvi">Id of Department</param>
+        /// <param name="idDonvi">Id of Department</param>
+        /// <param name="handler">Handler id</param>
         /// <returns>return 0: exist department children and employees
         ///          return 1: exist department children
         ///          return 2: exist employees
         ///          return 3: delete success
         /// </returns>
-        Task<int> DeleteDepartmentAsync(int idDonVi);
+        Task<int> DeleteDepartmentAsync(int idDonVi, int handler);
 
         /// <summary>
         /// Updates a Department
         /// </summary>
         /// <param name="Department">The Department</param>
         /// <returns>the task</returns>
-        Task UpdateDepartmentAsync(Department department);
+        Task<Department> UpdateDepartmentAsync(Department department);
 
         /// <summary>
         /// Insert new Department
         /// </summary>
         /// <param name="department">the new Department</param>
         /// <returns>the task</returns>
-        Task AddDepartmentAsync(Department department);
+        Task<Department> AddDepartmentAsync(Department department);
 
         /// <summary>
         /// Get departments with condition: to idDepartmentStart from idDepartmentEnd.
@@ -83,6 +91,6 @@ namespace WebClient.Repositories.Interfaces
         /// <returns>List department</returns>
         Task<IEnumerable<Department>> GetControlledDepartments(int accountId);
 
-        Task UpdateEmail(Department department);
+        Task<Department> UpdateEmail(Department department);
     }
 }

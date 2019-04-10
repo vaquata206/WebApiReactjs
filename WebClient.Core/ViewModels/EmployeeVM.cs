@@ -74,10 +74,8 @@ namespace WebClient.Core.ViewModels
         [MaxLength(200)]
         [Required]
         public string NoiCapCMND { get; set; }
-
-        public int Id_NhanVien { get; set; }
-
-        public int IdDonVi { get; set; }
+        
+        public string Ma_DonVi { get; set; }
 
         public int Chuc_Vu { get; set; }
         public string GhiChu { get; set; }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using WebClient.Core.Entities;
 using WebClient.Core.Helper;
+using WebClient.Core.Messages;
 using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 using WebClient.Services.Interfaces;
@@ -19,7 +21,7 @@ namespace WebClient.Services.Implements
         /// <summary>
         /// account repository
         /// </summary>
-        private IAccountRepository account;
+        private IAccountRepository accountRepository;
 
         /// <summary>
         /// department repository
@@ -27,14 +29,37 @@ namespace WebClient.Services.Implements
         private IDepartmentRepository departmentRepository;
 
         /// <summary>
+        /// Employee repository
+        /// </summary>
+        private IEmployeeRepository employeeRepository;
+
+        /// <summary>
+        /// Rabbit mqService
+        /// </summary>
+        private IRabbitMQService rabbitMQService;
+
+        /// <summary>
+        /// Mapper service
+        /// </summary>
+        private IMapper mapper;
+
+        /// <summary>
         /// A constructor
         /// </summary>
         /// <param name="account">account repository</param>
         /// <param name="departmentRepository">department repository</param>
-        public AccountService(IAccountRepository account, IDepartmentRepository departmentRepository)
+        public AccountService(
+            IAccountRepository account, 
+            IDepartmentRepository departmentRepository, 
+            IEmployeeRepository employeeRepository,
+            IRabbitMQService rabbitMQService,
+            IMapper mapper)
         {
-            this.account = account;
+            this.accountRepository = account;
             this.departmentRepository = departmentRepository;
+            this.employeeRepository = employeeRepository;
+            this.rabbitMQService = rabbitMQService;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -44,7 +69,7 @@ namespace WebClient.Services.Implements
         /// <param name="password">The user's password</param>
         public async Task<AccountInfo> LoginAsync(string username, string password)
         {
-            var account =  await this.account.LoginAsync(username, password);
+            var account =  await this.accountRepository.LoginAsync(username, password);
             return account;
         }
 
@@ -54,17 +79,17 @@ namespace WebClient.Services.Implements
         /// <param name="account">account with new information</param>
         void IAccountService.UpdateInformationAccount(Account acc)
         {
-            this.account.UpdateInformationAccount(acc);
+            this.accountRepository.UpdateInformationAccount(acc);
         }
 
         public async Task<Account> GetAccountByUsername(string username)
         {
-            return await this.account.GetAccountByUsername(username);
+            return await this.accountRepository.GetAccountByUsername(username);
         }
 
         public async Task<bool> ChangePassword(string username, int idNguoiDung, string matKhauCu, string matKhauMoi)
         {
-            return await this.account.ChangePassword(username, idNguoiDung, matKhauCu, matKhauMoi);
+            return await this.accountRepository.ChangePassword(username, idNguoiDung, matKhauCu, matKhauMoi);
         }
 
         /// <summary>
@@ -74,7 +99,7 @@ namespace WebClient.Services.Implements
         /// <returns>List account</returns>
         public async Task<IEnumerable<Account>> GetAccountsByEmployeeId(int employeeId)
         {
-            return await this.account.GetAccountsByEmployeeId(employeeId);
+            return await this.accountRepository.GetAccountsByEmployeeId(employeeId);
         }
 
         /// <summary>
@@ -83,34 +108,43 @@ namespace WebClient.Services.Implements
         /// <param name="accountVM">Account VM</param>
         /// <param name="currentUserId">Current user id</param>
         /// <returns>A void task</returns>
-        public async Task CreateAccount(AccountVM accountVM, int currentUserId)
+        public async Task<Account> CreateAccount(AccountVM accountVM, int currentUserId)
         {
+            var employee = await this.employeeRepository.GetEmployeeByCode(accountVM.Ma_NhanVien);
+            if (employee == null)
+            {
+                throw new Exception("Nhân viên không tồn tại");
+            }
+
             var account = new Account
             {
-                Id_NhanVien = accountVM.Id_NhanVien,
+                Id_NhanVien = employee.Id_NhanVien,
                 UserName = accountVM.UserName,
                 MatKhau = Common.MD5Hash(accountVM.MatKhau),
                 Id_NV_KhoiTao = currentUserId,
                 Ngay_KhoiTao = DateTime.Now,
-                Ma_NguoiDung = "user" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                Ma_NguoiDung = "U" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                 Tinh_Trang = 1,
                 Quan_Tri = 0,
                 Id_VaiTro = 3,
                 Ngay_CapNhat = DateTime.Now
             };
 
-            await this.account.AddAsync(account);
+            await this.accountRepository.AddAsync(account);
+            await this.PublishCreatingAccount(account);
+
+            return account;
         }
 
         /// <summary>
         /// Delete a account
         /// </summary>
-        /// <param name="accountId">Account id</param>
+        /// <param name="accountCode">Account Code</param>
         /// <param name="currUserId">Current user id</param>
         /// <returns>A account</returns>
-        public async Task<Account> DeleteAccount(int accountId, int currUserId)
+        public async Task<Account> DeleteAccount(string accountCode, int currUserId)
         {
-            var account = await this.account.GetByIdAsync(accountId, true);
+            var account = await this.accountRepository.GetAccountByCode(accountCode);
             if (account == null)
             {
                 throw new Exception("Tài khoản này không tồn tại");
@@ -123,8 +157,10 @@ namespace WebClient.Services.Implements
 
             account.Tinh_Trang = 0;
             account.Ngay_CapNhat = DateTime.Now;
+            account.Id_NV_CapNhat = currUserId;
 
-            await this.account.UpdateAsync(account);
+            await this.accountRepository.UpdateAsync(account);
+            await this.PublishUpdatingAccount(account.Ma_NguoiDung, account);
 
             return account;
         }
@@ -132,13 +168,18 @@ namespace WebClient.Services.Implements
         /// <summary>
         /// Reset password of a account
         /// </summary>
-        /// <param name="accountId">Acount id</param>
+        /// <param name="accountCode">Acount code</param>
         /// <param name="userId">currebt user</param>
         /// <returns></returns>
-        public async Task<string> ResetPassword(int accountId, int currUserId)
+        public async Task<string> ResetPassword(string accountCode, int currUserId)
         {
             var now = DateTime.Now;
-            var currAccount = await this.account.GetByIdAsync(accountId);
+            var currAccount = await this.accountRepository.GetAccountByCode(accountCode);
+            if (currAccount == null)
+            {
+                throw new Exception("Tài khoản không tồn tại");
+            }
+
             var password = CreatePassword(6);
             currAccount.MatKhau = Common.MD5Hash(password);
             currAccount.Ngay_DoiMatKhau = now;
@@ -146,7 +187,7 @@ namespace WebClient.Services.Implements
             currAccount.Id_NV_CapNhat = currUserId;
             currAccount.Ngay_CapNhat = now;
 
-            await this.account.UpdateAsync(currAccount);
+            await this.accountRepository.UpdateAsync(currAccount);
             return password;
         }
 
@@ -174,7 +215,7 @@ namespace WebClient.Services.Implements
         /// <returns>Tree nodes</returns>
         public async Task<IEnumerable<TreeNode>> GetTreeNodeAccounts(int employeeId)
         {
-            var accounts = await this.account.GetAccountsByEmployeeId(employeeId);
+            var accounts = await this.accountRepository.GetAccountsByEmployeeId(employeeId);
             if (accounts == null)
             {
                 return null;
@@ -187,6 +228,50 @@ namespace WebClient.Services.Implements
                 Text = x.UserName,
                 TypeNode = "Account"
             });
+        }
+
+        /// <summary>
+        /// Publish creating account
+        /// </summary>
+        /// <param name="account">A account instance</param>
+        /// <returns>A void task</returns>
+        private async Task PublishCreatingAccount(Account account)
+        {
+            var message = this.mapper.Map<AccountMessage>(account);
+            var employee = await this.employeeRepository.GetEmployeeById(account.Id_NhanVien);
+            if (employee != null)
+            {
+                message.Ma_NhanVien = employee.Ma_NhanVien;
+            }
+
+            this.rabbitMQService.Publish(
+                message,
+                RabbitActionTypes.Create,
+                RabbitEntities.Account
+                );
+        }
+
+        /// <summary>
+        /// Publish updating account
+        /// </summary>
+        /// <param name="accountCode">Account code</param>
+        /// <param name="account">Account instance</param>
+        /// <returns></returns>
+        private async Task PublishUpdatingAccount(string accountCode, Account account)
+        {
+            var message = this.mapper.Map<AccountMessage>(account);
+            var employee = await this.employeeRepository.GetEmployeeById(account.Id_NhanVien);
+            if (employee != null)
+            {
+                message.Ma_NhanVien = employee.Ma_NhanVien;
+            }
+
+            message.Ma_NguoiDung_Cu = accountCode;
+            this.rabbitMQService.Publish(
+                message,
+                RabbitActionTypes.Update,
+                RabbitEntities.Account
+                );
         }
     }
 }

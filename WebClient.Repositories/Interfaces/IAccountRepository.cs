@@ -36,5 +36,19 @@ namespace WebClient.Repositories.Interfaces
         /// <param name="employeeId">Employee id</param>
         /// <returns>List account</returns>
         Task<IEnumerable<Account>> GetAccountsByEmployeeId(int employeeId);
+
+        /// <summary>
+        /// Get all account by employee id
+        /// </summary>
+        /// <param name="employeeId">Employee id</param>
+        /// <returns>List account</returns>
+        Task<IEnumerable<Account>> GetAllAccountsByEmployeeId(int employeeId);
+
+        /// <summary>
+        /// Get account by account code
+        /// </summary>
+        /// <param name="accountCode">Account code</param>
+        /// <returns>A Account instance</returns>
+        Task<Account> GetAccountByCode(string accountCode);
     }
 }

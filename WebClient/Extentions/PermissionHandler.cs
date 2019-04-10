@@ -67,7 +67,7 @@ namespace WebClient.Extensions
                     context.Succeed(requirement);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WebClient.Core.Entities;
 using WebClient.Core.ViewModels;
-using WebClient.Extensions;
 using WebClient.Extentions;
 using WebClient.Services.Interfaces;
 
@@ -122,6 +118,59 @@ namespace WebClient.Controllers
         {
             var employee = await this.employeeService.UpdateInformationEmployee(employeeVM, this.authHelper.UserId);
             return this.Ok(employee);
+        }
+
+        /// <summary>
+        /// Create new account
+        /// </summary>
+        /// <param name="accountVM">Account VM</param>
+        /// <returns>Action result</returns>
+        [HttpPost("[action]")]
+        [Authorize]
+        public async Task<IActionResult> Create(AccountVM accountVM)
+        {
+            try
+            {
+                var account = await this.accountService.CreateAccount(accountVM, this.authHelper.UserId);
+                return this.Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Delete Account
+        /// </summary>
+        /// <param name="code">account code</param>
+        /// <returns>Action result</returns>
+        [HttpGet("[action]")]
+        [Authorize]
+        public async Task<IActionResult> Delete(string code)
+        {
+            try
+            {
+                var account = await this.accountService.DeleteAccount(code, this.authHelper.UserId);
+                return this.Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Reset password
+        /// </summary>
+        /// <param name="code">Account code</param>
+        /// <returns>New password</returns>
+        [HttpGet("[action]")]
+        [Authorize]
+        public async Task<IActionResult> ResetPassword(string code)
+        {
+            var password = await this.accountService.ResetPassword(code, this.authHelper.UserId);
+            return this.Ok(password);
         }
     }
 }

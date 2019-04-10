@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using WebClient.Core.Entities;
+using WebClient.Core.Messages;
 using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 using WebClient.Services.Interfaces;
@@ -17,20 +17,34 @@ namespace WebClient.Services.Implements
         /// RabbitMQ service
         /// </summary>
         private IRabbitMQService rabbitMQService;
+        
         /// <summary>
         /// employe service interface
         /// </summary>
         private IEmployeeRepository _employee;
+
+        /// <summary>
+        /// Department repository
+        /// </summary>
+        private IDepartmentRepository departmentRepository;
+        
+        /// <summary>
+        /// Account repository
+        /// </summary>
+        private IAccountRepository accountRepository;
+        
         /// <summary>
         /// Create a field to store the mapper object
         /// </summary>
-        private readonly IMapper _mapper;
+        private readonly IMapper mapper;
         
-        public EmployeeService(IEmployeeRepository employee, IRabbitMQService rabbitMQService, IMapper mapper)
+        public EmployeeService(IEmployeeRepository employee, IAccountRepository accountRepository, IDepartmentRepository departmentRepository,IRabbitMQService rabbitMQService, IMapper mapper)
         {
             this._employee = employee;
+            this.departmentRepository = departmentRepository;
+            this.accountRepository = accountRepository;
             this.rabbitMQService = rabbitMQService;
-            this._mapper = mapper;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -44,7 +58,7 @@ namespace WebClient.Services.Implements
             EmployeeVM employeVM = null;
             if (employee != null)
             {
-                employeVM = this._mapper.Map<EmployeeVM>(employee);
+                employeVM = this.mapper.Map<EmployeeVM>(employee);
             }
             return employeVM;
         }
@@ -52,21 +66,27 @@ namespace WebClient.Services.Implements
         /// <summary>
         /// Update information employee
         /// </summary>
-        /// <param name="employViewModel">Employee viewmodal</param>
+        /// <param name="employeeVM">Employee viewmodal</param>
         /// <param name="userId">User Id</param>
         /// <returns>Employee Viewmodal</returns>
-        public async Task<Employee> UpdateInformationEmployee(EmployeeVM employViewModel, int userId)
+        public async Task<Employee> UpdateInformationEmployee(EmployeeVM employeeVM, int userId)
         {
-            Employee emp = this._mapper.Map<Employee>(employViewModel);
-            emp = await this._employee.UpdateInformationEmployee(emp, userId);
-            rabbitMQService.Publish(
-                content: emp,
-                sender: "aaa",
-                action: "update",
-                name: RabbitEntities.Employee
-                );
+            var employee = await this._employee.GetEmployeeByCode(employeeVM.MaNhanVien);
 
-            return emp;
+            if (employee == null)
+            {
+                throw new Exception("Nhân viên không tồn tại");
+            }
+
+            var newEmployee = this.mapper.Map<Employee>(employeeVM);
+
+            newEmployee.Id_NhanVien = employee.Id_NhanVien;
+
+            newEmployee = await this._employee.UpdateInformationEmployee(newEmployee, userId);
+
+            await this.PublishUpdatingEmployee(employee.Ma_NhanVien, newEmployee);
+
+            return employee;
         }
 
         /// <summary>
@@ -98,23 +118,34 @@ namespace WebClient.Services.Implements
         }
 
         /// <summary>
-        /// Delete employee bi id
+        /// Delete employee by employee code
         /// </summary>
-        /// <param name="idNhanVien">idNhanVien</param>
+        /// <param name="employeeCode">idNhanVien</param>
         /// <param name="currUserId">Current user id</param>
         /// <returns>the task</returns>
-        public async Task DeleteEmployeeById(int idNhanVien, int currUserId)
+        public async Task<Employee> DeleteEmployeeByCode(string employeeCode, int currUserId)
         {
-            var employee = await this._employee.GetEmployeeById(idNhanVien);
+            var employee = await this._employee.GetEmployeeByCode(employeeCode);
             if (employee == null)
             {
                 throw new Exception("Nhân viên này không tồn tại");
             }
 
-            employee.Id_NV_CapNhat = currUserId;
-            employee.Ngay_CapNhat = DateTime.Now;
+            employee = await this._employee.DeteteEmployee(employee, currUserId);
 
-            await this._employee.DeteteEmployee(employee);
+            await this.PublishUpdatingEmployee(employee.Ma_NhanVien, employee);
+
+            var accounts = await this.accountRepository.GetAllAccountsByEmployeeId(employee.Id_NhanVien);
+            foreach(var a in accounts)
+            {
+                var message = this.mapper.Map<AccountMessage>(a);
+                message.Ma_NhanVien = employee.Ma_NhanVien;
+                message.Ma_NguoiDung_Cu = a.Ma_NguoiDung;
+                // update accounts that are deleted when the employee is deleted
+                rabbitMQService.Publish(message, RabbitActionTypes.Update, RabbitEntities.Account);
+            }
+
+            return employee;
         }
 
         /// <summary>
@@ -123,23 +154,40 @@ namespace WebClient.Services.Implements
         /// <param name="employeeVM">the employee VM</param>
         /// <param name="curUser">the current idNhanvien</param>
         /// <returns>the task</returns>
-        public async Task SaveEmployee(EmployeeVM employeeVM,int curUser)
+        public async Task<Employee> SaveEmployee(EmployeeVM employeeVM, int curUser)
         {
-            Employee emp = null;
-            
+            var department = await this.departmentRepository.GetDepartmentByCode(employeeVM.Ma_DonVi);
+
+            if (department == null)
+            {
+                throw new Exception("Đơn vị không tồn tại");
+            }
+
+            Employee emp = mapper.Map<Employee>(employeeVM);
+            await this.ValidationEmployee(emp);
+
+            emp.Id_DonVi = department.Id_DonVi;
             if (employeeVM.MaNhanVien != null)
             {
-                emp = _mapper.Map<Employee>(employeeVM);
-                await this.ValidationEmployee(emp);
-                await this._employee.UpdateInformationEmployee(emp,curUser);
+                var oldEmployee = await this._employee.GetEmployeeByCode(employeeVM.MaNhanVien);
+                if (oldEmployee == null)
+                {
+                    throw new Exception("Nhân viên không tồn tại");
+                }
+
+                emp.Id_NhanVien = oldEmployee.Id_NhanVien;
+
+                emp = await this._employee.UpdateInformationEmployee(emp, curUser);
+                await PublishUpdatingEmployee(employeeVM.MaNhanVien, emp);
             }
             else
             {
-                employeeVM.MaNhanVien = "NV" + DateTime.Now.Ticks;
-                emp = _mapper.Map<Employee>(employeeVM);
-                await this.ValidationEmployee(emp);
-                await this._employee.InsertEmployee(emp,curUser);
+                emp.Ma_NhanVien = "NV" + DateTime.Now.Ticks;
+                emp = await this._employee.InsertEmployee(emp,curUser);
+                await PublishCreatingEmployee(emp);
             }
+
+            return emp;
         }
 
         /// <summary>
@@ -151,9 +199,8 @@ namespace WebClient.Services.Implements
         {
             IEnumerable<Employee> employees;
             employees = await this._employee.GetAllEmployess();
-            employees = employees.Where(x => x.Id_NhanVien != emp.Id_NhanVien).ToList();
-            var valSoCmnd = employees.Where(x => x.So_CMND.Equals(emp.So_CMND));
-            if(valSoCmnd.Count() > 0)
+            var valSoCmnd = employees.Where(x => x.Ma_NhanVien != emp.Ma_NhanVien && x.So_CMND.Equals(emp.So_CMND)).Count();
+            if(valSoCmnd > 0)
             {
                 throw new Exception("Số CMND đã tồn tại!!");
             }
@@ -165,6 +212,41 @@ namespace WebClient.Services.Implements
             {
                 throw new Exception("Ngày cấp CMND không hợp lệ!!");
             }
+        }
+
+        /// <summary>
+        /// Publish updating employee
+        /// </summary>
+        /// <param name="employee">The employee</param>
+        private async Task PublishUpdatingEmployee(string oldEmployee, Employee newEmployee)
+        {
+            var message = this.mapper.Map<EmployeeMessage>(newEmployee);
+            var department = await this.departmentRepository.GetByIdAsync(newEmployee.Id_DonVi);
+            message.Ma_NhanVien_Cu = oldEmployee;
+            message.Ma_DonVi = department.Ma_DonVi;
+
+            rabbitMQService.Publish(
+                content: message,
+                action: RabbitActionTypes.Update,
+                name: RabbitEntities.Employee
+                );
+        }
+
+        /// <summary>
+        /// publish creating employee
+        /// </summary>
+        /// <param name="employee">The employee</param>
+        /// <returns>A void task</returns>
+        private async Task PublishCreatingEmployee(Employee employee)
+        {
+            var message = this.mapper.Map<EmployeeMessage>(employee);
+            var department = await this.departmentRepository.GetByIdAsync(employee.Id_DonVi);
+            message.Ma_DonVi = department.Ma_DonVi;
+            rabbitMQService.Publish(
+                content: message,
+                action: RabbitActionTypes.Create,
+                name: RabbitEntities.Employee
+                );
         }
     }
 }

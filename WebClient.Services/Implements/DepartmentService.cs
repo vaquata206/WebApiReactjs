@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
+using WebClient.Core.Messages;
 using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 using WebClient.Services.Interfaces;
@@ -14,32 +15,57 @@ namespace WebClient.Services.Implements
     {
         private IDepartmentRepository departmentRepository;
         private IEmployeeRepository employeeRepository;
+        private IRabbitMQService rabbitMQService;
         private readonly IMapper mapper;
-        public DepartmentService(IDepartmentRepository departmentRepository, IEmployeeRepository employeeRepository, IMapper mapper)
+        public DepartmentService(
+            IDepartmentRepository departmentRepository, 
+            IEmployeeRepository employeeRepository, 
+            IRabbitMQService rabbitMQService,
+            IMapper mapper)
         {
             this.departmentRepository = departmentRepository;
             this.employeeRepository = employeeRepository;
+            this.rabbitMQService = rabbitMQService;
             this.mapper = mapper;
         }
 
         /// <summary>
         /// Id of the Department that will be deleted
         /// </summary>
-        /// <param name="iddonvi">Id of Department</param>
+        /// <param name="idDonvi">Id of Department</param>
+        /// <param name="handler">Handler id</param>
         /// <returns>return 0: exist department children and employees
         ///          return 1: exist department children
         ///          return 2: exist employees
         ///          return 3: delete success
         /// </returns>
-        public async Task<int> DeleteDepartmentAsync(int idDonVi)
+        public async Task<Department> DeleteDepartmentAsync(string departmentCode, int handler)
         {
-            var department = await this.departmentRepository.GetDepartmentByIdAsync(idDonVi);
+            var department = await this.departmentRepository.GetDepartmentByCode(departmentCode);
             if (department == null)
             {
                 throw new Exception("Đơn vị này không tồn tại");
             }
 
-            return await this.departmentRepository.DeleteDepartmentAsync(idDonVi);
+            var children = await this.departmentRepository.GetDepartmentsByIdParent(department.Id_DonVi);
+            if (children != null && children.Count() > 0)
+            {
+                throw new Exception("Đơn vị này đang có các đơn vị con");
+            }
+
+            var employees = await this.employeeRepository.GetEmployeesByDeparmentId(department.Id_DonVi);
+            if (employees != null && children.Count() > 0)
+            {
+                throw new Exception("Đơn vị này đang có nhân viên");
+            }
+
+            department.Tinh_Trang = 0;
+            department.Id_NV_CapNhat = handler;
+            department.Ngay_CapNhat = DateTime.Now;
+
+            await this.departmentRepository.UpdateAsync(department);
+            await this.PublishUpdatingDepartment(department.Ma_DonVi, department);
+            return department;
         }
 
         /// <summary>
@@ -92,30 +118,49 @@ namespace WebClient.Services.Implements
             return await this.departmentRepository.GetByIdAsync(id, true);
         }
 
-        public async Task SaveDepartment(DepartmentVM departmentVM)
+        /// <summary>
+        /// Save department
+        /// </summary>
+        /// <param name="departmentVM">Department VM</param>
+        /// <param name="handler">Handler ID</param>
+        /// <returns>Department instance</returns>
+        public async Task<Department> SaveDepartment(DepartmentVM departmentVM, int handler)
         {
-            if (departmentVM.Id_DonVi != 0)
+            Department entity = mapper.Map<Department>(departmentVM);
+            var parent = await this.departmentRepository.GetDepartmentByCode(departmentVM.Ma_DV_Cha);
+            if (parent != null)
+            {
+                entity.Id_DV_Cha = parent.Id_DonVi;
+            }
+
+            if (!string.IsNullOrEmpty(departmentVM.Ma_DonVi))
             {
                 // Edit
-                var entity = await this.departmentRepository.GetDepartmentByIdAsync(departmentVM.Id_DonVi);
+                var department = await this.departmentRepository.GetDepartmentByCode(departmentVM.Ma_DonVi);
                 if (entity == null)
                 {
                     throw new Exception("Đơn vị này không tồn tại");
                 }
 
-                entity = mapper.Map<Department>(departmentVM);
                 entity.Ngay_CapNhat = DateTime.Now;
+                entity.Id_NV_CapNhat = handler;
+                entity.Id_DonVi = department.Id_DonVi;
 
-                await this.departmentRepository.UpdateDepartmentAsync(entity);
+                entity = await this.departmentRepository.UpdateDepartmentAsync(entity);
+                await this.PublishUpdatingDepartment(entity.Ma_DonVi, entity);
             }
             else
             {
-                var entity = mapper.Map<Department>(departmentVM);
+                entity.Ma_DonVi = Guid.NewGuid().ToString();
                 entity.Ngay_KhoiTao = DateTime.Now;
                 entity.Tinh_Trang = 1;
-                entity.Id_NV_KhoiTao = entity.Id_NV_CapNhat;
-                await this.departmentRepository.AddDepartmentAsync(entity);
+                entity.Id_NV_KhoiTao = handler;
+
+                entity = await this.departmentRepository.AddDepartmentAsync(entity);
+                await this.PublishCreatingDepartment(entity);
             }
+
+            return entity;
         }
 
         /// <summary>
@@ -184,12 +229,12 @@ namespace WebClient.Services.Implements
         /// update email
         /// </summary>
         /// <param name="emailDepartmentVM">the email of department vm</param>
-        /// <param name="employeeId">the employee id current</param>
+        /// <param name="handler">the employee id current</param>
         /// <param name="departmentId">the department id current</param>
         /// <returns>the task</returns>
-        public async Task UpdateEmail(EmailDepartmentVM emailDepartmentVM, int employeeId, int departmentId)
+        public async Task<Department> UpdateEmail(EmailDepartmentVM emailDepartmentVM, int handler, int departmentId)
         {
-            var department = await this.departmentRepository.GetDepartmentByIdAsync(departmentId);
+            var department = await this.departmentRepository.GetDepartmentByCode(emailDepartmentVM.Ma_DonVi);
             if (department != null)
             {
                 department.Email = emailDepartmentVM.Email;
@@ -197,9 +242,13 @@ namespace WebClient.Services.Implements
                 department.Port_Email = emailDepartmentVM.Port_Email;
                 department.Account_Email = emailDepartmentVM.Account_Email;
                 department.Pass_Email = emailDepartmentVM.Pass_Email;
-                department.Id_NV_CapNhat = employeeId;
-                await this.departmentRepository.UpdateEmail(department);
+                department.Id_NV_CapNhat = handler;
+                department = await this.departmentRepository.UpdateEmail(department);
+
+                await this.PublishUpdatingDepartment(department.Ma_DonVi, department);
             }
+
+            return department;
         }
 
         /// <summary>
@@ -235,6 +284,32 @@ namespace WebClient.Services.Implements
             var list = await this.departmentRepository.GetControlledDepartments(accountId);
 
             return list.Select(x => x.Id_DonVi);
+        }
+
+        private async Task PublishUpdatingDepartment(string oldDepartmentCode, Department department)
+        {
+            var parent = await this.departmentRepository.GetDepartmentByIdAsync(department.Id_DV_Cha);
+            var message = this.mapper.Map<DepartmentMessage>(department);
+            if (parent != null)
+            {
+                message.Ma_DV_Cha = parent.Ma_DonVi;
+            }
+
+            message.Ma_DV_Cu = oldDepartmentCode;
+
+            rabbitMQService.Publish(message, RabbitActionTypes.Update, RabbitEntities.Department);
+        }
+
+        private async Task PublishCreatingDepartment(Department department)
+        {
+            var parent = await this.departmentRepository.GetDepartmentByIdAsync(department.Id_DV_Cha);
+            var message = this.mapper.Map<DepartmentMessage>(department);
+            if (parent != null)
+            {
+                message.Ma_DV_Cha = parent.Ma_DonVi;
+            }
+
+            rabbitMQService.Publish(message, RabbitActionTypes.Create, RabbitEntities.Department);
         }
     }
 }
