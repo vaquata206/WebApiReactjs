@@ -4,14 +4,11 @@ import { Redirect } from 'react-router';
 import { Route } from 'react-router-dom';
 import Layout from '../Layout';
 import Home from '../Home';
-import Counter from '../Counter';
-import FetchData from '../FetchData';
+import Feature from '../Feature/Feature';
+import Department from '../Department/Department';
+import DepartmentDetail from '../Department/DepartmentDetail';
 
 class MainPage extends React.Component {
-
-    componentWillMount() {
-        
-    }
 
     render() {
         const { user } = this.props;
@@ -23,8 +20,9 @@ class MainPage extends React.Component {
             return (
                 <Layout>
                     <Route exact path='/' component={Home} />
-                    <Route path='/counter' component={Counter} />
-                    <Route path='/fetchdata/:startDateIndex?' component={FetchData} />
+                    <Route path='/feature' component={Feature} />
+                    <Route exact path='/department' component={Department} />
+                    <Route path='/department/:id' component={DepartmentDetail}/>
                 </Layout>
             );
         }

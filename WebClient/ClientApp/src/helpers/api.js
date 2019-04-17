@@ -25,3 +25,11 @@ export function configAxios() {
         return Promise.reject(error);
     });
 }
+
+export const ApiPaths = {
+    GetDepartmentByParentId: "api/department/getChildNodes",
+    GetDepartmentById: "api/department/get",
+    GetDepartmentSelectItems: "api/department/getAllSelectItems",
+    SaveDepartment: "api/department/save",
+    UpdateEmailDepartment: "api/department/updateEmail"
+};

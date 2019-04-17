@@ -69,68 +69,27 @@ namespace WebClient.Services.Implements
         }
 
         /// <summary>
-        /// Get all Departments
-        /// </summary>
-        /// <returns>List Departments</returns>
-        public async Task<IEnumerable<Department>> GetAllAsync()
-        {
-            var list = await this.departmentRepository.GetAllAsync();
-            return list;
-        }
-
-        /// <summary>
-        /// Get tree nodes that are children of the department
-        /// </summary>
-        /// <param name="departmentId">Id of department</param>
-        /// <returns>Tree nodes</returns>
-        public async Task<IEnumerable<TreeNode>> GetTreeNodeChildrenOfDepartment(int departmentId, int accountId)
-        {
-            var result = Enumerable.Empty<TreeNode>();
-            var departments = await this.departmentRepository.GetDepartmentsByIdParent(departmentId, accountId);
-            result = departments.Select(x => new TreeNode
-            {
-                Id = "D" + x.Id_DonVi,
-                Children = true,
-                Text = x.Ten_DonVi,
-                TypeNode = "Deparment"
-            });
-
-            var employees = await this.employeeRepository.GetEmployeesByDeparmentId(departmentId);
-
-            result = result.Concat(employees.Select(x => new TreeNode
-            {
-                Id = "E" + x.Id_NhanVien,
-                Children = true,
-                Text = x.Ho_Ten,
-                TypeNode = "Employee"
-            }));
-
-            return result;
-        }
-
-        /// <summary>
-        /// Get department by id
-        /// </summary
-        /// <param name="id">The id of department</param>
-        /// <returns>The department</returns>
-        public async Task<Department> GetDepartmentById(int id)
-        {
-            return await this.departmentRepository.GetByIdAsync(id, true);
-        }
-
-        /// <summary>
         /// Save department
         /// </summary>
         /// <param name="departmentVM">Department VM</param>
         /// <param name="handler">Handler ID</param>
         /// <returns>Department instance</returns>
-        public async Task<Department> SaveDepartment(DepartmentVM departmentVM, int handler)
+        public async Task<DepartmentVM> SaveDepartment(DepartmentVM departmentVM, int handler)
         {
             Department entity = mapper.Map<Department>(departmentVM);
-            var parent = await this.departmentRepository.GetDepartmentByCode(departmentVM.Ma_DV_Cha);
+            Department parent = null;
+            if (!string.IsNullOrEmpty(departmentVM.Ma_DV_Cha))
+            {
+                parent = await this.departmentRepository.GetDepartmentByCode(departmentVM.Ma_DV_Cha);
+            }
+            
             if (parent != null)
             {
                 entity.Id_DV_Cha = parent.Id_DonVi;
+            }
+            else
+            {
+                entity.Id_DV_Cha = 0;
             }
 
             if (!string.IsNullOrEmpty(departmentVM.Ma_DonVi))
@@ -160,69 +119,7 @@ namespace WebClient.Services.Implements
                 await this.PublishCreatingDepartment(entity);
             }
 
-            return entity;
-        }
-
-        /// <summary>
-        /// convert jstree
-        /// </summary>
-        /// <param name="list">the list departments</param>
-        /// <returns>list departments converted</returns>
-        public IEnumerable<Department> ConvertToTree(IEnumerable<Department> list, int idRoot = 0)
-        {
-            if (list != null && list.Count() > 0)
-            {
-                if (list.Count() == 1)
-                {
-                    return list;
-                }
-                // groups features by Id feature parent
-                var groupDepartments = list.GroupBy(x => x.Id_DV_Cha);
-                Department root = new Department() { Id_DV_Cha = 0 };
-
-                foreach (var gr in groupDepartments)
-                {
-                    Department fr = list.FirstOrDefault(y => y.Id_DonVi == gr.Key);
-                    if (fr != null)
-                    {
-                        if (fr.Id_DonVi == idRoot)
-                        {
-                            root = fr;
-                        }
-
-                        fr.Children = gr;
-                    }
-                };
-                // Gets root features that has ID_CN_PR = 0
-
-                return new List<Department> { root };
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// get departmentVM by idonvi
-        /// </summary>
-        /// <param name="idDonVi">the iddonvi</param>
-        /// <returns>department vm</returns>
-        public async Task<DepartmentVM> GetDeparmentVMByID(int idDonVi)
-        {
-            var department = await departmentRepository.GetDepartmentByIdAsync(idDonVi);
-            var departmnetVM = mapper.Map<DepartmentVM>(department);
-            return departmnetVM;
-        }
-
-        /// <summary>
-        /// Get departments with condition: to idDepartmentStart from idDepartmentEnd.
-        /// </summary>
-        /// <param name="idDepartment">id department start</param>
-        /// <param name="accountId">Account Id whose user is performing this action</param>
-        /// <param name="idDepartmentEnd">id department End. Default = -1, if idDepartmentEnd = -1 then return all.</param>
-        /// <returns>list departments </returns>
-        public async Task<IEnumerable<Department>> GetTreeDepartmentsdWithTerm(int accountId, int idDepartmentStart, int idDepartmentEnd = -1)
-        {
-            var departments = await this.departmentRepository.GetDepartmentsWithTerm(accountId, idDepartmentStart, idDepartmentEnd);
-            return this.ConvertToTree(departments, idDepartmentStart);
+            return this.mapper.Map<DepartmentVM>(entity);
         }
 
         /// <summary>
@@ -232,7 +129,7 @@ namespace WebClient.Services.Implements
         /// <param name="handler">the employee id current</param>
         /// <param name="departmentId">the department id current</param>
         /// <returns>the task</returns>
-        public async Task<Department> UpdateEmail(EmailDepartmentVM emailDepartmentVM, int handler, int departmentId)
+        public async Task<DepartmentVM> UpdateEmail(EmailDepartmentVM emailDepartmentVM, int handler, int departmentId)
         {
             var department = await this.departmentRepository.GetDepartmentByCode(emailDepartmentVM.Ma_DonVi);
             if (department != null)
@@ -248,47 +145,72 @@ namespace WebClient.Services.Implements
                 await this.PublishUpdatingDepartment(department.Ma_DonVi, department);
             }
 
-            return department;
+            return this.mapper.Map<DepartmentVM>(department);
         }
 
         /// <summary>
-        /// Gets children that are controlled by the account by parent Id
+        /// Gets child nodes by parent Id
         /// </summary>
-        /// <param name="parentId">parent department id</param>
-        /// <param name="accountId">Account id</param>
-        /// <returns>List department</returns>
-        public async Task<IEnumerable<Department>> GetChildrenByParentId(int parentId, int accountId)
+        /// <param name="parentId">Parent Id</param>
+        /// <param name="handler">Who is doing this action</param>
+        /// <returns>List node</returns>
+        public async Task<IEnumerable<DepartmentNodeVM>> GetChildNodes(int parentId, int handler)
         {
-            var departments = await this.departmentRepository.GetDepartmentsByIdParent(parentId, accountId);
-            return departments;
+            return await this.departmentRepository.GetChildNodes(parentId, handler);
         }
 
         /// <summary>
-        /// Gets all children by parent Id
+        /// Gets a department by id
         /// </summary>
-        /// <param name="parentId">Parent department id</param>
-        /// <returns>List department</returns>
-        public async Task<IEnumerable<Department>> GetChildrenByParentId(int parentId)
+        /// <param name="departmentId">Department Id</param>
+        /// <param name="handler">Who is doing this action</param>
+        /// <returns>A DepartmentVM instance</returns>
+        public async Task<DepartmentVM> GetById(int departmentId, int handler)
         {
-            var departments = await this.departmentRepository.GetDepartmentsByIdParent(parentId);
-            return departments;
+            var department = await this.departmentRepository.GetDepartmentByIdAsync(departmentId, handler);
+            if (department == null)
+            {
+                throw new Exception("Đơn vị này không tồn tại hoặc người dùng không có quyền truy cập");
+            }
+
+            return this.mapper.Map<DepartmentVM>(department);
         }
 
         /// <summary>
-        /// Gets id departments that managed by the account
+        /// Get departments with format select Item
         /// </summary>
-        /// <param name="accountId">Account id</param>
-        /// <returns>List id</returns>
-        public async Task<IEnumerable<int>> GetControlledDepartmentIds(int accountId)
+        /// <param name="handler">Who is doing this action</param>
+        public async Task<IEnumerable<DepartmentNodeVM>> GetSelectItems(int handler)
         {
-            var list = await this.departmentRepository.GetControlledDepartments(accountId);
+            var departments = (await this.departmentRepository.GetAllDepartmentAccessed(handler)).ToList();
+            var list = new List<DepartmentNodeVM>();
+            var length = departments.Count();
+            for (var i = 0; i < length; i++)
+            {
+                var level = 0;
+                for (var j = i - 1; j >= 0; j--)
+                {
+                    if (list[j].Id_DonVi == departments[i].Id_DV_Cha)
+                    {
+                        level = list[j].Level;
+                    }
+                }
 
-            return list.Select(x => x.Id_DonVi);
+                list.Add(new DepartmentNodeVM
+                {
+                    Id_DonVi = departments[i].Id_DonVi,
+                    Ten_DonVi = departments[i].Ten_DonVi,
+                    Ma_DonVi = departments[i].Ma_DonVi,
+                    Level = level + 1
+                });
+            }
+
+            return list;
         }
 
         private async Task PublishUpdatingDepartment(string oldDepartmentCode, Department department)
         {
-            var parent = await this.departmentRepository.GetDepartmentByIdAsync(department.Id_DV_Cha);
+            var parent = await this.departmentRepository.GetByIdAsync(department.Id_DV_Cha);
             var message = this.mapper.Map<DepartmentMessage>(department);
             if (parent != null)
             {
@@ -302,7 +224,7 @@ namespace WebClient.Services.Implements
 
         private async Task PublishCreatingDepartment(Department department)
         {
-            var parent = await this.departmentRepository.GetDepartmentByIdAsync(department.Id_DV_Cha);
+            var parent = await this.departmentRepository.GetByIdAsync(department.Id_DV_Cha);
             var message = this.mapper.Map<DepartmentMessage>(department);
             if (parent != null)
             {

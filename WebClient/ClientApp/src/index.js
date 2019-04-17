@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
+import 'bootstrap/dist/css/bootstrap-reboot.css';
 import 'font-awesome/css/font-awesome.min.css';
-import './index.css';
 import './assets/css/google-font.css';
 import './assets/dist/css/skins/skin-blue.min.css';
 import './assets/dist/css/AdminLTE.min.css';

@@ -90,7 +90,7 @@ class Login extends React.Component {
                                         null
                                 }
                                 <div className="row">
-                                    <div className="col-xs-4 col-xs-offset-8">
+                                    <div className="col-xs-4 offset-8">
                                         <button type="submit" className="btn btn-primary btn-block btn-flat">Đăng nhập</button>
                                         <CheckButton style={{ display: 'none' }} ref={c => { this.checkBtn = c; }} />
                                     </div>

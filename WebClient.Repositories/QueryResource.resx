@@ -117,178 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ACCOUNT_LOGIN" xml:space="preserve">
-    <value>BLDT_ACCOUNT.LOGIN</value>
+  <data name="Account_Login" xml:space="preserve">
+    <value>ADMIN_ACCOUNT.LOGIN</value>
     <comment>Check login</comment>
   </data>
-  <data name="Adjust_Amount_Invoice" xml:space="preserve">
-    <value>BLDT_BIENLAI.ADJUST_AMOUNT</value>
-  </data>
-  <data name="Department_Delete" xml:space="preserve">
-    <value>BLDT_DONVI.DELETE_DONVI</value>
-    <comment>Delete unit by id.</comment>
-  </data>
-  <data name="Department_GetALL" xml:space="preserve">
-    <value>BLDT_DONVI.GET_ALL</value>
-    <comment>Get all units</comment>
-  </data>
-  <data name="Department_GetDepartmentsWithTerm" xml:space="preserve">
-    <value>BLDT_DONVI.GET_DEPARTMENTS_WITH_TERM</value>
-  </data>
   <data name="Department_Get_By_Id" xml:space="preserve">
-    <value>BLDT_DONVI.GET_BY_ID</value>
+    <value>ADMIN_DONVI.GET_BY_ID</value>
     <comment>Get unit by id</comment>
   </data>
   <data name="Department_Insert" xml:space="preserve">
-    <value>BLDT_DONVI.INSERT_UNIT</value>
+    <value>ADMIN_DONVI.INSERT_UNIT</value>
     <comment>Insert unit.</comment>
   </data>
   <data name="Department_Update" xml:space="preserve">
-    <value>BLDT_DONVI.UPDATE_UNIT</value>
+    <value>ADMIN_DONVI.UPDATE_UNIT</value>
     <comment>update unit.</comment>
   </data>
   <data name="Employee_DeleteById" xml:space="preserve">
-    <value>BLDT_EMPLOYEE.DELETE_EMPLOYEE</value>
+    <value>ADMIN_EMPLOYEE.DELETE_EMPLOYEE</value>
     <comment>Delete employee by id employee</comment>
   </data>
   <data name="Employee_Get_ALL" xml:space="preserve">
-    <value>BLDT_EMPLOYEE.GET_ALL_EMPLOYEE</value>
+    <value>ADMIN_EMPLOYEE.GET_ALL_EMPLOYEE</value>
     <comment>Get All Employess with tinh_trang = 1.</comment>
   </data>
   <data name="Employee_Get_By_Department_Id" xml:space="preserve">
-    <value>BDLT_EMPLOYEE.GET_EMPLOYEE_BY_DEPARTMENT_ID</value>
+    <value>ADMIN_EMPLOYEE.GET_EMPLOYEE_BY_DEPARTMENT_ID</value>
     <comment>Get list employess by departmentID.</comment>
   </data>
   <data name="Employee_Get_By_Id" xml:space="preserve">
-    <value>BLDT_EMPLOYEE.GET_EMPLOYEE_BY_ID</value>
+    <value>ADMIN_EMPLOYEE.GET_EMPLOYEE_BY_ID</value>
     <comment>Get informaition's employee by id employee.</comment>
   </data>
   <data name="Employee_Insert" xml:space="preserve">
-    <value>BLDT_EMPLOYEE.INSERT_EMPLOYEE</value>
+    <value>ADMIN_EMPLOYEE.INSERT_EMPLOYEE</value>
     <comment>Insert new employee.</comment>
   </data>
   <data name="Employee_Update" xml:space="preserve">
-    <value>BLDT_EMPLOYEE.UPDATE_EMPLOYEE</value>
+    <value>ADMIN_EMPLOYEE.UPDATE_EMPLOYEE</value>
     <comment>update information's employee.</comment>
   </data>
   <data name="Feature_Get_Menu_Feature" xml:space="preserve">
     <value>ADMIN_FEATURE.GET_MENU_FEATURES</value>
   </data>
-  <data name="FEE_DELETE_BY_IDFEE" xml:space="preserve">
-    <value>BLDT_FEE.DELETE_FEE</value>
-    <comment>Delete fee by idFee.</comment>
-  </data>
-  <data name="FEE_GET_BY_DEPART_ID_FOR_TABLE" xml:space="preserve">
-    <value>BLDT_FEE.GET_FEE_BY_DEPART_ID_FOR_TABLE</value>
-    <comment>Get fees by department id for table with page request.</comment>
-  </data>
-  <data name="FEE_GET_BY_IDFEE" xml:space="preserve">
-    <value>BLDT_FEE.GET_FEE_BY_ID</value>
-    <comment>Get fee by id fee.</comment>
-  </data>
-  <data name="FEE_INSERT" xml:space="preserve">
-    <value>BLDT_FEE.INSERT_FEE</value>
-    <comment>Insert new fee</comment>
-  </data>
-  <data name="FEE_UPDATE" xml:space="preserve">
-    <value>BLDT_FEE.UPDATE_FEE</value>
-    <comment>Update fee by FeeId.</comment>
-  </data>
   <data name="Account_GetAccountByUsername" xml:space="preserve">
-    <value>BLDT_ACCOUNT.GETACCOUNTBYUSERNAME</value>
+    <value>ADMIN_ACCOUNT.GETACCOUNTBYUSERNAME</value>
     <comment>Get acc by username.</comment>
   </data>
-  <data name="Invoice_Basic_By_ParentId" xml:space="preserve">
-    <value>BLDT_BIENLAI.BASIC_BY_PARENTID</value>
-  </data>
-  <data name="Invoice_InvoiceHeader" xml:space="preserve">
-    <value>BLDT_BIENLAI.HEADER_INVOICE</value>
-    <comment>Get invoice information: publisher, cashier, courier, deleter</comment>
-  </data>
-  <data name="Invoice_Search_Invoices" xml:space="preserve">
-    <value>BLDT_BIENLAI.SEARCH_INVOICES</value>
-  </data>
-  <data name="PaymentMethod_GetById" xml:space="preserve">
-    <value>BLDT_BIENLAI.PAYMENT_METHOD_BY_ID</value>
-  </data>
-  <data name="Report_InvoiceDepartment" xml:space="preserve">
-    <value>BLDT_REPORT.REPORT_DEPARTMENT</value>
-  </data>
-  <data name="Report_InvoiceDepartments" xml:space="preserve">
-    <value>BLDT_REPORT.REPORT_CHILDREN</value>
-  </data>
-  <data name="Report_InvoiceMonths" xml:space="preserve">
-    <value>BLDT_REPORT.REPORT_MONTHS</value>
-  </data>
-  <data name="SiteAdmin_GetByDepartmentId" xml:space="preserve">
-    <value>BLDT_DONVI.GET_SITEADMIN</value>
-  </data>
-  <data name="Report_InvoiceMonthsOnlyDepartment" xml:space="preserve">
-    <value>BLDT_REPORT.REPORT_MONTHS_ONLY_DEPARTMENT</value>
-  </data>
-  <data name="Report_InvoiceOnlyDepartment" xml:space="preserve">
-    <value>BLDT_REPORT.REPORT_ONLY_DEPARTMENT</value>
-  </data>
-  <data name="Report_InvoicePatterns" xml:space="preserve">
-    <value>BLDT_REPORT.REPORT_INVOICE_PATTERNS</value>
-  </data>
-  <data name="InvoicePattern_GetInvoicePatternsAllowed" xml:space="preserve">
-    <value>BLDT_INVOICEPATTERN.GET_INVOICE_PATTERNS_ALLOWED</value>
-  </data>
-  <data name="InvoicePattern_GetAndCheckForPublishing" xml:space="preserve">
-    <value>BLDT_INVOICEPATTERN.GET_AND_CHECK_FOR_PUBLISHING</value>
-  </data>
-  <data name="InvoiceAudit_Search" xml:space="preserve">
-    <value>BLDT_QUYETTOAN.SearchInvoiceAudit</value>
-  </data>
-  <data name="InvoiceAudit_GetLast" xml:space="preserve">
-    <value>BLDT_QUYETTOAN. GetLastInvoiceAudit</value>
-  </data>
-  <data name="Invoice_GetErrorInvoiceTryAgain" xml:space="preserve">
-    <value>BLDT_BIENLAI.GET_ERR_INVOICES_TRY_AGAIN</value>
-  </data>
   <data name="Account_ChangePassword" xml:space="preserve">
-    <value>BLDT_ACCOUNT.ChangePassword</value>
-  </data>
-  <data name="GroupCustomer_GetListByDepartmentId" xml:space="preserve">
-    <value>BLDT_GROUPCUSTOMER.GetListByDepartmentId</value>
-    <comment>Get List GroupCustomers by department id.</comment>
-  </data>
-  <data name="Invoice_GetInvoiceDetailNames" xml:space="preserve">
-    <value>BLDT_BIENLAI.GET_INDT_NAME_OF_INVOICES</value>
-  </data>
-  <data name="Invoice_DeleteInvoiceDetailsByInvoiceId" xml:space="preserve">
-    <value>BLDT_BIENLAI.DELETE_INDT_BY_INVOICEID</value>
-  </data>
-  <data name="Invoice_GenerateNewInvoiceKey" xml:space="preserve">
-    <value>BLDT_BIENLAI.GENERATE_NEW_KEY_INVOICE</value>
-  </data>
-  <data name="Customer_GenerateNewCustomerCode" xml:space="preserve">
-    <value>BLDT_CUSTOMER.GENERATENEWCUSTOMERCODE</value>
+    <value>ADMIN_ACCOUNT.CHANGEPASSWORD</value>
   </data>
   <data name="Department_UpdateEmail" xml:space="preserve">
-    <value>BLDT_DONVI.UpdateEmail</value>
-  </data>
-  <data name="Invoice_GetInvoicesSendMail" xml:space="preserve">
-    <value>BLDT_BIENLAI.GET_INVOICES_SEND_MAIL</value>
-  </data>
-  <data name="Invoice_SetFile" xml:space="preserve">
-    <value>BLDT_BIENLAI.SET_FILE</value>
-  </data>
-  <data name="PaymentMethod_PaymentMethods" xml:space="preserve">
-    <value>BLDT_BIENLAI.GET_PAYMENT_METHODS</value>
-  </data>
-  <data name="PublishRelease_SearchRelease" xml:space="preserve">
-    <value>BLDT_PUBLISHRELEASE.SEARCH_PUBLISH_RELEASES</value>
-  </data>
-  <data name="PublishPattern_GetListByPublishReleaseId" xml:space="preserve">
-    <value>BLDT_PUBLISHPATTERN.Get_List_By_PublishRelease_Id</value>
-  </data>
-  <data name="InvoicePattern_GetByInvoicePatternId" xml:space="preserve">
-    <value>BLDT_INVOICEPATTERN.Get_By_Invoice_Pattern_Id</value>
-  </data>
-  <data name="PublishRelease_GetByPublishReleaseId" xml:space="preserve">
-    <value>BLDT_PUBLISHRELEASE.Get_By_Publish_Release_id</value>
+    <value>ADMIN_DONVI.UPDATEEMAIL</value>
   </data>
   <data name="Feature_GetAll" xml:space="preserve">
     <value>ADMIN_FEATURE.GET_ALL</value>
@@ -300,7 +180,7 @@
     <value>ADMIN_FEATURE.ADD_FEATURE</value>
   </data>
   <data name="Account_GetAccountsByEmployeeId" xml:space="preserve">
-    <value>BLDT_ACCOUNT.GETACCOUNTSBYEMPLOYEEID</value>
+    <value>ADMIN_ACCOUNT.GETACCOUNTSBYEMPLOYEEID</value>
   </data>
   <data name="AccPermission_GetPermissionIdsUser" xml:space="preserve">
     <value>ADMIN_NHANVIEN_QUYEN.GET_PERMISSIONIDS_OF_USER</value>
@@ -314,14 +194,8 @@
   <data name="Feature_FeatureNoPermissionAccount" xml:space="preserve">
     <value>ADMIN_FEATURE.FEATURE_NOTPERMISSION_ACCOUNT</value>
   </data>
-  <data name="Department_GetDepartments" xml:space="preserve">
-    <value>BLDT_DONVI.GETDEPARTMENTS</value>
-  </data>
   <data name="Department_GetAllChildDepartments" xml:space="preserve">
-    <value>BLDT_DONVI.GETALLCHILDDEPARTMENTS</value>
-  </data>
-  <data name="Department_GetControlledDepartments" xml:space="preserve">
-    <value>BLDT_DONVI.GETCONTROLLEDDEPARTMENTS</value>
+    <value>ADMIN_DONVI.GETALLCHILDDEPARTMENTS</value>
   </data>
   <data name="Permission_SetDepartments" xml:space="preserve">
     <value>ADMIN_QUYEN.SETDEPARTMENTS</value>
@@ -330,9 +204,15 @@
     <value>ADMIN_FEATURE.IS_ACCESSED_FEATURE</value>
   </data>
   <data name="Account_GetAllAccountsByEmployeeId" xml:space="preserve">
-    <value>BLDT_ACCOUNT.GETALLACCOUNTSBYEMPLOYEEID</value>
+    <value>ADMIN_ACCOUNT.GETALLACCOUNTSBYEMPLOYEEID</value>
   </data>
   <data name="Account_GetAccountByCode" xml:space="preserve">
-    <value>BLDT_ACCOUNT.GETACCOUNTBYCODE</value>
+    <value>ADMIN_ACCOUNT.GETACCOUNTBYCODE</value>
+  </data>
+  <data name="Department_GetChildNodes" xml:space="preserve">
+    <value>ADMIN_DONVI.GETCHILDNODES</value>
+  </data>
+  <data name="Department_GetAllDepartmentAccessed" xml:space="preserve">
+    <value>ADMIN_DONVI.GETALLDEPARTMENTSACCESSED</value>
   </data>
 </root>

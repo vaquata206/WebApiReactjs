@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using WebClient.Core;
-using WebClient.Core.Entities;
+using WebClient.Core.Messages;
 using WebClient.Services.Interfaces;
 
 namespace WebClient.Services.Implements

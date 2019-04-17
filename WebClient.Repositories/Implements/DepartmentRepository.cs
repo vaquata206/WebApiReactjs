@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using WebClient.Core.Entities;
+using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 
 namespace WebClient.Repositories.Implements
@@ -61,61 +62,18 @@ namespace WebClient.Repositories.Implements
         }
 
         /// <summary>
-        /// Id of the Department that will be deleted
+        /// Gets department that accessed by the handler with department id
         /// </summary>
-        /// <param name="iddonvi">Id of Department</param>
-        /// <param name="handler">Handler Id</param>
-        /// <returns>return 0: exist department children and employees
-        ///          return 1: exist department children
-        ///          return 2: exist employees
-        ///          return 3: delete success
-        /// </returns>
-        public async Task<int> DeleteDepartmentAsync(int idDonVi, int handler)
-        {
-            try
-            {
-                var query = QueryResource.Department_Delete;
-                var dyParam = new OracleDynamicParameters();
-                dyParam.Add("p_id_donvi", OracleDbType.Int64, ParameterDirection.Input, idDonVi);
-                dyParam.Add("rs", OracleDbType.Int64, ParameterDirection.Output);
-                await this.DbConnection.QueryAsync(query, param: dyParam, commandType: CommandType.StoredProcedure);
-                return int.Parse(dyParam.GetByName("rs").Value.ToString());
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        /// <summary>
-        /// Get all units
-        /// </summary>
-        /// <returns>List units</returns>
-        public async Task<IEnumerable<Department>> GetAllAsync()
-        {
-            try
-            {
-                var dyParam = new OracleDynamicParameters();
-                dyParam.Add("RSOUT", OracleDbType.RefCursor, ParameterDirection.Output);
-                var query = QueryResource.Department_GetALL;
-                return await this.DbConnection.QueryAsync<Department>(
-                    query, 
-                    param: dyParam, 
-                    commandType: CommandType.StoredProcedure, 
-                    commandTimeout: 5000);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<Department> GetDepartmentByIdAsync(int idDonVi)
+        /// <param name="idDonVi">department id</param>
+        /// <param name="handler">who is doing this action</param>
+        /// <returns></returns>
+        public async Task<Department> GetDepartmentByIdAsync(int idDonVi, int handler)
         {
             try
             {
                 var dyParam = new OracleDynamicParameters();
                 dyParam.Add("P_ID_DONVI", OracleDbType.Int64, ParameterDirection.Input, idDonVi);
+                dyParam.Add("P_ID_ND_THUCHIEN", OracleDbType.Int64, ParameterDirection.Input, handler);
                 dyParam.Add("RSOUT", OracleDbType.RefCursor, ParameterDirection.Output);
                 var query = QueryResource.Department_Get_By_Id;
                 return await this.DbConnection.QueryFirstOrDefaultAsync<Department>(
@@ -123,31 +81,6 @@ namespace WebClient.Repositories.Implements
                     param: dyParam, 
                     commandType: CommandType.StoredProcedure, 
                     commandTimeout: 5000);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        /// <summary>
-        /// Gets children that are controlled by the account by parent Id
-        /// </summary>
-        /// <param name="parentId">parent department id</param>
-        /// <param name="accountId">Account id</param>
-        /// <returns>List department</returns>
-        public async Task<IEnumerable<Department>> GetDepartmentsByIdParent(int idParent, int accountId)
-        {
-            try
-            {
-                var dyParam = new OracleDynamicParameters();
-                dyParam.Add("p_id_dv_cha", OracleDbType.Int64, ParameterDirection.Input, idParent);
-                dyParam.Add("p_id_nd", OracleDbType.Int64, ParameterDirection.Input, accountId);
-                dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
-                return await this.DbConnection.QueryAsync<Department>(
-                    QueryResource.Department_GetDepartments,
-                    param: dyParam,
-                    commandType: System.Data.CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {
@@ -169,22 +102,6 @@ namespace WebClient.Repositories.Implements
                 QueryResource.Department_GetAllChildDepartments,
                 param: dyParam,
                 commandType: System.Data.CommandType.StoredProcedure);
-        }
-
-        /// <summary>
-        /// Get department by employee id
-        /// </summary>
-        /// <param name="employeeId">employee id</param>
-        /// <returns>The department</returns>
-        public async Task<Department> GetDepartmentByEmployeeId(int employeeId)
-        {
-            var query = @"select dvi.* from don_vi dvi
-                join nhan_vien nv on nv.id_donvi = dvi.id_donvi
-                where id_nhanvien = :employeeId and dvi.tinh_trang = 1";
-            return await this.DbConnection.QueryFirstAsync<Department>(
-                query, 
-                new { employeeId }, 
-                commandType: System.Data.CommandType.Text);
         }
 
         /// <summary>
@@ -222,34 +139,10 @@ namespace WebClient.Repositories.Implements
         }
 
         /// <summary>
-        /// Get departments with condition: to idDepartmentStart from idDepartmentEnd.
+        /// Update email
         /// </summary>
-        /// <param name="idDepartment">id department start</param>
-        /// <param name="accountId">Account Id whose user is performing this action</param>
-        /// <param name="idDepartmentEnd">id department End, if idDepartmentEnd = -1 then return all.</param>
-        /// <returns>list departments </returns>
-        public async Task<IEnumerable<Department>> GetDepartmentsWithTerm(int accountId, int idDepartment, int idDepartmentEnd = -1)
-        {
-            try
-            {
-                var dyParam = new OracleDynamicParameters();
-                dyParam.Add("p_id_donvi", OracleDbType.Int64, ParameterDirection.Input, idDepartment);
-                dyParam.Add("p_end", OracleDbType.Int64, ParameterDirection.Input, idDepartmentEnd);
-                dyParam.Add("p_id_nd", OracleDbType.Int64, ParameterDirection.Input, accountId);
-                dyParam.Add("RSOUT", OracleDbType.RefCursor, ParameterDirection.Output);
-                var query = QueryResource.Department_GetDepartmentsWithTerm;
-                return await this.DbConnection.QueryAsync<Department>(
-                    query, 
-                    param: dyParam, 
-                    commandType: CommandType.StoredProcedure, 
-                    commandTimeout: 5000);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+        /// <param name="department">Department instance</param>
+        /// <returns>Department instance</returns>
         public async Task<Department> UpdateEmail(Department department)
         {
             try
@@ -273,19 +166,41 @@ namespace WebClient.Repositories.Implements
         }
 
         /// <summary>
-        /// Gets id departments that managed by the account
+        /// Gets child nodes by parent Id
         /// </summary>
-        /// <param name="accountId">Account id</param>
-        /// <returns>List department</returns>
-        public async Task<IEnumerable<Department>> GetControlledDepartments(int accountId)
+        /// <param name="parentId">Parent Id</param>
+        /// <param name="handler">Who is doing this action</param>
+        /// <returns>List node</returns>
+        public async Task<IEnumerable<DepartmentNodeVM>> GetChildNodes(int parentId, int handler)
         {
             var dyParam = new OracleDynamicParameters();
-            dyParam.Add("p_id_nd", OracleDbType.Int64, ParameterDirection.Input, accountId);
+            dyParam.Add("p_id_dv_cha", OracleDbType.Int64, ParameterDirection.Input, parentId);
+            dyParam.Add("p_id_nd_thuchien", OracleDbType.Int64, ParameterDirection.Input, handler);
             dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
-            return await this.DbConnection.QueryAsync<Department>(
-                QueryResource.Department_GetControlledDepartments,
+
+            return await this.DbConnection.QueryAsync<DepartmentNodeVM>(
+                QueryResource.Department_GetChildNodes,
                 param: dyParam,
-                commandType: System.Data.CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure
+                );
+        }
+
+        /// <summary>
+        /// Get all department that the user is accessed
+        /// </summary>
+        /// <param name="handler">Who is doing this action</param>
+        /// <returns>List department</returns>
+        public async Task<IEnumerable<Department>> GetAllDepartmentAccessed(int handler)
+        {
+            var dyParam = new OracleDynamicParameters();
+            dyParam.Add("p_id_nd", OracleDbType.Int64, ParameterDirection.Input, handler);
+            dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
+
+            return await this.DbConnection.QueryAsync<Department>(
+                QueryResource.Department_GetAllDepartmentAccessed,
+                param: dyParam,
+                commandType: CommandType.StoredProcedure
+                );
         }
     }
 }

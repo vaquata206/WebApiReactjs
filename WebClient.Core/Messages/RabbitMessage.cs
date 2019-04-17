@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebClient.Core.Entities
+namespace WebClient.Core.Messages
 {
     public class RabbitMessage
     {

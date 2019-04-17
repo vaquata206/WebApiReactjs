@@ -96,5 +96,61 @@ namespace WebClient.Controllers
                 return this.BadRequest(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Gets child nodes by parent id
+        /// </summary>
+        /// <param name="id">Parent id</param>
+        /// <returns>A list node</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetChildNodes(int id)
+        {
+            try
+            {
+                var nodes = await this.departmentService.GetChildNodes(id, this.authHelper.UserId);
+                return this.Ok(nodes);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get a department by Id
+        /// </summary>
+        /// <param name="id">Department id</param>
+        /// <returns>A DepartmentVM instance</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                var department = await this.departmentService.GetById(id, this.authHelper.UserId);
+                return this.Ok(department);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get All department with format for select item
+        /// </summary>
+        /// <returns>List department</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAllSelectItems()
+        {
+            try
+            {
+                var list = await this.departmentService.GetSelectItems(this.authHelper.UserId);
+                return this.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
     }
 }

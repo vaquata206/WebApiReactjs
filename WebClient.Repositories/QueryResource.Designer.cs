@@ -61,7 +61,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_ACCOUNT.ChangePassword.
+        ///   Looks up a localized string similar to ADMIN_ACCOUNT.CHANGEPASSWORD.
         /// </summary>
         internal static string Account_ChangePassword {
             get {
@@ -70,7 +70,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_ACCOUNT.GETACCOUNTBYCODE.
+        ///   Looks up a localized string similar to ADMIN_ACCOUNT.GETACCOUNTBYCODE.
         /// </summary>
         internal static string Account_GetAccountByCode {
             get {
@@ -79,7 +79,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_ACCOUNT.GETACCOUNTBYUSERNAME.
+        ///   Looks up a localized string similar to ADMIN_ACCOUNT.GETACCOUNTBYUSERNAME.
         /// </summary>
         internal static string Account_GetAccountByUsername {
             get {
@@ -88,7 +88,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_ACCOUNT.GETACCOUNTSBYEMPLOYEEID.
+        ///   Looks up a localized string similar to ADMIN_ACCOUNT.GETACCOUNTSBYEMPLOYEEID.
         /// </summary>
         internal static string Account_GetAccountsByEmployeeId {
             get {
@@ -97,7 +97,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_ACCOUNT.GETALLACCOUNTSBYEMPLOYEEID.
+        ///   Looks up a localized string similar to ADMIN_ACCOUNT.GETALLACCOUNTSBYEMPLOYEEID.
         /// </summary>
         internal static string Account_GetAllAccountsByEmployeeId {
             get {
@@ -106,11 +106,11 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_ACCOUNT.LOGIN.
+        ///   Looks up a localized string similar to ADMIN_ACCOUNT.LOGIN.
         /// </summary>
-        internal static string ACCOUNT_LOGIN {
+        internal static string Account_Login {
             get {
-                return ResourceManager.GetString("ACCOUNT_LOGIN", resourceCulture);
+                return ResourceManager.GetString("Account_Login", resourceCulture);
             }
         }
         
@@ -133,34 +133,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.ADJUST_AMOUNT.
-        /// </summary>
-        internal static string Adjust_Amount_Invoice {
-            get {
-                return ResourceManager.GetString("Adjust_Amount_Invoice", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_CUSTOMER.GENERATENEWCUSTOMERCODE.
-        /// </summary>
-        internal static string Customer_GenerateNewCustomerCode {
-            get {
-                return ResourceManager.GetString("Customer_GenerateNewCustomerCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.DELETE_DONVI.
-        /// </summary>
-        internal static string Department_Delete {
-            get {
-                return ResourceManager.GetString("Department_Delete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.GET_BY_ID.
+        ///   Looks up a localized string similar to ADMIN_DONVI.GET_BY_ID.
         /// </summary>
         internal static string Department_Get_By_Id {
             get {
@@ -169,16 +142,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.GET_ALL.
-        /// </summary>
-        internal static string Department_GetALL {
-            get {
-                return ResourceManager.GetString("Department_GetALL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.GETALLCHILDDEPARTMENTS.
+        ///   Looks up a localized string similar to ADMIN_DONVI.GETALLCHILDDEPARTMENTS.
         /// </summary>
         internal static string Department_GetAllChildDepartments {
             get {
@@ -187,34 +151,25 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.GETCONTROLLEDDEPARTMENTS.
+        ///   Looks up a localized string similar to ADMIN_DONVI.GETALLDEPARTMENTSACCESSED.
         /// </summary>
-        internal static string Department_GetControlledDepartments {
+        internal static string Department_GetAllDepartmentAccessed {
             get {
-                return ResourceManager.GetString("Department_GetControlledDepartments", resourceCulture);
+                return ResourceManager.GetString("Department_GetAllDepartmentAccessed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.GETDEPARTMENTS.
+        ///   Looks up a localized string similar to ADMIN_DONVI.GETCHILDNODES.
         /// </summary>
-        internal static string Department_GetDepartments {
+        internal static string Department_GetChildNodes {
             get {
-                return ResourceManager.GetString("Department_GetDepartments", resourceCulture);
+                return ResourceManager.GetString("Department_GetChildNodes", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.GET_DEPARTMENTS_WITH_TERM.
-        /// </summary>
-        internal static string Department_GetDepartmentsWithTerm {
-            get {
-                return ResourceManager.GetString("Department_GetDepartmentsWithTerm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.INSERT_UNIT.
+        ///   Looks up a localized string similar to ADMIN_DONVI.INSERT_UNIT.
         /// </summary>
         internal static string Department_Insert {
             get {
@@ -223,7 +178,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.UPDATE_UNIT.
+        ///   Looks up a localized string similar to ADMIN_DONVI.UPDATE_UNIT.
         /// </summary>
         internal static string Department_Update {
             get {
@@ -232,7 +187,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.UpdateEmail.
+        ///   Looks up a localized string similar to ADMIN_DONVI.UPDATEEMAIL.
         /// </summary>
         internal static string Department_UpdateEmail {
             get {
@@ -241,7 +196,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_EMPLOYEE.DELETE_EMPLOYEE.
+        ///   Looks up a localized string similar to ADMIN_EMPLOYEE.DELETE_EMPLOYEE.
         /// </summary>
         internal static string Employee_DeleteById {
             get {
@@ -250,7 +205,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_EMPLOYEE.GET_ALL_EMPLOYEE.
+        ///   Looks up a localized string similar to ADMIN_EMPLOYEE.GET_ALL_EMPLOYEE.
         /// </summary>
         internal static string Employee_Get_ALL {
             get {
@@ -259,7 +214,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BDLT_EMPLOYEE.GET_EMPLOYEE_BY_DEPARTMENT_ID.
+        ///   Looks up a localized string similar to ADMIN_EMPLOYEE.GET_EMPLOYEE_BY_DEPARTMENT_ID.
         /// </summary>
         internal static string Employee_Get_By_Department_Id {
             get {
@@ -268,7 +223,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_EMPLOYEE.GET_EMPLOYEE_BY_ID.
+        ///   Looks up a localized string similar to ADMIN_EMPLOYEE.GET_EMPLOYEE_BY_ID.
         /// </summary>
         internal static string Employee_Get_By_Id {
             get {
@@ -277,7 +232,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_EMPLOYEE.INSERT_EMPLOYEE.
+        ///   Looks up a localized string similar to ADMIN_EMPLOYEE.INSERT_EMPLOYEE.
         /// </summary>
         internal static string Employee_Insert {
             get {
@@ -286,7 +241,7 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_EMPLOYEE.UPDATE_EMPLOYEE.
+        ///   Looks up a localized string similar to ADMIN_EMPLOYEE.UPDATE_EMPLOYEE.
         /// </summary>
         internal static string Employee_Update {
             get {
@@ -358,299 +313,11 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BLDT_FEE.DELETE_FEE.
-        /// </summary>
-        internal static string FEE_DELETE_BY_IDFEE {
-            get {
-                return ResourceManager.GetString("FEE_DELETE_BY_IDFEE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_FEE.GET_FEE_BY_DEPART_ID_FOR_TABLE.
-        /// </summary>
-        internal static string FEE_GET_BY_DEPART_ID_FOR_TABLE {
-            get {
-                return ResourceManager.GetString("FEE_GET_BY_DEPART_ID_FOR_TABLE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_FEE.GET_FEE_BY_ID.
-        /// </summary>
-        internal static string FEE_GET_BY_IDFEE {
-            get {
-                return ResourceManager.GetString("FEE_GET_BY_IDFEE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_FEE.INSERT_FEE.
-        /// </summary>
-        internal static string FEE_INSERT {
-            get {
-                return ResourceManager.GetString("FEE_INSERT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_FEE.UPDATE_FEE.
-        /// </summary>
-        internal static string FEE_UPDATE {
-            get {
-                return ResourceManager.GetString("FEE_UPDATE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_GROUPCUSTOMER.GetListByDepartmentId.
-        /// </summary>
-        internal static string GroupCustomer_GetListByDepartmentId {
-            get {
-                return ResourceManager.GetString("GroupCustomer_GetListByDepartmentId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.BASIC_BY_PARENTID.
-        /// </summary>
-        internal static string Invoice_Basic_By_ParentId {
-            get {
-                return ResourceManager.GetString("Invoice_Basic_By_ParentId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.DELETE_INDT_BY_INVOICEID.
-        /// </summary>
-        internal static string Invoice_DeleteInvoiceDetailsByInvoiceId {
-            get {
-                return ResourceManager.GetString("Invoice_DeleteInvoiceDetailsByInvoiceId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.GENERATE_NEW_KEY_INVOICE.
-        /// </summary>
-        internal static string Invoice_GenerateNewInvoiceKey {
-            get {
-                return ResourceManager.GetString("Invoice_GenerateNewInvoiceKey", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.GET_ERR_INVOICES_TRY_AGAIN.
-        /// </summary>
-        internal static string Invoice_GetErrorInvoiceTryAgain {
-            get {
-                return ResourceManager.GetString("Invoice_GetErrorInvoiceTryAgain", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.GET_INDT_NAME_OF_INVOICES.
-        /// </summary>
-        internal static string Invoice_GetInvoiceDetailNames {
-            get {
-                return ResourceManager.GetString("Invoice_GetInvoiceDetailNames", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.GET_INVOICES_SEND_MAIL.
-        /// </summary>
-        internal static string Invoice_GetInvoicesSendMail {
-            get {
-                return ResourceManager.GetString("Invoice_GetInvoicesSendMail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.HEADER_INVOICE.
-        /// </summary>
-        internal static string Invoice_InvoiceHeader {
-            get {
-                return ResourceManager.GetString("Invoice_InvoiceHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.SEARCH_INVOICES.
-        /// </summary>
-        internal static string Invoice_Search_Invoices {
-            get {
-                return ResourceManager.GetString("Invoice_Search_Invoices", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.SET_FILE.
-        /// </summary>
-        internal static string Invoice_SetFile {
-            get {
-                return ResourceManager.GetString("Invoice_SetFile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_QUYETTOAN. GetLastInvoiceAudit.
-        /// </summary>
-        internal static string InvoiceAudit_GetLast {
-            get {
-                return ResourceManager.GetString("InvoiceAudit_GetLast", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_QUYETTOAN.SearchInvoiceAudit.
-        /// </summary>
-        internal static string InvoiceAudit_Search {
-            get {
-                return ResourceManager.GetString("InvoiceAudit_Search", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_INVOICEPATTERN.GET_AND_CHECK_FOR_PUBLISHING.
-        /// </summary>
-        internal static string InvoicePattern_GetAndCheckForPublishing {
-            get {
-                return ResourceManager.GetString("InvoicePattern_GetAndCheckForPublishing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_INVOICEPATTERN.Get_By_Invoice_Pattern_Id.
-        /// </summary>
-        internal static string InvoicePattern_GetByInvoicePatternId {
-            get {
-                return ResourceManager.GetString("InvoicePattern_GetByInvoicePatternId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_INVOICEPATTERN.GET_INVOICE_PATTERNS_ALLOWED.
-        /// </summary>
-        internal static string InvoicePattern_GetInvoicePatternsAllowed {
-            get {
-                return ResourceManager.GetString("InvoicePattern_GetInvoicePatternsAllowed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.PAYMENT_METHOD_BY_ID.
-        /// </summary>
-        internal static string PaymentMethod_GetById {
-            get {
-                return ResourceManager.GetString("PaymentMethod_GetById", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_BIENLAI.GET_PAYMENT_METHODS.
-        /// </summary>
-        internal static string PaymentMethod_PaymentMethods {
-            get {
-                return ResourceManager.GetString("PaymentMethod_PaymentMethods", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to ADMIN_QUYEN.SETDEPARTMENTS.
         /// </summary>
         internal static string Permission_SetDepartments {
             get {
                 return ResourceManager.GetString("Permission_SetDepartments", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_PUBLISHPATTERN.Get_List_By_PublishRelease_Id.
-        /// </summary>
-        internal static string PublishPattern_GetListByPublishReleaseId {
-            get {
-                return ResourceManager.GetString("PublishPattern_GetListByPublishReleaseId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_PUBLISHRELEASE.Get_By_Publish_Release_id.
-        /// </summary>
-        internal static string PublishRelease_GetByPublishReleaseId {
-            get {
-                return ResourceManager.GetString("PublishRelease_GetByPublishReleaseId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_PUBLISHRELEASE.SEARCH_PUBLISH_RELEASES.
-        /// </summary>
-        internal static string PublishRelease_SearchRelease {
-            get {
-                return ResourceManager.GetString("PublishRelease_SearchRelease", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_REPORT.REPORT_DEPARTMENT.
-        /// </summary>
-        internal static string Report_InvoiceDepartment {
-            get {
-                return ResourceManager.GetString("Report_InvoiceDepartment", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_REPORT.REPORT_CHILDREN.
-        /// </summary>
-        internal static string Report_InvoiceDepartments {
-            get {
-                return ResourceManager.GetString("Report_InvoiceDepartments", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_REPORT.REPORT_MONTHS.
-        /// </summary>
-        internal static string Report_InvoiceMonths {
-            get {
-                return ResourceManager.GetString("Report_InvoiceMonths", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_REPORT.REPORT_MONTHS_ONLY_DEPARTMENT.
-        /// </summary>
-        internal static string Report_InvoiceMonthsOnlyDepartment {
-            get {
-                return ResourceManager.GetString("Report_InvoiceMonthsOnlyDepartment", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_REPORT.REPORT_ONLY_DEPARTMENT.
-        /// </summary>
-        internal static string Report_InvoiceOnlyDepartment {
-            get {
-                return ResourceManager.GetString("Report_InvoiceOnlyDepartment", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_REPORT.REPORT_INVOICE_PATTERNS.
-        /// </summary>
-        internal static string Report_InvoicePatterns {
-            get {
-                return ResourceManager.GetString("Report_InvoicePatterns", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to BLDT_DONVI.GET_SITEADMIN.
-        /// </summary>
-        internal static string SiteAdmin_GetByDepartmentId {
-            get {
-                return ResourceManager.GetString("SiteAdmin_GetByDepartmentId", resourceCulture);
             }
         }
     }

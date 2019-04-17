@@ -4,6 +4,45 @@
 
 .main-header .navbar-static-top {
     background: url(../dist/img/back1.jpg) no-repeat #3c8dbc;
+    justify-content: left;
+    padding: 0 10px 0 0;
+    font-size: 14px;
+    height: 50px;
+}
+
+.main-header .user-menu-nav.dropdown {
+    position: absolute;
+    float: right;
+    right: 0;
+    top: 0;
+    text-align: center;
+}
+
+.main-header .user-menu-nav .user-toggle {
+    height: 50px;
+    line-height: 20px;
+    padding: 15px;
+    display: block;
+    color: #f6f6f6;
+}
+
+.main-header .user-menu-nav .user-toggle:hover{
+    background: #367fa9;
+    color: #f6f6f6;
+}
+
+.user-menu-nav .user-toggle .user-image {
+    float: left;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-top: -2px;
+}
+
+.user-menu-nav .dropdown-menu{
+    padding: 0;
+    border: none
 }
 
 .main-header .logo {
@@ -68,11 +107,11 @@
     min-height: 34px;
 }
 
-    .form-group .dropdown-toggle span.caret {
+.form-group .dropdown-toggle span.caret {
         position: absolute;
         right: 7px;
         top: 16px;
-    }
+}
 
 .form-group .dropdown.dropdown-tree ul {
     width: 100%;
@@ -179,21 +218,6 @@
     padding: 0;
 }
 
-.fee .pagination > li > a {
-    background: #f6f6f6 !important;
-    color: #333 !important;
-}
-    .fee .pagination > li > a:hover {
-        color: #23527c !important;
-        background-color: #eee !important;
-        border-color: #ddd !important;
-    }
-.fee .pagination > .disabled > a, .fee .pagination > .disabled > a:focus, .fee .pagination > .disabled > a:hover,
-.fee .pagination > .disabled > span, .fee .pagination > .disabled > span:focus, .fee .pagination > .disabled > span:hover {
-    color: #999 !important;
-    background-color: #ccc !important;
-    border-color: #ddd !important;
-}
 #template-row td {
     padding-top: 0;
     padding-bottom: 0;
@@ -237,5 +261,61 @@
 }
 .detail-publish-release-form tr{
     height:30px;
+}
+.treenode-item, .treenode-icon {
+    background-image: url(/images/32px.png);
+    background-repeat: no-repeat;
+}
+.treenode-icon {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    display: inline-block;
+}
+.treenode-anchor {
+    display: flex;
+    cursor: pointer;
+    padding-right: 10px
+}
+.treenode-anchor:hover, .treenode-anchor.actived {
+    background: #e7f4f9;
+    border-radius: 2px;
+    box-shadow: inset 0 0 1px #cccccc;
+}
+.treenode-group .treenode-group {
+    margin-left: 24px;
+}
+.treenode-close > .treenode-icon {
+    background-position: -100px -4px;
+}
+.treenode-open > .treenode-icon {
+    background-position: -132px -4px;
+}
+.treenode-leaf > .treenode-icon {
+    background-position: -68px -4px;
+}
+.treenode-icon.treenode-folder {
+    background-position: -260px -4px;
+}
+.treenode-item {
+    display: flex;
+    flex-direction: row;
+    -webkit-box-align: center;
+    align-items: center;
+    background-position: -292px -4px;
+    background-repeat: repeat-y;
+}
+.treenode-last {
+    background: transparent;
+}
+.treenode-loading {
+    margin-left: 50px;
+    display: flex;
+    flex-direction: row;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.treenode-loading span{
+    margin-left: 5px;
 }
 /*end details publishrelease*/

@@ -32,7 +32,7 @@ namespace WebClient.Repositories.Implements
             dyParam.Add("p_username", OracleDbType.Varchar2, ParameterDirection.Input, username);
             dyParam.Add("p_password", OracleDbType.Varchar2, ParameterDirection.Input, Common.MD5Hash(password));
             dyParam.Add("RSOUT", OracleDbType.RefCursor, ParameterDirection.Output);
-            return await this.DbConnection.QueryFirstOrDefaultAsync<AccountInfo>(QueryResource.ACCOUNT_LOGIN, param: dyParam, commandType: CommandType.StoredProcedure, commandTimeout: 1200);
+            return await this.DbConnection.QueryFirstOrDefaultAsync<AccountInfo>(QueryResource.Account_Login, param: dyParam, commandType: CommandType.StoredProcedure, commandTimeout: 1200);
         }
 
         /// <summary>

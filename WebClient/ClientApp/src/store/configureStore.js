@@ -7,11 +7,15 @@ import * as Counter from './Counter';
 import * as WeatherForecasts from './WeatherForecasts';
 import * as Auth from './Auth';
 import * as Menu from './Menu';
+import * as ConfirmationModal from './ConfirmationModal';
+import * as AdminAlert from './AdminAlert';
 
 export default function configureStore(history, initialState) {
     const reducers = {
         auth: persistReducer(Auth.persistConfig, Auth.reducer),
         menu: Menu.reducer,
+        confirmationModal: ConfirmationModal.reducer,
+        adminAlert: AdminAlert.reducer,
         counter: Counter.reducer,
         weatherForecasts: WeatherForecasts.reducer
     };
