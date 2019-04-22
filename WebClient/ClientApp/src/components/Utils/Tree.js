@@ -60,7 +60,7 @@ class Tree extends React.Component {
 
     selectOnlyNode(nodes, node) {
         nodes.forEach(value => {
-            if (node.id !== value.id) {
+            if (node.id !== value.id || node.typeNode !== value.typeNode) {
                 value.actived = false;
             } else {
                 value.actived = !value.actived;

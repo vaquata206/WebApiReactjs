@@ -98,7 +98,7 @@ namespace WebClient.Controllers
         }
 
         /// <summary>
-        /// Gets child nodes by parent id
+        /// Gets child nodes by parent id. Include: Departments/employees
         /// </summary>
         /// <param name="id">Parent id</param>
         /// <returns>A list node</returns>
@@ -108,6 +108,25 @@ namespace WebClient.Controllers
             try
             {
                 var nodes = await this.departmentService.GetChildNodes(id, this.authHelper.UserId);
+                return this.Ok(nodes);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get departments by parent. For
+        /// </summary>
+        /// <param name="id">Parent Id</param>
+        /// <returns>List Department</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetDepartmentsByParent(int id)
+        {
+            try
+            {
+                var nodes = await this.departmentService.GetDepartmentsByParent(id, this.authHelper.UserId);
                 return this.Ok(nodes);
             }
             catch (Exception ex)

@@ -4,6 +4,7 @@ import { Redirect } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import Layout from '../Layout';
 import Home from '../Home';
+import Permission from "../Permission/Permission";
 import Employee from "../Employee/Employee";
 import EmployeeDetail from "../Employee/EmployeeDetail";
 import Department from '../Department/Department';
@@ -22,6 +23,9 @@ class MainPage extends React.Component {
             return (
                 <Layout>
                     <Route exact path='/' component={Home} />
+                    <Switch>
+                        <Route path='/permission' component={Permission} />
+                    </Switch>
                     <Switch>
                         <Route path='/employee/detail/:code' component={EmployeeDetail} />
                         <Route path='/employee/create' component={EmployeeDetail} />

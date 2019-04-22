@@ -224,8 +224,8 @@ namespace WebClient.Services.Implements
             return accounts.Select(x => new TreeNode
             {
                 Children = false,
-                Id = "A" + x.Id_NguoiDung,
-                Text = x.UserName,
+                Id = x.Id_NguoiDung,
+                Title = x.UserName,
                 TypeNode = "Account"
             });
         }

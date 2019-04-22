@@ -284,6 +284,14 @@
 }
 .treenode-group .treenode-group {
     margin-left: 24px;
+    /*background-image: url(/images/32px.png);
+    background-position: -292px -4px;
+    background-repeat: repeat-y;*/
+}
+.treenode-group .treenode-group.hasChild {
+    background-image: url(/images/32px.png);
+    background-position: -292px -4px;
+    background-repeat: repeat-y;
 }
 .treenode-close > .treenode-icon {
     background-position: -100px -4px;
@@ -296,6 +304,12 @@
 }
 .treenode-icon.treenode-folder {
     background-position: -260px -4px;
+}
+.treenode-icon.treenode-file {
+    background: url(/images/file_sprite.png) 0 0 no-repeat !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
 }
 .treenode-item {
     display: flex;

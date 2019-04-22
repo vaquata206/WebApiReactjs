@@ -58,7 +58,7 @@ namespace WebClient.Repositories.Interfaces
         /// <param name="parentId">Parent Id</param>
         /// <param name="handler">Who is doing this action</param>
         /// <returns>List node</returns>
-        Task<IEnumerable<DepartmentNodeVM>> GetChildNodes(int parentId, int handler);
+        Task<IEnumerable<DepartmentNodeVM>> GetDepartmentsByParent(int parentId, int handler);
 
         /// <summary>
         /// Get all department that the user is accessed

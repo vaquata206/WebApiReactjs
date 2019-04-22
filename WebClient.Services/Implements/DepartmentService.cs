@@ -154,9 +154,9 @@ namespace WebClient.Services.Implements
         /// <param name="parentId">Parent Id</param>
         /// <param name="handler">Who is doing this action</param>
         /// <returns>List node</returns>
-        public async Task<IEnumerable<DepartmentNodeVM>> GetChildNodes(int parentId, int handler)
+        public async Task<IEnumerable<DepartmentNodeVM>> GetDepartmentsByParent(int parentId, int handler)
         {
-            return await this.departmentRepository.GetChildNodes(parentId, handler);
+            return await this.departmentRepository.GetDepartmentsByParent(parentId, handler);
         }
 
         /// <summary>
@@ -206,6 +206,39 @@ namespace WebClient.Services.Implements
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// Gets child nodes by parent id. Include: Departments/employees
+        /// </summary>
+        /// <param name="id">parent id</param>
+        /// <param name="handler">Who doing this action</param>
+        /// <returns>Tree nodes</returns>
+        public async Task<IEnumerable<TreeNode>> GetChildNodes(int id, int handler)
+        {
+            var departments = await this.departmentRepository.GetDepartmentsByParent(id, handler);
+            List<TreeNode> treeNodes = null;
+            treeNodes = departments.Select(x => new TreeNode
+            {
+                Id = x.Id_DonVi,
+                Children = x.SoLuong_DV_Con > 0,
+                Title = x.Ten_DonVi,
+                TypeNode = "Department"
+            }).ToList();
+
+            var employees = await this.employeeRepository.GetEmployeesByDeparmentId(id);
+            foreach(var employee in employees)
+            {
+                treeNodes.Add(new TreeNode
+                {
+                    Id = employee.Id_NhanVien,
+                    Children = true,
+                    Title = employee.Ho_Ten,
+                    TypeNode = "Employee"
+                });
+            }
+
+            return treeNodes;
         }
 
         private async Task PublishUpdatingDepartment(string oldDepartmentCode, Department department)

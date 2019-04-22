@@ -191,5 +191,24 @@ namespace WebClient.Controllers
                 return this.BadRequest(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Gets treenode accounts
+        /// </summary>
+        /// <param name="id">Employee id</param>
+        /// <returns>Tree node accounts</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetTreeNodeAccounts(int id)
+        {
+            try
+            {
+                var list = await this.accountService.GetTreeNodeAccounts(id);
+                return this.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
     }
 }

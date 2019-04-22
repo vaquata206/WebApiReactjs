@@ -128,14 +128,14 @@ namespace WebClient.Services.Implements
             // feature list belong the employee's permissions
             result = fp.Select(x => new TreeNode
             {
-                Id = x.Id_ChucNang.ToString(),
+                Id = x.Id_ChucNang,
                 TypeNode = "P"
             });
 
             // feature list expand to the employee
             result = result.Concat(fe.Select(x => new TreeNode
             {
-                Id = x.Id_ChucNang.ToString(),
+                Id = x.Id_ChucNang,
                 TypeNode = "E"
             }));
 

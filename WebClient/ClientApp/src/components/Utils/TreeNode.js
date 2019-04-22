@@ -97,11 +97,11 @@ class TreeNode extends React.Component {
         }
 
         return (
-            <div className="treenode-group">
+            <div className={"treenode-group " + (open ? "hasChild" : "")}>
                 <div className={classItem}>
                     <i className="treenode-icon treenode-ocl" onClick={this.eventClickCollap} />
                     <div className={"treenode-anchor" + (node.actived ? " actived" : "")} title={node.subtitle} onClick={this.eventClickItem}>
-                        <i className="treenode-icon treenode-folder " />
+                        {node.icon ? <i className={"treenode-icon " + node.icon} /> : null}
                         <span>{node.title}</span>
                     </div>
                 </div>

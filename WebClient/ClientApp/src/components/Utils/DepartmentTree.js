@@ -17,21 +17,37 @@ class DepartmentTree extends React.Component {
 
     getDataTree(node) {
         var parentId = (node || {}).id || 0;
-        var url = ApiPaths.GetDepartmentByParentId + "?id=" + parentId;
-        return axios.get(url).then(response => {
-            var list = [];
-            response.data.forEach(value => {
-                list.push({
-                    id: value.id_DonVi,
-                    title: value.ten_DonVi,
-                    subtitle: value.ten_DonVi,
-                    children: value.soLuong_DV_Con > 0,
-                    open: false
-                });
-            });
 
-            return list;
-        });
+        if (!this.props.showEmployee) {
+            return axios.get(ApiPaths.GetDepartmentByParentId + "?id=" + parentId).then(response => {
+                var list = [];
+                response.data.forEach(value => {
+                    list.push({
+                        id: value.id_DonVi,
+                        title: value.ten_DonVi,
+                        subtitle: value.ten_DonVi,
+                        children: value.soLuong_DV_Con > 0,
+                        open: false,
+                        icon: "treenode-folder"
+                    });
+                });
+
+                return list;
+            });
+        } else {
+            let url = (node || {}).typeNode === "Employee" ? ApiPaths.GetTreeNodeAccounts : ApiPaths.GetChildNodes;
+            return axios.get(url + "?id=" + parentId).then(response => {
+                response.data.forEach((value, index) => {
+                    if (value.typeNode === "Department") {
+                        value.icon = "treenode-folder";
+                    } else if (value.typeNode === "Employee") {
+                        value.icon = "treenode-file";
+                    }
+                });
+
+                return response.data;
+            });
+        }
     }
 
     render() {

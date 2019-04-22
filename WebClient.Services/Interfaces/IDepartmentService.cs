@@ -38,7 +38,7 @@ namespace WebClient.Services.Interfaces
         /// <param name="parentId">Parent Id</param>
         /// <param name="handler">Who is doing this action</param>
         /// <returns>List node</returns>
-        Task<IEnumerable<DepartmentNodeVM>> GetChildNodes(int parentId, int handler);
+        Task<IEnumerable<DepartmentNodeVM>> GetDepartmentsByParent(int parentId, int handler);
 
         /// <summary>
         /// Gets a department by id
@@ -53,5 +53,13 @@ namespace WebClient.Services.Interfaces
         /// </summary>
         /// <param name="handler">Who is doing this action</param>
         Task<IEnumerable<DepartmentNodeVM>> GetSelectItems(int handler);
+
+        /// <summary>
+        /// Gets child nodes by parent id. Include: Departments/employees
+        /// </summary>
+        /// <param name="id">parent id</param>
+        /// <param name="handler">Who doing this action</param>
+        /// <returns>Tree nodes</returns>
+        Task<IEnumerable<TreeNode>> GetChildNodes(int id, int handler);
     }
 }

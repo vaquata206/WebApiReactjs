@@ -45,7 +45,7 @@ namespace WebClient.Controllers
         /// </summary>
         /// <returns>List menu</returns>
         [HttpGet("[action]")]
-        public async Task<ActionResult> GetMenu()
+        public async Task<IActionResult> GetMenu()
         {
             var features = await this.featureService.GetFeaturesUser(this.authHelper.UserId);
             return this.Ok(this.featureService.TreeFeaturesToMenu(features));

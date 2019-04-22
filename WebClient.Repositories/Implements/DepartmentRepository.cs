@@ -171,7 +171,7 @@ namespace WebClient.Repositories.Implements
         /// <param name="parentId">Parent Id</param>
         /// <param name="handler">Who is doing this action</param>
         /// <returns>List node</returns>
-        public async Task<IEnumerable<DepartmentNodeVM>> GetChildNodes(int parentId, int handler)
+        public async Task<IEnumerable<DepartmentNodeVM>> GetDepartmentsByParent(int parentId, int handler)
         {
             var dyParam = new OracleDynamicParameters();
             dyParam.Add("p_id_dv_cha", OracleDbType.Int64, ParameterDirection.Input, parentId);
