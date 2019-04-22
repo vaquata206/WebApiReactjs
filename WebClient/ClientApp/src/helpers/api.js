@@ -39,5 +39,7 @@ export const ApiPaths = {
     SaveEmployee: "api/employee/save",
 
     GetAccountsByEmployeeId: "api/account/getByEmployeeId",
-    CreateAccount: "api/account/create"
+    CreateAccount: "api/account/create",
+    ResetPassword: "api/account/resetPassword",
+    DeleteAccount: "api/account/delete"
 };

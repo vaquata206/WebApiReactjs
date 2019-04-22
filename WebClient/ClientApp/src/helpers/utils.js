@@ -51,4 +51,4 @@ export const alertHelper = {
         var boundActionCreators = bindActionCreators(creatorAdminAlert, store.dispatch);
         return boundActionCreators.hideAlert();
     }
-}
+};

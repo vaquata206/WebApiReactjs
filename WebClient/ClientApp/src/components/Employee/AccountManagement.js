@@ -86,17 +86,67 @@ class AccountManagement extends React.Component{
     }
 
     deleteAccount(account) {
-        debugger;
         modalHelper.show({
             title: "Xóa tài khoản",
-            body: <p>Bạn có muốn xóa tài khoản <strong>{account.userName}</strong> không.</p>
+            body: <p>Bạn có muốn xóa tài khoản <strong>{account.userName}</strong> không.</p>,
+            okButton: {
+                title: "Xóa",
+                handle: () => {
+                    modalHelper.hide();
+                    this.setState({ loading: true });
+                    axios.get(ApiPaths.DeleteAccount + "?code=" + account.ma_NguoiDung).then(response => {
+                        let { accounts } = this.state;
+                        var index = accounts.indexOf(account);
+
+                        if (index >= 0) {
+                            accounts.splice(index, 1);
+                        }
+
+                        this.setState({ accounts: accounts });
+
+                        alertHelper.show({
+                            variant: "success",
+                            content: <p className="mb-0">Xóa tài khoản <strong>{account.userName}</strong> thành công.</p>
+                        });
+                    }).catch(error => {
+                        let message = typeof error.response.data === "string" ? error.response.data : "";
+                        alertHelper.show({
+                            variant: "danger",
+                            content: <p className="mb-0">Xóa tài khoản <strong>{account.userName}</strong> không thành công. {message}</p>
+                        });
+                    }).then(() => {
+                        this.setState({ loading: false });
+                    });
+                }
+            }
         });
     }
 
     resetPassword(account) {
         modalHelper.show({
             title: "Đặt lại mật khẩu",
-            body: <p>Bạn có muốn đặt lại mật khẩu cho tài khoản <strong>{account.userName}</strong> không.</p>
+            body: <p>Bạn có muốn đặt lại mật khẩu cho tài khoản <strong>{account.userName}</strong> không.</p>,
+            okButton: {
+                title: "Đặt lại",
+                handle: () => {
+                    modalHelper.hide();
+                    this.setState({ loading: true });
+                    axios.get(ApiPaths.ResetPassword + "?code=" + account.ma_NguoiDung).then(response => {
+                        alertHelper.show({
+                            variant: "success",
+                            content: <p className="mb-0">Đặt lại mật khẩu tài khoản <strong>{account.userName}</strong> thành công. Mật khẩu mới lai: <strong>{response.data}</strong></p>
+                        });
+                    }).catch(error => {
+                        let message = typeof error.data.response === "string" ? error.data.response : "";
+                        alertHelper.show({
+                            variant: "danger",
+                            content: <p className="mb-0">Đặt lại mật khẩu tài khoản <strong>{account.userName}</strong> không thành công. {message}</p>
+                        });
+                    }).then(() => {
+                        this.setState({ loading: false });
+                    });
+                }
+            }
         });
     }
 
@@ -209,7 +259,7 @@ class AccountManagement extends React.Component{
                                                     <td><Button variant="success" onClick={() => this.resetPassword(value)}>Đặt lại</Button></td>
                                                     <td><Button variant="danger" onClick={() => this.deleteAccount(value)}>Xóa</Button></td>
                                                 </tr>)
-                                            ) : null
+                                            ) : <tr style={{ textAlign: "center" }}><td colSpan="7">Không có dữ liệu</td></tr>
                                     }
                                 </tbody>
                             </Table>
