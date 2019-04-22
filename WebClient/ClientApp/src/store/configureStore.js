@@ -3,8 +3,6 @@ import thunk from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import * as Counter from './Counter';
-import * as WeatherForecasts from './WeatherForecasts';
 import * as Auth from './Auth';
 import * as Menu from './Menu';
 import * as ConfirmationModal from './ConfirmationModal';
@@ -15,9 +13,7 @@ export default function configureStore(history, initialState) {
         auth: persistReducer(Auth.persistConfig, Auth.reducer),
         menu: Menu.reducer,
         confirmationModal: ConfirmationModal.reducer,
-        adminAlert: AdminAlert.reducer,
-        counter: Counter.reducer,
-        weatherForecasts: WeatherForecasts.reducer
+        adminAlert: AdminAlert.reducer
     };
 
     const middleware = [
