@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using WebClient.Core.Entities;
 using WebClient.Core.Messages;
+using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 using WebClient.Services.Interfaces;
@@ -61,6 +62,22 @@ namespace WebClient.Services.Implements
                 employeVM = this.mapper.Map<EmployeeVM>(employee);
             }
             return employeVM;
+        }
+
+        /// <summary>
+        /// get employee view model by ma nhanvien
+        /// </summary>
+        /// <param name="employeeCode">ma nhanvien</param>
+        /// <returns>the employee view model</returns>
+        public async Task<EmployeeResponse> GetEmployeeByCode(string code)
+        {
+            var employee = await this._employee.GetEmployeeByCode(code);
+            if (employee == null)
+            {
+                throw new Exception("Nhân viên không tồn tại hoặc bạn không có quyền truy cập");
+            }
+
+            return this.mapper.Map<EmployeeResponse>(employee);
         }
 
         /// <summary>
@@ -154,7 +171,7 @@ namespace WebClient.Services.Implements
         /// <param name="employeeVM">the employee VM</param>
         /// <param name="curUser">the current idNhanvien</param>
         /// <returns>the task</returns>
-        public async Task<Employee> SaveEmployee(EmployeeVM employeeVM, int curUser)
+        public async Task<EmployeeResponse> SaveEmployee(EmployeeVM employeeVM, int curUser)
         {
             var department = await this.departmentRepository.GetDepartmentByCode(employeeVM.Ma_DonVi);
 
@@ -187,7 +204,7 @@ namespace WebClient.Services.Implements
                 await PublishCreatingEmployee(emp);
             }
 
-            return emp;
+            return this.mapper.Map<EmployeeResponse>(emp);
         }
 
         /// <summary>

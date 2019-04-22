@@ -8,6 +8,11 @@ class DepartmentTree extends React.Component {
     constructor(props) {
         super(props);
         this.getDataTree = this.getDataTree.bind(this);
+        this.refresh = this.refresh.bind(this);
+    }
+
+    refresh() {
+        this.tree.refresh();
     }
 
     getDataTree(node) {
@@ -31,7 +36,7 @@ class DepartmentTree extends React.Component {
 
     render() {
         return (
-            <Tree nodes={this.getDataTree} onChange={this.props.onChange} />
+            <Tree nodes={this.getDataTree} onChange={this.props.onChange} ref={c => { this.tree = c;}} />
             );
     }
 }

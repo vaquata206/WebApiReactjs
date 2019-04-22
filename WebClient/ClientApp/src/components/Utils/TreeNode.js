@@ -43,7 +43,7 @@ class TreeNode extends React.Component {
 
     getChildren(node) {
         const { children } = this.props;
-        if (node.children && typeof node === "function") {
+        if (node.children && typeof children === "function") {
             return children;
         } else {
             return node.children;

@@ -77,7 +77,7 @@ namespace WebClient.Services.Implements
         /// update information account
         /// </summary>
         /// <param name="account">account with new information</param>
-        void IAccountService.UpdateInformationAccount(Account acc)
+        public void UpdateInformationAccount(Account acc)
         {
             this.accountRepository.UpdateInformationAccount(acc);
         }

@@ -2,31 +2,23 @@
 import axios from 'axios';
 import { bindActionCreators } from 'redux';
 import { store } from "../../store/store";
+import history from "../../store/history";
 import { ApiPaths } from "../../helpers/api";
 import { Tabs, Tab, Container, Row, Col, Button } from 'react-bootstrap';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import CheckButton from 'react-validation/build/button';
-import { required, maxLength } from "./../../helpers/ValidatorTypes";
+import { required, maxLength, maxLength50, maxLength100, maxLength200 } from "./../../helpers/ValidatorTypes";
 import CbbDepartments from "./../Utils/CbbDepartments";
 import { actionCreators as creatorConfirmationModal } from "../../store/ConfirmationModal";
 import { actionCreators as creatorAdminAlert } from "../../store/AdminAlert";
 import { LoadingOverlay, Loader } from 'react-overlay-loader';
 
-const maxLength50 = (value) => {
-    return maxLength(value, 50);
-};
 const maxLength32 = (value) => {
     return maxLength(value, 32);
 };
 const maxLength40 = (value) => {
     return maxLength(value, 40);
-};
-const maxLength100 = (value) => {
-    return maxLength(value, 100);
-};
-const maxLength200 = (value) => {
-    return maxLength(value, 200);
 };
 
 class DepartmentDetail extends React.Component {
@@ -35,25 +27,28 @@ class DepartmentDetail extends React.Component {
         super(props);
         this.state = {
             loading: false,
-            department: {}
+            department: {},
+            isCreate: true
         };
         this.handleChange = this.handleChange.bind(this);
         this.clickSaveDepartment = this.clickSaveDepartment.bind(this);
         this.clickUpdateEmail = this.clickUpdateEmail.bind(this);
+        this.deleteDepartment = this.deleteDepartment.bind(this);
         this.boundActionCreators = bindActionCreators({ ...creatorConfirmationModal, ...creatorAdminAlert }, store.dispatch);
     }
 
     componentWillMount() {
         const id = this.props.match.params.id;
-        if (id !== "0") {
+        if (id) {
             this.setState({ loading: true });
             axios.get(ApiPaths.GetDepartmentById + "?id=" + id).then(response => {
-                this.setState({ department: response.data });
+                this.setState({ department: response.data, isCreate: false });
             }).catch(error => {
                 this.boundActionCreators.showAlert({
                     variant: "danger",
                     content: error.response.data
                 });
+                this.setState({ isCreate: true });
             }).then(() => {
                 this.setState({ loading: false });
             });
@@ -75,19 +70,18 @@ class DepartmentDetail extends React.Component {
 
     clickSaveDepartment(event) {
         event.preventDefault();
-        const { department } = this.state;
-        var parent = this.parent || {};
+        const { department, isCreate } = this.state;
+        var parent = this.cbbDepartments.getSelected() || {};
         this.form.validateAll();
-        debugger
         if (this.checkBtn.context._errors.length === 0) {
             this.boundActionCreators.showModal({
-                title: "Lưu đơn vị",
-                body: <span>Bạn có muốn lưu đơn vị <strong>{department.ten_DonVi || ""}</strong> không?</span>,
+                title: (isCreate ? "Khởi tạo" : "Cập nhật") + " đơn vị",
+                body: <span>Bạn có muốn {isCreate? "khởi tạo": "cập nhật"} đơn vị <strong>{department.ten_DonVi || ""}</strong> không?</span>,
                 cancelButton: {
                     title: "Hủy"
                 },
                 okButton: {
-                    title: "Lưu",
+                    title: isCreate? "Khởi tạo": "Cập nhật",
                     handle: () => {
                         this.boundActionCreators.hideModal();
                         this.setState({ loading: true });
@@ -104,15 +98,20 @@ class DepartmentDetail extends React.Component {
                             Cap_DonVi: 0,
                             Ghi_chu: department.ghi_Chu
                         }).then(response => {
-                            this.setState({ department: response.data });
+                            this.setState({ department: response.data, isCreate: false });
                             this.boundActionCreators.showAlert({
                                 variant: "success",
-                                content: <p className="mb-0">Lưu đơn vị <strong>{department.ten_DonVi}</strong> thành công.</p>
+                                content: <p className="mb-0">{isCreate ? "Khởi tạo" : "Cập nhật"} đơn vị <strong>{department.ten_DonVi}</strong> thành công.</p>
                             });
+
+                            if (isCreate) {
+                                history.replace("/department/detail/" + response.data.id_DonVi);
+                            }
                         }).catch(error => {
+                            const message = typeof error.response.data === "string" ? error.response.data : "";
                             this.boundActionCreators.showAlert({
                                 variant: "danger",
-                                content: "Lưu không thành công. " + error.response.data
+                                content: (isCreate ? "Khởi tạo" : "Cập nhật") + " không thành công. " + message
                             });
                         }).then(() => {
                             this.setState({ loading: false });
@@ -166,8 +165,43 @@ class DepartmentDetail extends React.Component {
         }
     }
 
+    deleteDepartment(event) {
+        event.preventDefault();
+        const { isCreate, department } = this.state;
+        if (isCreate) {
+            return;
+        }
+
+        this.boundActionCreators.showModal({
+            title: "Xóa đơn vị",
+            body: "Bạn có muốn xóa đơn vị này không?",
+            okButton: {
+                title: "Xóa",
+                handle: () => {
+                    this.boundActionCreators.hideModal();
+                    this.setState({ loading: true });
+                    axios.get(ApiPaths.DeleteDepartment + "?code=" + department.ma_DonVi).then(response => {
+                        this.boundActionCreators.showAlert({
+                            variant: "success",
+                            content: <p className="mb-0">Xóa đơn vị <strong>{department.ten_DonVi}</strong> thành công.</p>
+                        });
+                        history.replace("/department");
+                    }).catch(error => {
+                        const message = typeof error.response.data === "string" ? error.response.data : "";
+                        this.boundActionCreators.showAlert({
+                            variant: "danger",
+                            content: "Xóa đơn vị không thành công. " + message
+                        });
+                    }).then(() => {
+                        this.setState({ loading: false });
+                    });
+                }
+            }
+        });
+    }
+
     render() {
-        const { department, loading } = this.state;
+        const { department, loading, isCreate } = this.state;
         return (
             <LoadingOverlay >
                 <section className="content">
@@ -241,12 +275,15 @@ class DepartmentDetail extends React.Component {
                                                             </Col>
                                                             <Col>
                                                                 <div className="form-group row">
-                                                                    <label htmlFor="website" className="col-sm-3 col-form-label">Đơn vị cha:</label>
+                                                                    <label htmlFor="id_DV_Cha" className="col-sm-3 col-form-label">Đơn vị cha:</label>
                                                                     <div className="col-sm-9">
                                                                         <CbbDepartments
+                                                                            name="id_DV_Cha"
                                                                             className="form-control"
+                                                                            defaultOption
                                                                             value={department.id_DV_Cha}
-                                                                            onChange={(d) => { this.parent = d;}}
+                                                                            onChange={this.handleChange}
+                                                                            ref={c => { this.cbbDepartments = c; }}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -273,7 +310,7 @@ class DepartmentDetail extends React.Component {
                                                                             placeholder="Địa chỉ"
                                                                             name="dia_Chi"
                                                                             value={department.dia_Chi || ""}
-                                                                            validations={[maxLength200]}
+                                                                            validations={[required, maxLength200]}
                                                                             onChange={this.handleChange}
                                                                         />
                                                                     </div>
@@ -287,7 +324,7 @@ class DepartmentDetail extends React.Component {
                                                                             placeholder="Số điện thoại"
                                                                             name="dien_Thoai"
                                                                             value={department.dien_Thoai || ""}
-                                                                            validations={[maxLength50]}
+                                                                            validations={[required, maxLength50]}
                                                                             onChange={this.handleChange}
                                                                         />
                                                                     </div>
@@ -318,8 +355,9 @@ class DepartmentDetail extends React.Component {
                                             <div className="box-footer">
                                                 <Container>
                                                     <Row>
-                                                        <Col md={{ span: 2, offset: 10 }}>
-                                                            <Button className="pull-right" variant="primary" onClick={this.clickSaveDepartment}>Lưu</Button>
+                                                        <Col>
+                                                            {!isCreate ? <Button variant="danger" onClick={this.deleteDepartment}>Xóa</Button> : null}
+                                                            <Button className="pull-right" variant="primary" onClick={this.clickSaveDepartment}>{isCreate?"Khởi tạo": "Cập nhật"}</Button>
                                                         </Col>
                                                     </Row>
                                                 </Container>

@@ -12,9 +12,14 @@ class Tree extends React.Component {
             loading: false
         };
         this.changeActived = this.changeActived.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     componentWillMount() {
+        this.refresh();
+    }
+
+    refresh() {
         const { nodes } = this.props;
         if (Array.isArray(nodes)) {
             this.setState({ nodes: nodes });

@@ -31,5 +31,13 @@ export const ApiPaths = {
     GetDepartmentById: "api/department/get",
     GetDepartmentSelectItems: "api/department/getAllSelectItems",
     SaveDepartment: "api/department/save",
-    UpdateEmailDepartment: "api/department/updateEmail"
+    DeleteDepartment: "api/department/delete",
+    UpdateEmailDepartment: "api/department/updateEmail",
+
+    GetEmployeesByDepartmentId: "api/employee/GetByDepartmentId",
+    GetEmployeeByCode: "api/employee/Get",
+    SaveEmployee: "api/employee/save",
+
+    GetAccountsByEmployeeId: "api/account/getByEmployeeId",
+    CreateAccount: "api/account/create"
 };

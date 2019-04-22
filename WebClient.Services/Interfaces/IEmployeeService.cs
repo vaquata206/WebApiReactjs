@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
+using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
 
 namespace WebClient.Services.Interfaces
@@ -13,6 +14,13 @@ namespace WebClient.Services.Interfaces
         /// <param name="idNhanVien">idnhanvien</param>
         /// <returns>the employee view model</returns>
         Task<EmployeeVM> GetEmployVMById(int idNhanVien);
+
+        /// <summary>
+        /// get employee by ma nhanvien
+        /// </summary>
+        /// <param name="employeeCode">ma nhanvien</param>
+        /// <returns>the employee</returns>
+        Task<EmployeeResponse> GetEmployeeByCode(string code);
 
         /// <summary>
         /// get all employees
@@ -55,6 +63,6 @@ namespace WebClient.Services.Interfaces
         /// <param name="employeeVM">the employee VM</param>
         /// <param name="curUser">the current idNhanvien</param>
         /// <returns>the task</returns>
-        Task<Employee> SaveEmployee(EmployeeVM employeeVM,int curUser);
+        Task<EmployeeResponse> SaveEmployee(EmployeeVM employeeVM,int curUser);
     }
 }

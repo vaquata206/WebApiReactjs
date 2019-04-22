@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
 using WebClient.Extensions;
 using WebClient.Extentions;
@@ -46,7 +47,7 @@ namespace WebClient.Controllers
         /// <returns>the View</returns>
         [Permission("employee", "index")]
         [HttpPost("[action]")]
-        public async Task<ActionResult> Save(EmployeeVM employeeVM)
+        public async Task<IActionResult> Save(EmployeeVM employeeVM)
         {
             try
             {
@@ -66,7 +67,7 @@ namespace WebClient.Controllers
         /// <returns>Action result</returns>
         [HttpGet("[action]")]
         [Permission("employee", "index")]
-        public async Task<ActionResult> Delete(string code)
+        public async Task<IActionResult> Delete(string code)
         {
             try
             {
@@ -76,6 +77,49 @@ namespace WebClient.Controllers
             catch (Exception ex)
             {
                 return this.BadRequest(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get employees by department id
+        /// </summary>
+        /// <param name="id">department id</param>
+        /// <returns>List employee</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetByDepartmentId(int id)
+        {
+            try
+            {
+                var employees = await this.employeeService.GetEmployeesByDeparmentId(id);
+                return this.Ok(employees.Select(x => new SubEmployeeResponse
+                {
+                    Ho_Ten = x.Ho_Ten,
+                    Id = x.Id_NhanVien,
+                    Ma_NhanVien = x.Ma_NhanVien
+                }));
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get a employee by employee code
+        /// </summary>
+        /// <param name="code">Employee Code</param>
+        /// <returns>A Employee instance</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Get(string code)
+        {
+            try
+            {
+                var employee = await this.employeeService.GetEmployeeByCode(code);
+                return this.Ok(employee);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
             }
         }
     }

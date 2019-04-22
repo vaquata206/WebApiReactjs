@@ -3,6 +3,7 @@ using System.Globalization;
 using AutoMapper;
 using WebClient.Core.Entities;
 using WebClient.Core.Messages;
+using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
 
 namespace WebClient.Extensions
@@ -28,6 +29,7 @@ namespace WebClient.Extensions
                 .ForMember(dest => dest.NgayCapCMND, opts => opts.MapFrom(src => src.NgayCap_CMND.HasValue ? src.NgayCap_CMND.Value.ToString(ConsHelper.FormatDate) : string.Empty))
                 .ForMember(dest => dest.NoiCapCMND, opts => opts.MapFrom(src => src.NoiCap_CMND))
                 .ForMember(dest => dest.GhiChu, opts => opts.MapFrom(src => src.Ghi_Chu));
+
             this.CreateMap<EmployeeVM, Employee>()
                 .ForMember(dest => dest.Ma_NhanVien, opts => opts.MapFrom(src => src.MaNhanVien))
                 .ForMember(dest => dest.Ho_Ten, opts => opts.MapFrom(src => src.HoTen))
@@ -38,6 +40,8 @@ namespace WebClient.Extensions
                 .ForMember(dest => dest.NgayCap_CMND, opts => opts.MapFrom(src => DateTime.ParseExact(src.NgayCapCMND, ConsHelper.FormatDate, CultureInfo.InvariantCulture)))
                 .ForMember(dest => dest.NoiCap_CMND, opts => opts.MapFrom(src => src.NoiCapCMND))
                 .ForMember(dest => dest.Ghi_Chu, opts => opts.MapFrom(src => src.GhiChu));
+
+            this.CreateMap<EmployeeResponse, Employee>();
 
             // department
             this.CreateMap<Department, DepartmentVM>();

@@ -172,5 +172,24 @@ namespace WebClient.Controllers
             var password = await this.accountService.ResetPassword(code, this.authHelper.UserId);
             return this.Ok(password);
         }
+
+        /// <summary>
+        /// Get accounts by employeeId
+        /// </summary>
+        /// <param name="id">Employee Id</param>
+        /// <returns>List accounts</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetByEmployeeId(int id)
+        {
+            try
+            {
+                var list = await this.accountService.GetAccountsByEmployeeId(id);
+                return this.Ok(list);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
     }
 }
