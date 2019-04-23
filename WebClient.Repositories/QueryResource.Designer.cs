@@ -133,6 +133,33 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADMIN_CHUONGTRINH.GETALL.
+        /// </summary>
+        internal static string App_GetAll {
+            get {
+                return ResourceManager.GetString("App_GetAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ADMIN_CHUONGTRINH.GETUSERAPPS.
+        /// </summary>
+        internal static string App_GetUserApps {
+            get {
+                return ResourceManager.GetString("App_GetUserApps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ADMIN_CHUONGTRINH.SETPERMISSION.
+        /// </summary>
+        internal static string App_SetPermission {
+            get {
+                return ResourceManager.GetString("App_SetPermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ADMIN_DONVI.GET_BY_ID.
         /// </summary>
         internal static string Department_Get_By_Id {

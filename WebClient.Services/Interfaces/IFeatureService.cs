@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
+using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
 
 namespace WebClient.Services.Interfaces
@@ -17,6 +18,12 @@ namespace WebClient.Services.Interfaces
         /// </summary>
         /// <returns>A list feature</returns>
         Task<IEnumerable<Feature>> GetAllAsync();
+
+        /// <summary>
+        /// Get all feature formated node
+        /// </summary>
+        /// <returns>Feture nodes</returns>
+        Task<IEnumerable<FeatureNode>> GetFeatureNodes();
 
         /// <summary>
         /// Save a feature

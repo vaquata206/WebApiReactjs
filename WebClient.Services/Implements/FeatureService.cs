@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
+using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 using WebClient.Services.Interfaces;
@@ -30,6 +31,16 @@ namespace WebClient.Services.Implements
             var list = await this.featureRepository.GetAllAsync();
             list = this.ConvertToTree(list);
             return list;
+        }
+
+        /// <summary>
+        /// Get all feature formated node
+        /// </summary>
+        /// <returns>Feture nodes</returns>
+        public async Task<IEnumerable<FeatureNode>> GetFeatureNodes()
+        {
+            var list = await GetAllAsync();
+            return ConvertFeatureToNode(list);
         }
 
         /// <summary>
@@ -229,5 +240,29 @@ namespace WebClient.Services.Implements
             return list;
         }
 
+        /// <summary>
+        /// Convert a list Feature to node
+        /// </summary>
+        /// <param name="list">List feature</param>
+        /// <returns>Feature nodes</returns>
+        private IEnumerable<FeatureNode> ConvertFeatureToNode(IEnumerable<Feature> features)
+        {
+            var list = new List<FeatureNode>();
+            foreach(var f in features)
+            {
+                var fn = new FeatureNode
+                {
+                    Id = f.Id_ChucNang,
+                    Subtitle = f.Tooltip,
+                    Title = f.Ten_ChucNang,
+                    Type = "Feature",
+                    Children = (f.Children == null || f.Children.Count() == 0) ? null : ConvertFeatureToNode(f.Children)
+                };
+
+                list.Add(fn);
+            }
+
+            return list;
+        }
     }
 }

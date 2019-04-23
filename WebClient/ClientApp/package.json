@@ -12,6 +12,7 @@
     "react-bootstrap": "^1.0.0-beta.8",
     "react-datepicker": "^2.4.0",
     "react-dom": "^16.8.6",
+    "react-lines-ellipsis": "^0.14.1",
     "react-loading": "^2.0.3",
     "react-overlay-loader": "0.0.3",
     "react-redux": "^5.0.6",

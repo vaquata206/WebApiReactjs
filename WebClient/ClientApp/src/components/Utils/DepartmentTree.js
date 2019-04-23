@@ -42,6 +42,8 @@ class DepartmentTree extends React.Component {
                         value.icon = "treenode-folder";
                     } else if (value.typeNode === "Employee") {
                         value.icon = "treenode-file";
+                    } else {
+                        value.icon = null;
                     }
                 });
 

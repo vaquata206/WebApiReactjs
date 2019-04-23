@@ -215,4 +215,13 @@
   <data name="Department_GetAllDepartmentAccessed" xml:space="preserve">
     <value>ADMIN_DONVI.GETALLDEPARTMENTSACCESSED</value>
   </data>
+  <data name="App_GetAll" xml:space="preserve">
+    <value>ADMIN_CHUONGTRINH.GETALL</value>
+  </data>
+  <data name="App_GetUserApps" xml:space="preserve">
+    <value>ADMIN_CHUONGTRINH.GETUSERAPPS</value>
+  </data>
+  <data name="App_SetPermission" xml:space="preserve">
+    <value>ADMIN_CHUONGTRINH.SETPERMISSION</value>
+  </data>
 </root>

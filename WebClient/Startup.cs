@@ -127,6 +127,7 @@ namespace WebClient
             builder.RegisterType<PermissionFeatureService>().As<IPermissionFeatureService>();
             builder.RegisterType<DepartmentService>().As<IDepartmentService>();
             builder.RegisterType<EmployeePermissionService>().As<IEmployeePermissionService>();
+            builder.RegisterType<AppService>().As<IAppService>();
 
             // Register Repositories
             builder.RegisterType<AccountRepository>().As<IAccountRepository>();
@@ -136,6 +137,7 @@ namespace WebClient
             builder.RegisterType<DepartmentRepository>().As<IDepartmentRepository>();
             builder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>();
             builder.RegisterType<EmployeePermissionRepository>().As<IEmployeePermissionRepository>();
+            builder.RegisterType<AppRepository>().As<IAppRepository>();
 
             this.ApplicationContainer = builder.Build();
 

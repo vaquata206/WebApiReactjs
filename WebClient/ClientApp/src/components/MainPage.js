@@ -2,14 +2,15 @@
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
-import Layout from '../Layout';
-import Home from '../Home';
-import Permission from "../Permission/Permission";
-import Employee from "../Employee/Employee";
-import EmployeeDetail from "../Employee/EmployeeDetail";
-import Department from '../Department/Department';
-import DepartmentDetail from '../Department/DepartmentDetail';
-
+import Layout from './Layout';
+import Home from './Home/Home';
+import Permission from "./Permission/Permission";
+import PermissionManager from "./Permission/PermissionManager";
+import AppManager from "./Permission/AppManager";
+import Employee from "./Employee/Employee";
+import EmployeeDetail from "./Employee/EmployeeDetail";
+import Department from './Department/Department';
+import DepartmentDetail from './Department/DepartmentDetail';
 
 class MainPage extends React.Component {
 
@@ -24,6 +25,8 @@ class MainPage extends React.Component {
                 <Layout>
                     <Route exact path='/' component={Home} />
                     <Switch>
+                        <Route path="/permission/apps" component={AppManager} />
+                        <Route path='/permission/list' component={PermissionManager} />
                         <Route path='/permission' component={Permission} />
                     </Switch>
                     <Switch>

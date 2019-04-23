@@ -50,5 +50,23 @@ namespace WebClient.Controllers
             var features = await this.featureService.GetFeaturesUser(this.authHelper.UserId);
             return this.Ok(this.featureService.TreeFeaturesToMenu(features));
         }
+
+        /// <summary>
+        /// Get all featurem
+        /// </summary>
+        /// <returns>List features</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAllNodes()
+        {
+            try
+            {
+                var features = await this.featureService.GetFeatureNodes();
+                return this.Ok(features);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
     }
 }
