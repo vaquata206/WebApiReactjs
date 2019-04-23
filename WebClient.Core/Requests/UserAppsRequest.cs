@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WebClient.Core.Request
+namespace WebClient.Core.Requests
 {
     public class UserAppsRequest
     {

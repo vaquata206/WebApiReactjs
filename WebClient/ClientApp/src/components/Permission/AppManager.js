@@ -42,7 +42,8 @@ class AppManager extends React.Component {
             this.setState({ loading: true, account: node });
             axios.get(ApiPaths.GetUserApps + "?id=" + node.id).then(response => {
                 (apps || []).forEach(app => {
-                    app.selected = this.findAppById(response.data, app.id) >= 0;
+                    debugger
+                    app.selected = this.findAppById(response.data, app.id_ChuongTrinh) >= 0;
                 });
             }).catch(error => {
                 let message = typeof error.response.data === "string" ? error.response.data : "";
@@ -110,7 +111,7 @@ class AppManager extends React.Component {
     findAppById(list, id) {
         const length = (list || []).length;
         for (let i = 0; i < length; i++) {
-            if (list[i].id === id) {
+            if (list[i].id_ChuongTrinh === id) {
                 return i;
             }
         }

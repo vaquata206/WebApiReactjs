@@ -7,6 +7,7 @@ import Home from './Home/Home';
 import Permission from "./Permission/Permission";
 import PermissionManager from "./Permission/PermissionManager";
 import AppManager from "./Permission/AppManager";
+import AppDetail from "./Permission/AppDetail";
 import Employee from "./Employee/Employee";
 import EmployeeDetail from "./Employee/EmployeeDetail";
 import Department from './Department/Department';
@@ -25,6 +26,7 @@ class MainPage extends React.Component {
                 <Layout>
                     <Route exact path='/' component={Home} />
                     <Switch>
+                        <Route path="/permission/apps/add" component={AppDetail} />
                         <Route path="/permission/apps" component={AppManager} />
                         <Route path='/permission/list' component={PermissionManager} />
                         <Route path='/permission' component={Permission} />

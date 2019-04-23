@@ -51,5 +51,6 @@ export const ApiPaths = {
 
     GetApps: "api/app/getAll",
     GetUserApps: "api/app/getUserApps",
-    SetUserApps: "api/app/setPermission"
+    SetUserApps: "api/app/setPermission",
+    SaveApp: "api/app/save"
 };

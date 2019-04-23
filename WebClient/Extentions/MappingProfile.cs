@@ -3,6 +3,7 @@ using System.Globalization;
 using AutoMapper;
 using WebClient.Core.Entities;
 using WebClient.Core.Messages;
+using WebClient.Core.Requests;
 using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
 
@@ -55,6 +56,9 @@ namespace WebClient.Extensions
 
             this.CreateMap<Account, AccountMessage>();
             this.CreateMap<AccountMessage, Account>();
+
+            this.CreateMap<AppRequest, App>();
+            this.CreateMap<App, AppResponse>();
         }
     }
 }

@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using WebClient.Core.Request;
+using WebClient.Core.Requests;
 using WebClient.Core.Responses;
 
 namespace WebClient.Services.Interfaces
 {
     public interface IAppService
     {
+        /// <summary>
+        /// Get a app by app id
+        /// </summary>
+        /// <param name="id">App id</param>
+        /// <returns>App response</returns>
+        Task<AppResponse> Get(int id);
+
         /// <summary>
         /// Get all app
         /// </summary>
@@ -29,5 +36,20 @@ namespace WebClient.Services.Interfaces
         /// <param name="handler">Who doing this action</param>
         /// <returns>A void task</returns>
         Task SetPermission(UserAppsRequest userApps, int handler);
+
+        /// <summary>
+        /// Save a app
+        /// </summary>
+        /// <param name="appRequest">App request</param>
+        /// <param name="handler">Who doing this action</param>
+        /// <returns>A task</returns>
+        Task Save(AppRequest appRequest, int handler);
+
+        /// <summary>
+        /// Delete a app
+        /// </summary>
+        /// <param name="id">App id</param>
+        /// <returns>A task</returns>
+        Task Delete(int id);
     }
 }
