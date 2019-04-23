@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Button, Col, Spinner, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import LinesEllipsis from 'react-lines-ellipsis';
 
 class AppCard extends React.Component {
