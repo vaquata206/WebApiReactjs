@@ -22,7 +22,7 @@ namespace WebClient.Services.Implements
         /// <summary>
         /// employe service interface
         /// </summary>
-        private IEmployeeRepository _employee;
+        private IEmployeeRepository employeeRepository;
 
         /// <summary>
         /// Department repository
@@ -41,7 +41,7 @@ namespace WebClient.Services.Implements
         
         public EmployeeService(IEmployeeRepository employee, IAccountRepository accountRepository, IDepartmentRepository departmentRepository,IRabbitMQService rabbitMQService, IMapper mapper)
         {
-            this._employee = employee;
+            this.employeeRepository = employee;
             this.departmentRepository = departmentRepository;
             this.accountRepository = accountRepository;
             this.rabbitMQService = rabbitMQService;
@@ -55,7 +55,7 @@ namespace WebClient.Services.Implements
         /// <returns>the employee view model</returns>
         public async Task<EmployeeVM> GetEmployVMById(int idNhanVien)
         {
-            var employee = await this._employee.GetEmployeeById(idNhanVien);
+            var employee = await this.employeeRepository.GetEmployeeById(idNhanVien);
             EmployeeVM employeVM = null;
             if (employee != null)
             {
@@ -71,7 +71,7 @@ namespace WebClient.Services.Implements
         /// <returns>the employee view model</returns>
         public async Task<EmployeeResponse> GetEmployeeByCode(string code)
         {
-            var employee = await this._employee.GetEmployeeByCode(code);
+            var employee = await this.employeeRepository.GetEmployeeByCode(code);
             if (employee == null)
             {
                 throw new Exception("Nhân viên không tồn tại hoặc bạn không có quyền truy cập");
@@ -88,7 +88,7 @@ namespace WebClient.Services.Implements
         /// <returns>Employee Viewmodal</returns>
         public async Task<Employee> UpdateInformationEmployee(EmployeeVM employeeVM, int userId)
         {
-            var employee = await this._employee.GetEmployeeByCode(employeeVM.MaNhanVien);
+            var employee = await this.employeeRepository.GetEmployeeByCode(employeeVM.MaNhanVien);
 
             if (employee == null)
             {
@@ -99,7 +99,7 @@ namespace WebClient.Services.Implements
 
             newEmployee.Id_NhanVien = employee.Id_NhanVien;
 
-            newEmployee = await this._employee.UpdateInformationEmployee(newEmployee, userId);
+            newEmployee = await this.employeeRepository.UpdateInformationEmployee(newEmployee, userId);
 
             await this.PublishUpdatingEmployee(employee.Ma_NhanVien, newEmployee);
 
@@ -113,7 +113,7 @@ namespace WebClient.Services.Implements
         /// <returns>The employee instance</returns>
         public async Task<Employee> GetEmployeeAsync(int employeeId)
         {
-            return await this._employee.GetEmployeeById(employeeId);
+            return await this.employeeRepository.GetEmployeeById(employeeId);
         }
 
         /// get all employees
@@ -121,7 +121,7 @@ namespace WebClient.Services.Implements
         /// <returns>lst employees</returns>
         public async Task<IEnumerable<Employee>> GetAllEmployees()
         {
-            return await _employee.GetAllEmployess();
+            return await employeeRepository.GetAllEmployess();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace WebClient.Services.Implements
         /// <returns>List employee</returns>
         public async Task<IEnumerable<Employee>> GetEmployeesByDeparmentId(int deparmentId)
         {
-            return await _employee.GetEmployeesByDeparmentId(deparmentId);
+            return await employeeRepository.GetEmployeesByDeparmentId(deparmentId);
         }
 
         /// <summary>
@@ -142,13 +142,12 @@ namespace WebClient.Services.Implements
         /// <returns>the task</returns>
         public async Task<Employee> DeleteEmployeeByCode(string employeeCode, int currUserId)
         {
-            var employee = await this._employee.GetEmployeeByCode(employeeCode);
-            if (employee == null)
-            {
-                throw new Exception("Nhân viên này không tồn tại");
-            }
+            var employee = await this.employeeRepository.GetEmployeeByCode(employeeCode);
 
-            employee = await this._employee.DeteteEmployee(employee, currUserId);
+            // validate employee
+            await ValidateEmployeeForDelete(employee);
+
+            employee = await this.employeeRepository.DeteteEmployee(employee, currUserId);
 
             await this.PublishUpdatingEmployee(employee.Ma_NhanVien, employee);
 
@@ -186,7 +185,7 @@ namespace WebClient.Services.Implements
             emp.Id_DonVi = department.Id_DonVi;
             if (employeeVM.MaNhanVien != null)
             {
-                var oldEmployee = await this._employee.GetEmployeeByCode(employeeVM.MaNhanVien);
+                var oldEmployee = await this.employeeRepository.GetEmployeeByCode(employeeVM.MaNhanVien);
                 if (oldEmployee == null)
                 {
                     throw new Exception("Nhân viên không tồn tại");
@@ -194,17 +193,40 @@ namespace WebClient.Services.Implements
 
                 emp.Id_NhanVien = oldEmployee.Id_NhanVien;
 
-                emp = await this._employee.UpdateInformationEmployee(emp, curUser);
+                emp = await this.employeeRepository.UpdateInformationEmployee(emp, curUser);
                 await PublishUpdatingEmployee(employeeVM.MaNhanVien, emp);
             }
             else
             {
                 emp.Ma_NhanVien = "NV" + DateTime.Now.Ticks;
-                emp = await this._employee.InsertEmployee(emp,curUser);
+                emp = await this.employeeRepository.InsertEmployee(emp,curUser);
                 await PublishCreatingEmployee(emp);
             }
 
             return this.mapper.Map<EmployeeResponse>(emp);
+        }
+
+        /// <summary>
+        /// Validate a employee for delete
+        /// </summary>
+        /// <param name="employee">Employee</param>
+        /// <returns>A Task</returns>
+        private async Task ValidateEmployeeForDelete(Employee employee)
+        {
+            if (employee == null)
+            {
+                throw new Exception("Nhân viên này không tồn tại");
+            }
+
+            // can't remove employee that has admin account
+            var accounts = await this.accountRepository.GetAccountsByEmployeeId(employee.Id_NhanVien);
+            foreach (var account in accounts)
+            {
+                if (account.Quan_Tri == 1)
+                {
+                    throw new Exception("Không thể xóa nhân viên này");
+                }
+            }
         }
 
         /// <summary>
@@ -215,7 +237,7 @@ namespace WebClient.Services.Implements
         private async Task ValidationEmployee(Employee emp)
         {
             IEnumerable<Employee> employees;
-            employees = await this._employee.GetAllEmployess();
+            employees = await this.employeeRepository.GetAllEmployess();
             var valSoCmnd = employees.Where(x => x.Ma_NhanVien != emp.Ma_NhanVien && x.So_CMND.Equals(emp.So_CMND)).Count();
             if(valSoCmnd > 0)
             {

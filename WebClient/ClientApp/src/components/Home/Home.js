@@ -1,9 +1,8 @@
 ﻿import React from 'react';
-import { Button, Col, Spinner, Card } from 'react-bootstrap';
-import { LoadingOverlay, Loader } from 'react-overlay-loader';
+import { Col } from 'react-bootstrap';
 import axios from 'axios';
 import { ApiPaths } from "../../helpers/api";
-import { modalHelper, alertHelper } from "../../helpers/utils";
+import { alertHelper } from "../../helpers/utils";
 import AppCard from "./AppCard";
 
 class Home extends React.Component {

@@ -13,6 +13,7 @@ class AppManager extends React.Component {
         this.state = {
             account: null,
             loading: false,
+            btnLoading: false,
             apps: []
         };
         this.onDepartmentChange = this.onDepartmentChange.bind(this);
@@ -74,7 +75,7 @@ class AppManager extends React.Component {
                 okButton: {
                     title: "Cấp quyền",
                     handle: () => {
-                        this.setState({ loading: true });
+                        this.setState({ btnLoading: true });
                         modalHelper.hide();
                         axios.post(ApiPaths.SetUserApps, {
                             Id_NguoiDung: account.id,
@@ -91,7 +92,7 @@ class AppManager extends React.Component {
                                 content: <p className="mb-0">Cấp quyền cho tài khoản <strong>{account.title}</strong> không thành công. {message}</p>
                             });
                         }).then(() => {
-                            this.setState({ loading: false });
+                            this.setState({ btnLoading: false });
                         });
                     }
                 }
@@ -121,7 +122,7 @@ class AppManager extends React.Component {
     }
 
     render() {
-        const { apps, loading, account } = this.state;
+        const { apps, loading, account, btnLoading } = this.state;
         return (
             <section className="content">
                 <Row>
@@ -188,7 +189,17 @@ class AppManager extends React.Component {
                             <div className="box-footer">
                                 <Row>
                                     <Col>
-                                        <Button variant="primary" className="pull-right" size="sm" disabled={loading || !account} onClick={this.onSaveApps}>Cấp quyền</Button>
+                                        <Button variant="primary" className="pull-right" size="sm" disabled={loading || !account || btnLoading} onClick={this.onSaveApps}>
+                                            {btnLoading ?
+                                                <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                />
+                                                : "Cấp quyền"}
+                                        </Button>
                                     </Col>
                                 </Row>
                             </div>

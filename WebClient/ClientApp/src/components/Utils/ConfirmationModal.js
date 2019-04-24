@@ -38,5 +38,4 @@ class ConfirmationModal extends React.Component {
 
 export default connect(
     state => state.confirmationModal ? { confirmationModal: state.confirmationModal } : { confirmationModal: null },
-    dispatch => bindActionCreators(actionCreators, dispatch))
-    (ConfirmationModal);
+    dispatch => bindActionCreators(actionCreators, dispatch))(ConfirmationModal);

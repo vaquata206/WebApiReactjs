@@ -6,7 +6,6 @@ import { ApiPaths } from "../../helpers/api";
 import { actionCreators as creatorConfirmationModal } from "../../store/ConfirmationModal";
 import { actionCreators as creatorAdminAlert } from "../../store/AdminAlert";
 import { bindActionCreators } from 'redux';
-import { store } from "../../store/store";
 import { Link } from 'react-router-dom';
 import { LoadingOverlay, Loader } from 'react-overlay-loader';
 

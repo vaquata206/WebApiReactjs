@@ -21,7 +21,26 @@ class AppDetail extends React.Component {
         };
 
         this.onClickSave = this.onClickSave.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentWillMount() {
+        var id = this.props.match.params.id;
+        if (id) {
+            this.setState({ loading: true });
+            axios.get(ApiPaths.GetAppById + "?id=" + id).then(response => {
+                this.setState({ app: response.data, isCreate: false });
+            }).catch(error => {
+                let message = typeof error.response.data === "string" ? error.response.data : "";
+                alertHelper.show({
+                    variant: "danger",
+                    content: "Lấy chương trình không thành công. " + message
+                });
+            }).then(() => {
+                this.setState({ loading: false });
+            });
+        }
     }
 
     onClickSave() {
@@ -54,6 +73,37 @@ class AppDetail extends React.Component {
                             variant: "danger",
                             content: <p className="mb-0">{isCreate ? "Tạo mới" : "Cập nhật"} chương trình <strong>{app.ten_ChuongTrinh}</strong> không thành công. {message}</p>
                         });
+                    }).then(() => {
+                        this.setState({ loading: false });
+                    });
+                }
+            }
+        });
+    }
+
+    onClickDelete() {
+        const { isCreate, app } = this.state;
+        if (isCreate || !app.id_ChuongTrinh) {
+            return;
+        }
+
+        modalHelper.show({
+            title: "Xóa chương trình",
+            body: "Bạn có muốn xóa chương trình này không.",
+            okButton: {
+                title: "Xóa",
+                handle: () => {
+                    modalHelper.hide();
+                    this.setState({ loading: true });
+                    axios.get(ApiPaths.DeleteApp + "?id=" + app.id_ChuongTrinh).then(response => {
+                        alertHelper.show({
+                            vairant: "success",
+                            content: <p className="mb-0">Xóa chương trình <strong>{app.ten_ChuongTrinh}</strong> thành công.</p>
+                        });
+
+                        history.replace("/permission/apps");
+                    }).catch(error => {
+                        alertHelper.showError(error, "Xóa chương trình không thành công");
                     }).then(() => {
                         this.setState({ loading: false });
                     });
@@ -166,7 +216,7 @@ class AppDetail extends React.Component {
                                     <Row>
                                         <Col>
                                             <Button className="pull-right" variant="primary" onClick={this.onClickSave}>{isCreate ? "Tạo mới" : "Cập nhật"}</Button>
-                                            {!isCreate? <Button variant="danger" >Xóa</Button>: null}
+                                            {!isCreate ? <Button variant="danger" onClick={this.onClickDelete} >Xóa</Button> : null}
                                         </Col>
                                     </Row>
                                 </div>

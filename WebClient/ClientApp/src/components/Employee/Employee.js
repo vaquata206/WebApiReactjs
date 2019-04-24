@@ -4,10 +4,8 @@ import { ApiPaths } from "../../helpers/api";
 import { Link } from "react-router-dom";
 import { Row, Col, Table, Button } from 'react-bootstrap';
 import DepartmentTree from "./../Utils/DepartmentTree";
-import { bindActionCreators } from 'redux';
-import { store } from "../../store/store";
-import { actionCreators } from "./../../store/AdminAlert";
 import { LoadingOverlay, Loader } from 'react-overlay-loader';
+import { modalHelper, alertHelper } from "../../helpers/utils";
 
 class Employee extends React.Component {
 
@@ -18,7 +16,7 @@ class Employee extends React.Component {
             employees: [],
             loading: false
         };
-        this.boundActionCreators = bindActionCreators(actionCreators, store.dispatch);
+        this.clickDeleteEmployee = this.clickDeleteEmployee.bind(this);
     }
 
     changeDepartmentSelected(d) {
@@ -26,12 +24,47 @@ class Employee extends React.Component {
         axios.get(ApiPaths.GetEmployeesByDepartmentId + "?id=" + d.id).then(response => {
             this.setState({ employees: response.data });
         }).catch(error => {
-            this.boundActionCreators.showAlert({
+            alertHelper.show({
                 variant: "danger",
                 content: error.response.data
             });
         }).then(() => {
             this.setState({ loading: false });
+        });
+    }
+
+    clickDeleteEmployee(employee) {
+        const { loading } = this.state;
+
+        if (loading || !employee.ma_NhanVien) {
+            return;
+        }
+
+        modalHelper.show({
+            title: "Xóa nhân viên",
+            body: <p>Bạn có muốn xóa nhân viên <strong>{employee.ho_Ten}</strong> không?</p>,
+            okButton: {
+                title: "Xóa",
+                handle: () => {
+                    this.setState({ loading: true });
+                    modalHelper.hide();
+
+                    axios.get(ApiPaths.DeleteEmployee + "?code=" + employee.ma_NhanVien).then(response => {
+                        alertHelper.show({
+                            variant: "success",
+                            content: <p className="mb-0">Xóa nhân viên <strong>{employee.ho_Ten}</strong> thành công.</p>
+                        });
+                    }).catch(error => {
+                        const message = typeof error.response.data === "string" ? error.response.data : "";
+                        alertHelper.show({
+                            variant: "danger",
+                            content: <p className="mb-0">Xóa nhân viên <strong>{employee.ho_Ten}</strong> không thành công. {message}</p>
+                        });
+                    }).then(() => {
+                        this.setState({ loading: false });
+                    });
+                }
+            }
         });
     }
 
@@ -82,7 +115,7 @@ class Employee extends React.Component {
                                                             <td>{e.ma_NhanVien}</td>
                                                             <td>{e.ho_Ten}</td>
                                                             <td><Link to={"detail/" + e.ma_NhanVien} className="btn btn-success btn-sm">Xem</Link></td>
-                                                            <td><Button variant="danger" size="sm">Xóa</Button></td>
+                                                            <td><Button variant="danger" size="sm" onClick={() => this.clickDeleteEmployee(e)}>Xóa</Button></td>
                                                         </tr>)
                                                     ) :
                                                     <tr><td colSpan="5" style={{ textAlign: "center" }}><span>Không có nhân viên</span></td></tr>

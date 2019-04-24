@@ -21,9 +21,9 @@ class AppCard extends React.Component {
                 <Card.Img className="appcard-img" variant="top" src="images/app-icon-default.png" style={{ backgroundColor: "#E2E2E2", height: "183px" }} />
                 <Card.Body>
                     <Card.Title><a href={app.url} target="_blank">{app.ten_ChuongTrinh}</a></Card.Title>
-                    <Card.Text title={app.mo_Ta}>
-                        <LinesEllipsis text={app.mo_Ta} maxLine="4"/>
-                    </Card.Text>
+                    <div className="card-text" title={app.mo_Ta}>
+                        <LinesEllipsis text={app.mo_Ta} maxLine="4" component="p"/>
+                    </div>
                 </Card.Body>
             </Card>
             );

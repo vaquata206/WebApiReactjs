@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import axios from 'axios';
 import { ApiPaths } from "../../helpers/api";
-import { modalHelper, alertHelper } from "../../helpers/utils";
-import { Row, Col, Table, Button, Spinner  } from 'react-bootstrap';
+import { alertHelper } from "../../helpers/utils";
+import { Row, Col, Table, Spinner  } from 'react-bootstrap';
 import DepartmentTree from "./../Utils/DepartmentTree";
 
 class Permission extends React.Component {

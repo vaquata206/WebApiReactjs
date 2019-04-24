@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import axios from 'axios';
-import { Spinner, Button } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { ApiPaths } from "../../helpers/api";
 import { store } from "../../store/store";
 import { bindActionCreators } from 'redux';
@@ -60,7 +60,7 @@ class CbbDepartments extends React.Component {
 
     getSelected() {
         const { departments } = this.state;
-        const value = parseInt(this.props.value);
+        const value = parseInt(this.props.value, 10);
         
         var length = (departments || []).length;
         for (let i = 0; i < length; i++) {

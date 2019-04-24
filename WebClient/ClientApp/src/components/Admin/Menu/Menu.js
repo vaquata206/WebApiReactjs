@@ -3,27 +3,22 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actionCreators } from '../../../store/Menu';
 import MenuItem from './MenuItem';
-import axios from 'axios';
 
 class Menu extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     componentWillMount() {
-        axios.get("api/feature/getmenu").then(response => {
-            response.data.unshift({
-                m_ID: 0,
-                controler_Name: "/",
-                action_Name: null,
-                m_Name: "Trang chủ",
-                actived: true,
-                opened: false
-            });
+        //axios.get("api/feature/getmenu").then(response => {
+        //    response.data.unshift({
+        //        m_ID: 0,
+        //        controler_Name: "/",
+        //        action_Name: null,
+        //        m_Name: "Trang chủ",
+        //        actived: true,
+        //        opened: false
+        //    });
 
-            this.props.SetMenu(response.data);
-        });
+        //    this.props.SetMenu(response.data);
+        //});
     }
 
     isActived(key) {

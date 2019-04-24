@@ -38,7 +38,6 @@ class Layout extends React.Component {
     }
 
     render() {
-        let { userName, department } = this.props.user;
         return (
             <div className={"hold-transition skin-blue sidebar-mini" + (this.state.isSidebarCollapsed ? " sidebar-collapse" : "")}>
                 <div className="wrapper" >

@@ -27,6 +27,9 @@ export function configAxios() {
 }
 
 export const ApiPaths = {
+    features: {
+        getMenu: "api/feature/getmenu"
+    },
     GetFeatureNodes: "api/feature/GetAllNodes",
 
     GetChildNodes: "api/department/getChildNodes",
@@ -40,6 +43,7 @@ export const ApiPaths = {
     GetEmployeesByDepartmentId: "api/employee/GetByDepartmentId",
     GetEmployeeByCode: "api/employee/Get",
     SaveEmployee: "api/employee/save",
+    DeleteEmployee: "api/employee/delete",
 
     GetAccountsByEmployeeId: "api/account/getByEmployeeId",
     CreateAccount: "api/account/create",
@@ -52,5 +56,7 @@ export const ApiPaths = {
     GetApps: "api/app/getAll",
     GetUserApps: "api/app/getUserApps",
     SetUserApps: "api/app/setPermission",
-    SaveApp: "api/app/save"
+    SaveApp: "api/app/save",
+    GetAppById: "api/app/get",
+    DeleteApp: "api/app/delete"
 };

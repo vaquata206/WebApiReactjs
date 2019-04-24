@@ -1,21 +1,18 @@
 ﻿import React from 'react';
 import axios from 'axios';
-import { bindActionCreators } from 'redux';
-import { store } from "../../store/store";
 import history from "../../store/history";
 import { ApiPaths } from "../../helpers/api";
 import { dateHelper } from "../../helpers/utils";
 import { LoadingOverlay, Loader } from 'react-overlay-loader';
-import { Row, Col, Tabs, Tab, Button, Table } from 'react-bootstrap';
+import { Row, Col, Tabs, Tab, Button } from 'react-bootstrap';
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
 import CheckButton from 'react-validation/build/button';
 import DatePicker from 'react-datepicker';
 import { required, maxLength, maxLength50, maxLength100, maxLength200 } from "./../../helpers/ValidatorTypes";
-import { actionCreators as creatorConfirmationModal } from "../../store/ConfirmationModal";
-import { actionCreators as creatorAdminAlert } from "../../store/AdminAlert";
 import CbbDepartments from "../Utils/CbbDepartments";
 import AccountManagement from "./AccountManagement";
+import { modalHelper, alertHelper } from "../../helpers/utils";
 
 import "react-datepicker/dist/react-datepicker.css";
 import 'react-overlay-loader/styles.css';
@@ -39,9 +36,9 @@ class EmployeeDetail extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeBirthday = this.handleChangeBirthday.bind(this);
+        this.clickDeleteEmployee = this.clickDeleteEmployee.bind(this);
         this.clickSaveEmployee = this.clickSaveEmployee.bind(this);
         this.setStateEmployee = this.setStateEmployee.bind(this);
-        this.boundActionCreators = bindActionCreators({ ...creatorConfirmationModal, ...creatorAdminAlert }, store.dispatch);
     }
 
     componentWillMount() {
@@ -106,13 +103,13 @@ class EmployeeDetail extends React.Component {
         var department = this.cbbDepartment.getSelected();
         this.form.validateAll();
         if (this.checkBtn.context._errors.length === 0) {
-            this.boundActionCreators.showModal({
-                title: "Lưu nhân viên",
+            modalHelper.show({
+                title: (isCreate ? "Khởi tạo" : "Cập nhật") + " nhân viên",
                 body: <span>Bạn có muốn <strong>{isCreate ? "khởi tạo" : "cập nhật"}</strong> nhân viên <strong>{employee.ho_Ten || ""}</strong> không?</span>,
                 okButton: {
                     title: isCreate? "Khởi tạo" : "Cập nhật",
                     handle: () => {
-                        this.boundActionCreators.hideModal();
+                        modalHelper.hide();
                         this.setState({ loading: true });
                         axios.post(ApiPaths.SaveEmployee, {
                             MaNhanVien: employee.ma_NhanVien,
@@ -128,9 +125,9 @@ class EmployeeDetail extends React.Component {
                             Chuc_Vu: employee.chuc_Vu,
                             GhiChu: employee.ghi_Chu
                         }).then(response => {
-                            this.boundActionCreators.showAlert({
+                            alertHelper.show({
                                 variant: "success",
-                                content: <p><strong>{isCreate ? "Khởi tạo" : "Cập nhật"}</strong> nhân viên <strong>{response.data.ho_Ten}</strong> thành công.</p>
+                                content: <p className="mb-0"><strong>{isCreate ? "Khởi tạo" : "Cập nhật"}</strong> nhân viên <strong>{response.data.ho_Ten}</strong> thành công.</p>
                             });
                             if (isCreate) {
                                 history.replace("/employee/detail/" + response.data.ma_NhanVien);
@@ -138,7 +135,7 @@ class EmployeeDetail extends React.Component {
                             this.setStateEmployee(response.data);
                         }).catch(error => {
                             let message = typeof error.response.data === "string" ? error.response.data : "";
-                            this.boundActionCreators.showAlert({
+                            alertHelper.show({
                                 variant: "danger",
                                 content: (isCreate ? "Khởi tạo" : "Cập nhật") + " nhân viên không thành công. " + message
                             });
@@ -149,6 +146,41 @@ class EmployeeDetail extends React.Component {
                 }
             });
         }
+    }
+
+    clickDeleteEmployee() {
+        const { loading, employee } = this.state;
+        if (loading || !employee.id_NhanVien) {
+            return;
+        }
+
+        modalHelper.show({
+            title: "Xóa nhân viên",
+            body: "Bạn có muốn xóa nhân viên này không?",
+            okButton: {
+                title: "Xóa",
+                handle: () => {
+                    this.setState({ loading: true });
+                    modalHelper.hide();
+
+                    axios.get(ApiPaths.DeleteEmployee + "?code=" + employee.ma_NhanVien).then(response => {
+                        alertHelper.show({
+                            variant: "success",
+                            content: <p className="mb-0">Xóa nhân viên <strong>{employee.ho_Ten}</strong> thành công.</p>
+                        });
+                        history.replace("/employee");
+                    }).catch(error => {
+                        const message = typeof error.response.data === "string" ? error.response.data : "";
+                        alertHelper.show({
+                            variant: "danger",
+                            content: <p className="mb-0">Xóa nhân viên <strong>{employee.ho_Ten}</strong> không thành công. {message}</p>
+                        });
+                    }).then(() => {
+                        this.setState({ loading: false });
+                    });
+                }
+            }
+        });
     }
 
     render() {
@@ -326,7 +358,7 @@ class EmployeeDetail extends React.Component {
                                             <div className="box-footer">
                                                 <Row>
                                                     <Col>
-                                                        <Button variant="danger">Xóa</Button>
+                                                        <Button variant="danger" onClick={this.clickDeleteEmployee}>Xóa</Button>
                                                         <Button variant="primary" className="pull-right" onClick={this.clickSaveEmployee}>{isCreate? "Khởi tạo": "Cập nhật"}</Button>
                                                     </Col>
                                                 </Row>

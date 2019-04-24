@@ -27,7 +27,7 @@ function SetMenu(payload) {
 }
 function ActiveItemMapPath() {
     return {
-        type: activeItemMapPathType,
+        type: activeItemMapPathType
     };
 }
 export const actionCreators = {

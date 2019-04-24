@@ -46,6 +46,11 @@ namespace WebClient.Services.Implements
         /// <returns>App response</returns>
         public async Task<AppResponse> Get(int id){
             var app = await this.appRepository.GetByIdAsync(id);
+            if (app == null)
+            {
+                throw new Exception("Chương trình không tồn tại");
+            }
+
             return this.mapper.Map<AppResponse>(app);
         }
 
@@ -93,6 +98,7 @@ namespace WebClient.Services.Implements
 
                 app.Id_ChuongTrinh = old.Id_ChuongTrinh;
                 app.Ma_ChuongTrinh = old.Ma_ChuongTrinh;
+                app.Tinh_Trang = 1;
 
                 await this.appRepository.UpdateAsync(app);
             }

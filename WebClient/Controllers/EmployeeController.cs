@@ -56,7 +56,7 @@ namespace WebClient.Controllers
             }
             catch (Exception ex)
             {
-                return this.BadRequest(ex);
+                return this.BadRequest(ex.Message);
             }
         }
 
@@ -76,7 +76,7 @@ namespace WebClient.Controllers
             }
             catch (Exception ex)
             {
-                return this.BadRequest(ex);
+                return this.BadRequest(ex.Message);
             }
         }
 

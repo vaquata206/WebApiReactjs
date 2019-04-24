@@ -25,8 +25,8 @@ export const dateHelper = {
         return format.replace(/dd/, ("0" + date.getDate()).slice(-2)).replace(/MM/, ("0" + (date.getMonth() + 1)).slice(-2)).replace(/yyyy/, date.getFullYear());
     },
     ConvertStringToDate: (date, format) => {
-        let d = date.split(/[.,\/ -]/);
-        let f = format.split(/[.,\/ -]/);
+        let d = date.split(/[.,/ -]/);
+        let f = format.split(/[.,/ -]/);
         return new Date(d[f.indexOf("yyyy")], d[f.indexOf("MM")], d[f.indexOf("dd")]);
     }
 };
@@ -50,5 +50,15 @@ export const alertHelper = {
     hide: () => {
         var boundActionCreators = bindActionCreators(creatorAdminAlert, store.dispatch);
         return boundActionCreators.hideAlert();
+    },
+    showError: (error, message) => {
+        const m = typeof error.response.data === "string" ? error.response.data : "";
+        var config = {
+            variant: "danger",
+            content: message + "." + m
+        };
+
+        var boundActionCreators = bindActionCreators(creatorAdminAlert, store.dispatch);
+        return boundActionCreators.showAlert(config);
     }
 };
