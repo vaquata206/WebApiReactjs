@@ -82,11 +82,12 @@ function ActiveMenuItems(menu) {
     l = l > 2 ? 2 : l;
     switch (l) {
         case 2:
+            controller = paths[0] || null;
             actionName = paths[1] || null;
             break;
         case 1:
             controller = paths[0] || null;
-            actionName = paths[1] || null;
+            actionName = null;
             break;
         default:
             controller = null;
