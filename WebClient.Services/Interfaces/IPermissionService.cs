@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
+using WebClient.Core.Requests;
 using WebClient.Core.ViewModels;
 
 namespace WebClient.Services.Interfaces
@@ -13,8 +14,9 @@ namespace WebClient.Services.Interfaces
         /// Add a permission
         /// </summary>
         /// <param name="permission">The permission</param>
+        /// <param name="handler">Who is doing this action</param>
         /// <returns>A task</returns>
-        Task<Permission> SavePermissionAsync(PermissionVM permission);
+        Task<Permission> SavePermissionAsync(PermissionRequest permission, int handler);
 
         /// <summary>
         /// Get the permission by id

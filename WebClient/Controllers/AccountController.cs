@@ -59,9 +59,12 @@ namespace WebClient.Controllers
                 return this.BadRequest("Tên đăng nhập hoặc mập khẩu không đúng");
             }
 
+            var token = AuthHelper.BuildToken(account);
+            this.Response.Cookies.Append("token", token);
+
             return this.Ok(new
             {
-                token = AuthHelper.BuildToken(account),
+                token = token,
                 username = account.UserName,
                 name = account.EmployeeName,
                 department = account.DepartmentName,

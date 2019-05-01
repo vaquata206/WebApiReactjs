@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace WebClient.Core.ViewModels
+namespace WebClient.Core.Requests
 {
-    public class PermissionVM
+    public class PermissionRequest
     {
         public int? Id_Quyen { get; set; }
 

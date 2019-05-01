@@ -30,6 +30,13 @@ export const ApiPaths = {
     features: {
         getMenu: "api/feature/getmenu"
     },
+    permissions: {
+        GetAll: "api/permission/getAll",
+        Get: "api/permission/get",
+        Delete: "api/permission/delete",
+        Save: "api/permission/save"
+    },
+
     GetFeatureNodes: "api/feature/GetAllNodes",
 
     GetChildNodes: "api/department/getChildNodes",

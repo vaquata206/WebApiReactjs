@@ -4,6 +4,7 @@ import { ApiPaths } from "../../helpers/api";
 import { alertHelper } from "../../helpers/utils";
 import { Row, Col, Table, Spinner  } from 'react-bootstrap';
 import DepartmentTree from "./../Utils/DepartmentTree";
+import { Link } from "react-router-dom";
 
 class Permission extends React.Component {
 
@@ -31,14 +32,20 @@ class Permission extends React.Component {
     }
 
     onDepartmentChange(node) {
-        const { permissions, loading } = this.state;
+        const { permissions, loading, account } = this.state;
         if (loading || (permissions || []).length === 0) {
             return;
+        }
+
+        if (node.typeNode === "Account") {
+            this.setState({ account: node });
+        } else {
+            this.setState({ account: null });
         }
     }
 
     render() {
-        const { permissions, loading } = this.state;
+        const { permissions, loading, account } = this.state;
         return (
             <section className="content">
                 <Row>
@@ -80,17 +87,19 @@ class Permission extends React.Component {
                                                     </Spinner>
                                                 </td>
                                             </tr> :
-                                            (permissions || []).length > 0 ? permissions.map((value, index) => (
-                                                <tr>
-                                                    <td>{index + 1}</td>
-                                                    <td>{value.ma_Quyen}</td>
-                                                    <td>{value.ten_Quyen}</td>
-                                                    <td><input type="checkbox" /></td>
-                                                </tr>
-                                            )) :
-                                                <tr style={{ textAlign: "center" }}>
-                                                    <td colSpan="4">Không có dữ liệu</td>
-                                                </tr>
+                                            (account ?
+                                                (permissions || []).length > 0 ? permissions.map((value, index) => (
+                                                    <tr key={value.id_Quyen}>
+                                                        <td>{index + 1}</td>
+                                                        <td><Link to={"/permission/detail/" + value.id_Quyen}>{value.ma_Quyen}</Link></td>
+                                                        <td>{value.ten_Quyen}</td>
+                                                        <td><input type="checkbox" /></td>
+                                                    </tr>
+                                                )) :
+                                                    <tr style={{ textAlign: "center" }}>
+                                                        <td colSpan="4">Không có dữ liệu</td>
+                                                    </tr>
+                                                : <tr style={{ textAlign: "center" }}><td colSpan="4">Vui lòng chọn một tài khoản</td></tr>)
                                         }
                                     </tbody>
                                 </Table>

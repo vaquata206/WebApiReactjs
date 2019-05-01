@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
 using WebClient.Core.Helper;
+using WebClient.Core.Requests;
 using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 using WebClient.Services.Interfaces;
@@ -23,15 +24,16 @@ namespace WebClient.Services.Implements
         /// <summary>
         /// Add a permission
         /// </summary>
-        /// <param name="permissionVM">The permission</param>
+        /// <param name="permission">The permission</param>
+        /// <param name="handler">Who is doing this action</param>
         /// <returns>A Permission</returns>
-        public async Task<Permission> SavePermissionAsync(PermissionVM permissionVM)
+        public async Task<Permission> SavePermissionAsync(PermissionRequest permissionVM, int handler)
         {
             Permission permission;
             if (permissionVM.Id_Quyen.HasValue && permissionVM.Id_Quyen.Value != 0)
             {
                 // edit
-                permission = await this.permissionRepository.GetPermissionByIdAsync(permissionVM.Id_Quyen.Value);
+                permission = await this.permissionRepository.GetByIdAsync(permissionVM.Id_Quyen.Value);
                 if (permission == null)
                 {
                     throw new Exception("Quyền này không tồn tại");
@@ -39,8 +41,9 @@ namespace WebClient.Services.Implements
 
                 permission.Ten_Quyen = permissionVM.Ten_Quyen;
                 permission.Ghi_Chu = permissionVM.Ghi_Chu;
+                permission.Tinh_Trang = 1;
 
-                await this.permissionRepository.UpdatePermissionAsync(permission);
+                await this.permissionRepository.UpdateAsync(permission);
             }
             else
             {
@@ -50,10 +53,10 @@ namespace WebClient.Services.Implements
                     Ma_Quyen = "MQ" + string.Format("{0:yyyyMMddhhmmss}", DateTime.Now),
                     Ghi_Chu = permissionVM.Ghi_Chu,
                     Ten_Quyen = permissionVM.Ten_Quyen,
-                    Tinh_Trang = true
+                    Tinh_Trang = 1
                 };
 
-                await this.permissionRepository.AddPermissionAsync(permission);
+                await this.permissionRepository.AddAsync(permission);
             }
 
             return permission;
@@ -66,7 +69,7 @@ namespace WebClient.Services.Implements
         /// <returns>A Permission</returns>
         public async Task<Permission> GetPermissionByIdAsync(int permissionId)
         {
-            return await this.permissionRepository.GetPermissionByIdAsync(permissionId);
+            return await this.permissionRepository.GetByIdAsync(permissionId);
         }
 
         /// <summary>
@@ -85,6 +88,12 @@ namespace WebClient.Services.Implements
         /// <returns>A task</returns>
         public async Task DeleteAsync(int permissionId)
         {
+            var permission = this.permissionRepository.GetByIdAsync(permissionId);
+            if (permission == null)
+            {
+                throw new Exception("Quyền không tồn tại");
+            }
+
             await this.permissionRepository.DeleteAsync(permissionId);
         }
 

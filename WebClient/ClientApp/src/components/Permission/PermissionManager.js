@@ -4,6 +4,7 @@ import { ApiPaths } from "../../helpers/api";
 import { alertHelper } from "../../helpers/utils";
 import { Row, Col, Table, Spinner } from 'react-bootstrap';
 import FeatureTree from "../Utils/FeatureTree";
+import { Link } from 'react-router-dom';
 
 class PermissionManager extends React.Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class PermissionManager extends React.Component {
 
     componentWillMount() {
         this.setState({ loading: true });
-        axios.get(ApiPaths.GetPermisisons).then(response => {
+        axios.get(ApiPaths.permissions.GetAll).then(response => {
             this.setState({ permissions: response.data });
         }).catch(error => {
             alertHelper.show({
@@ -37,6 +38,7 @@ class PermissionManager extends React.Component {
                         <div className="box box-primary">
                             <div className="box-header with-border">
                                 <h3 className="box-title">Danh sách quyền</h3>
+                                <Link to="/permission/create" title="Thêm quyền" className="btn btn-primary btn-sm pull-right"><i className="fa fa-plus" /></Link>
                             </div>
                             <div className="box-body">
                                 <Table striped bordered hover size="sm">
@@ -45,7 +47,7 @@ class PermissionManager extends React.Component {
                                             <th>STT</th>
                                             <th>Mã quyền</th>
                                             <th>Tên quyền</th>
-                                            <th>Chọn</th>
+                                            <th>Chi tiết</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -58,11 +60,11 @@ class PermissionManager extends React.Component {
                                                 </td>
                                             </tr> :
                                             (permissions || []).length > 0 ? permissions.map((value, index) => (
-                                                <tr>
+                                                <tr key={value.id_Quyen}>
                                                     <td>{index + 1}</td>
                                                     <td>{value.ma_Quyen}</td>
                                                     <td>{value.ten_Quyen}</td>
-                                                    <td><input type="checkbox" /></td>
+                                                    <td><Link to={"/permission/detail/" + value.id_Quyen} className="btn btn-success btn-sm">Chi tiết</Link></td>
                                                 </tr>
                                             )) :
                                                 <tr style={{ textAlign: "center" }}>

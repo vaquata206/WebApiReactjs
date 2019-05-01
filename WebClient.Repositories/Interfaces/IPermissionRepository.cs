@@ -9,32 +9,16 @@ namespace WebClient.Repositories.Interfaces
     public interface IPermissionRepository : IBaseRepository<Permission>
     {
         /// <summary>
-        /// Add a permission
-        /// </summary>
-        /// <param name="permission">The permission</param>
-        /// <returns>A task</returns>
-        Task AddPermissionAsync(Permission permission);
-
-        /// <summary>
-        /// Update a permission
-        /// </summary>
-        /// <param name="permission">The permission</param>
-        /// <returns>A task</returns>
-        Task UpdatePermissionAsync(Permission permission);
-
-        /// <summary>
-        /// Get permission by id 
-        /// </summary>
-        /// <param name="permissionId">permission id</param>
-        /// <returns>The permission</returns>
-        Task<Permission> GetPermissionByIdAsync(int permissionId);
-
-        /// <summary>
         /// Get list permission
         /// </summary>
         /// <returns>List permission</returns>
         Task<IEnumerable<Permission>> GetPermissions();
-
+        
+        /// <summary>
+        /// Delete permission
+        /// </summary>
+        /// <param name="permissionId">Permisison id</param>
+        /// <returns>A Task</returns>
         Task DeleteAsync(int permissionId);
 
         /// <summary>
