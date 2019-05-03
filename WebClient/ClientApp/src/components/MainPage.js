@@ -15,6 +15,8 @@ import Employee from "./Employee/Employee";
 import EmployeeDetail from "./Employee/EmployeeDetail";
 import Department from './Department/Department';
 import DepartmentDetail from './Department/DepartmentDetail';
+import Feature from "./Feature/Feature";
+import FeatureDetail from "./Feature/FeatureDetail";
 import axios from 'axios';
 import { ApiPaths } from '../helpers/api';
 
@@ -83,6 +85,11 @@ class MainPage extends React.Component {
                         <Route path='/department/detail/:id' component={DepartmentDetail} />
                         <Route path='/department/create' component={DepartmentDetail} />
                         <Route path='/department' component={Department} />
+                    </Switch>
+                    <Switch>
+                        <Route path="/feature/details/:id" component={FeatureDetail} />
+                        <Route path="/feature/create" component={FeatureDetail} />
+                        <Route path="/feature" component={Feature} />
                     </Switch>
                 </Layout>
             );

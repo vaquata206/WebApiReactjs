@@ -16,14 +16,16 @@ namespace WebClient.Services.Interfaces
         /// <summary>
         /// Gets all featuress
         /// </summary>
+        /// <param name="id">App Id</param>
         /// <returns>A list feature</returns>
-        Task<IEnumerable<Feature>> GetAllAsync();
+        Task<IEnumerable<Feature>> GetAllAsync(int id);
 
         /// <summary>
         /// Get all feature formated node
         /// </summary>
+        /// <param name="appId">App Id</param>
         /// <returns>Feture nodes</returns>
-        Task<IEnumerable<FeatureNode>> GetFeatureNodes();
+        Task<IEnumerable<FeatureNode>> GetFeatureNodes(int appId);
 
         /// <summary>
         /// Save a feature
@@ -65,6 +67,13 @@ namespace WebClient.Services.Interfaces
         /// <param name="isModeUri">Is mode uri</param>
         /// <returns>true if the user is accessed</returns>
         Task<bool> IsAccessedToTheFeature(int userId, string path, bool isModeUri);
+
+        /// <summary>
+        /// Get feature by id
+        /// </summary>
+        /// <param name="id">feature id</param>
+        /// <returns>Feature response</returns>
+        Task<FeatureResponse> GetFeature(int id);
 
         /// <summary>
         /// Convert a tree features to array menus

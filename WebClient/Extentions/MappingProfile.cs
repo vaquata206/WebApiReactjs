@@ -59,6 +59,8 @@ namespace WebClient.Extensions
 
             this.CreateMap<AppRequest, App>();
             this.CreateMap<App, AppResponse>();
+
+            this.CreateMap<Feature, FeatureResponse>();
         }
     }
 }

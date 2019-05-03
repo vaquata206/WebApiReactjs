@@ -28,7 +28,8 @@ export function configAxios() {
 
 export const ApiPaths = {
     features: {
-        getMenu: "api/feature/getmenu"
+        getMenu: "api/feature/getmenu",
+        getFeature: "api/feature/GetFeature"
     },
     permissions: {
         GetAll: "api/permission/getAll",

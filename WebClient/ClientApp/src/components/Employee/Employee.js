@@ -91,7 +91,7 @@ class Employee extends React.Component {
                         <div className="box box-primary">
                             <div className="box-header with-border">
                                 <h3 className="box-title">Danh sách nhân viên</h3>
-                                <Link to="create" title="Thêm đơn vị" className="btn btn-primary btn-sm pull-right"><i className="fa fa-plus" /></Link>
+                                <Link to="create" title="Thêm nhân viên" className="btn btn-primary btn-sm pull-right"><i className="fa fa-plus" /></Link>
                             </div>
                             <div className="box-body">
                                 <LoadingOverlay>

@@ -32,7 +32,7 @@ class Permission extends React.Component {
     }
 
     onDepartmentChange(node) {
-        const { permissions, loading, account } = this.state;
+        const { permissions, loading } = this.state;
         if (loading || (permissions || []).length === 0) {
             return;
         }

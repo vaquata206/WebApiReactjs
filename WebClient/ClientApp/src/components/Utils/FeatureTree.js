@@ -12,11 +12,23 @@ class FeatureTree extends React.Component {
             loading: false,
             features: []
         };
+
+        this.loadDataFeature = this.loadDataFeature.bind(this);
     }
 
     componentWillMount() {
+        this.loadDataFeature(this.props.appId);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.appId !== nextProps.appId) {
+            this.loadDataFeature(nextProps.appId);
+        }
+    }
+
+    loadDataFeature(appId) {
         this.setState({ loading: true });
-        axios.get(ApiPaths.GetFeatureNodes).then(response => {
+        axios.get(ApiPaths.GetFeatureNodes + "?id=" + (appId || 0)).then(response => {
             let list = response.data;
             (list || []).forEach(value => {
                 value.icon = "treenode-folder";

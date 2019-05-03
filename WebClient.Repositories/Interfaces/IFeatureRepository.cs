@@ -11,8 +11,9 @@ namespace WebClient.Repositories.Interfaces
         /// <summary>
         /// Gets all featuress
         /// </summary>
+        /// <param name="id">App Id</param>
         /// <returns>A list feature</returns>
-        Task<IEnumerable<Feature>> GetAllAsync();
+        Task<IEnumerable<Feature>> GetAllAsync(int id);
 
         /// <summary>
         /// Gets a feature by id

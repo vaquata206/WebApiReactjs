@@ -16,10 +16,12 @@ namespace WebClient.Repositories.Implements
         /// <summary>
         /// Gets all featuress
         /// </summary>
+        /// <param name="id">App id</param>
         /// <returns>A list feature</returns>
-        public async Task<IEnumerable<Feature>> GetAllAsync()
+        public async Task<IEnumerable<Feature>> GetAllAsync(int id)
         {
             var dyParam = new OracleDynamicParameters();
+            dyParam.Add("p_chuongtrinh_id", OracleDbType.Int64, ParameterDirection.Input, id);
             dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
 
             return await this.DbConnection.QueryAsync<Feature>(QueryResource.Feature_GetAll, param: dyParam, commandType: CommandType.StoredProcedure);
@@ -35,7 +37,7 @@ namespace WebClient.Repositories.Implements
             Feature feature = null;
             using (var dbConnection = new OracleConnection(WebConfig.ConnectionString))
             {
-                var query = @"SELECT Id_ChucNang, Ten_ChucNang, MoTa_ChucNang, Tooltip, Id_ChucNang_Cha, Controller_Name, Action_Name, Thu_Tu 
+                var query = @"SELECT * 
                                 FROM chuc_nang WHERE Id_ChucNang = :id AND TINH_TRANG = 1";
 
                 feature = await dbConnection.QueryFirstAsync<Feature>(sql: query, param: new {

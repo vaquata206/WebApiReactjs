@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using WebClient.Core.Entities;
 using WebClient.Core.Responses;
 using WebClient.Core.ViewModels;
@@ -17,18 +18,25 @@ namespace WebClient.Services.Implements
         /// </summary>
         private IFeatureRepository featureRepository;
 
-        public FeatureService(IFeatureRepository featureRepository)
+        /// <summary>
+        /// Mapper
+        /// </summary>
+        private IMapper mapper;
+
+        public FeatureService(IFeatureRepository featureRepository, IMapper mapper)
         {
             this.featureRepository = featureRepository;
+            this.mapper = mapper;
         }
 
         /// <summary>
         /// Gets all featuress
         /// </summary>
+        /// <param name="id">App Id</param>
         /// <returns>A list feature</returns>
-        public async Task<IEnumerable<Feature>> GetAllAsync()
+        public async Task<IEnumerable<Feature>> GetAllAsync(int id)
         {
-            var list = await this.featureRepository.GetAllAsync();
+            var list = await this.featureRepository.GetAllAsync(id);
             list = this.ConvertToTree(list);
             return list;
         }
@@ -36,10 +44,11 @@ namespace WebClient.Services.Implements
         /// <summary>
         /// Get all feature formated node
         /// </summary>
+        /// <param name="id">App Id</param>
         /// <returns>Feture nodes</returns>
-        public async Task<IEnumerable<FeatureNode>> GetFeatureNodes()
+        public async Task<IEnumerable<FeatureNode>> GetFeatureNodes(int id)
         {
-            var list = await GetAllAsync();
+            var list = await GetAllAsync(id);
             return ConvertFeatureToNode(list);
         }
 
@@ -84,6 +93,17 @@ namespace WebClient.Services.Implements
                 });
             }
 
+        }
+
+        /// <summary>
+        /// Get feature by id
+        /// </summary>
+        /// <param name="id">feature id</param>
+        /// <returns>Feature response</returns>
+        public async Task<FeatureResponse> GetFeature(int id)
+        {
+            var feature = await this.featureRepository.GetFeatureByIdAsync(id);
+            return this.mapper.Map<FeatureResponse>(feature);
         }
 
         /// <summary>
