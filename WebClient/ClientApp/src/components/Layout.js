@@ -7,6 +7,7 @@ import ConfirmationModal from "./Utils/ConfirmationModal";
 import Menu from './Admin/Menu/Menu';
 import UserNav from "./Admin/UserNav/UserNav";
 import AdminAlert from "./Utils/AdminAlert";
+import TitleHeader from "./Admin/TitleHeader";
 
 const logoContent = {
     fontSize: "27px",
@@ -54,7 +55,7 @@ class Layout extends React.Component {
                                 <span className="sr-only">Toggle navigation</span>
                             </a>
                             <div className="header-name-app">
-                                <p id="headerTitle">BIÊN LAI ĐIỆN TỬ</p>
+                                <p id="headerTitle">Demo</p>
                             </div>
                             <UserNav />
                         </nav>
@@ -62,9 +63,7 @@ class Layout extends React.Component {
                     <Menu />
                     <div className="content-wrapper" ref={c => this.contentWrapper = c}>
                         <AdminAlert />
-                        <section className="content-header">
-                            <h1>Page 1</h1>
-                        </section>
+                        <TitleHeader />
                         {this.props.children}
                     </div>
                     <footer className="main-footer" ref={c => this.mainFooter = c}>

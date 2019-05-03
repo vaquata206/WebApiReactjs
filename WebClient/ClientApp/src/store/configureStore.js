@@ -7,13 +7,15 @@ import * as Auth from './Auth';
 import * as Menu from './Menu';
 import * as ConfirmationModal from './ConfirmationModal';
 import * as AdminAlert from './AdminAlert';
+import * as TitleHeader from './TitleHeader';
 
 export default function configureStore(history, initialState) {
     const reducers = {
         auth: persistReducer(Auth.persistConfig, Auth.reducer),
         menu: Menu.reducer,
         confirmationModal: ConfirmationModal.reducer,
-        adminAlert: AdminAlert.reducer
+        adminAlert: AdminAlert.reducer,
+        titleHeader: TitleHeader.reducer
     };
 
     const middleware = [

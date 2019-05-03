@@ -2,12 +2,15 @@
 import { Col } from 'react-bootstrap';
 import axios from 'axios';
 import { ApiPaths } from "../../helpers/api";
-import { alertHelper } from "../../helpers/utils";
+import { alertHelper, titleHeader } from "../../helpers/utils";
 import AppCard from "./AppCard";
 
 class Home extends React.Component {
     constructor(props, context) {
         super(props, context);
+
+        titleHeader.set("Trang chủ");
+
         this.state = {
             loadingApp: false,
             apps: []

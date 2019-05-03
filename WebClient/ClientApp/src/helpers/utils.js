@@ -2,6 +2,7 @@
 import { store } from "./../store/store";
 import { actionCreators as creatorConfirmationModal } from "./../store/ConfirmationModal";
 import { actionCreators as creatorAdminAlert } from "./../store/AdminAlert";
+import { actionCreators as creatorTitleHeader } from "./../store/TitleHeader";
 
 export function checkStatus(response) {
     if (!response.ok) {   // (response.status < 200 || response.status > 300)
@@ -60,5 +61,12 @@ export const alertHelper = {
 
         var boundActionCreators = bindActionCreators(creatorAdminAlert, store.dispatch);
         return boundActionCreators.showAlert(config);
+    }
+};
+
+export const titleHeader = {
+    set: (title) => {
+        var boundActionCreators = bindActionCreators(creatorTitleHeader, store.dispatch);
+        return boundActionCreators.setTitle(title);
     }
 };
