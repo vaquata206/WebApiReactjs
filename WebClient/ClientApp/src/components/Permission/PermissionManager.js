@@ -1,23 +1,33 @@
 ﻿import React from 'react';
 import axios from 'axios';
 import { ApiPaths } from "../../helpers/api";
-import { alertHelper } from "../../helpers/utils";
+import { alertHelper, titleHeader } from "../../helpers/utils";
 import { Row, Col, Table, Spinner } from 'react-bootstrap';
 import FeatureTree from "../Utils/FeatureTree";
 import { Link } from 'react-router-dom';
+import SelectProgram from "./../Utils/SelectProgram";
 
 class PermissionManager extends React.Component {
     constructor(props) {
         super(props);
+        titleHeader.set("Quản lý quyền");
         this.state = {
             loading: false,
-            permissions: []
+            permissions: [],
+            appId: 0
         };
+
+        this.onPropgramChange = this.onPropgramChange.bind(this);
+        this.loadPermissions = this.loadPermissions.bind(this);
     }
 
     componentWillMount() {
+        this.loadPermissions(this.state.appId);
+    }
+
+    loadPermissions(appId) {
         this.setState({ loading: true });
-        axios.get(ApiPaths.permissions.GetAll).then(response => {
+        axios.get(ApiPaths.permissions.GetAll + "?id=" + appId).then(response => {
             this.setState({ permissions: response.data });
         }).catch(error => {
             alertHelper.show({
@@ -29,8 +39,13 @@ class PermissionManager extends React.Component {
         });
     }
 
+    onPropgramChange(event) {
+        this.setState({ appId: event.target.value, feature: {} });
+        this.loadPermissions(event.target.value);
+    }
+
     render() {
-        const { permissions, loading } = this.state;
+        const { permissions, loading, appId } = this.state;
         return (
             <section className="content">
                 <Row>
@@ -38,7 +53,7 @@ class PermissionManager extends React.Component {
                         <div className="box box-primary">
                             <div className="box-header with-border">
                                 <h3 className="box-title">Danh sách quyền</h3>
-                                <Link to="/permission/create" title="Thêm quyền" className="btn btn-primary btn-sm pull-right"><i className="fa fa-plus" /></Link>
+                                <SelectProgram className="pull-right" value={appId} onChange={this.onPropgramChange}/>
                             </div>
                             <div className="box-body">
                                 <Table striped bordered hover size="sm">
@@ -74,6 +89,9 @@ class PermissionManager extends React.Component {
                                     </tbody>
                                 </Table>
                             </div>
+                            <div className="box box-footer">
+                                <Link to="/permission/create" title="Thêm quyền" className="btn btn-primary btn-sm pull-right"><i className="fa fa-plus" /></Link>
+                            </div>
                         </div>
                     </Col>
                     <Col xs lg>
@@ -82,7 +100,7 @@ class PermissionManager extends React.Component {
                                 <h3 className="box-title">Danh sách quyền</h3>
                             </div>
                             <div className="box-body">
-                                <FeatureTree />
+                                <FeatureTree appId={appId} />
                             </div>
                         </div>
                     </Col>

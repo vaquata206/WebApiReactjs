@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
 using WebClient.Core.Requests;
-using WebClient.Core.ViewModels;
 
 namespace WebClient.Services.Interfaces
 {
@@ -28,8 +25,9 @@ namespace WebClient.Services.Interfaces
         /// <summary>
         /// Get list permission
         /// </summary>
+        /// <param name="appId">App id</param>
         /// <returns>list permission</returns>
-        Task<IEnumerable<Permission>> GetPermissions();
+        Task<IEnumerable<Permission>> GetPermissions(int appId);
 
         /// <summary>
         /// Delete a permission

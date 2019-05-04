@@ -31,7 +31,7 @@ class SelectProgram extends React.Component {
         } else {
             return (
                 <select className={this.props.className} value={this.props.value || 0} onChange={this.props.onChange}>
-                    <option value="0">Quan ly</option>
+                    <option value="0">Mặt định</option>
                     {
                         (apps || []).map(value => <option key={value.id_ChuongTrinh} value={value.id_ChuongTrinh}>{value.ten_ChuongTrinh}</option>)
                     }

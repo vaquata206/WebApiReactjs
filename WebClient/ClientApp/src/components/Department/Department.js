@@ -41,7 +41,7 @@ class Department extends React.Component {
                 handle: () => {
                     this.props.hideModal();
                     this.setState({ loading: true });
-                    axios.get(ApiPaths.DeleteDepartment + "?code=" + department.ma_DonVi).then(response => {
+                    axios.get(ApiPaths.departments.delete + "?code=" + department.ma_DonVi).then(response => {
                         this.props.showAlert({
                             variant: "success",
                             content: <p className="mb-0">Xóa đơn vị <strong>{department.ten_DonVi}</strong> thành công.</p>
@@ -63,7 +63,7 @@ class Department extends React.Component {
     }
 
     changeDepartmentSelected(node) {
-        let url = ApiPaths.GetDepartmentById + "?id=" + node.id;
+        let url = ApiPaths.departments.getDepartmentById + "?id=" + node.id;
         axios.get(url).then(response => {
             this.setState({ department: response.data });
         });

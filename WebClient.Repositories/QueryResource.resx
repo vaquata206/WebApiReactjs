@@ -224,4 +224,10 @@
   <data name="App_SetPermission" xml:space="preserve">
     <value>ADMIN_CHUONGTRINH.SETPERMISSION</value>
   </data>
+  <data name="Permission_GetPermissions" xml:space="preserve">
+    <value>ADMIN_QUYEN.GET_PERMISSIONS</value>
+  </data>
+  <data name="Permission_DeletePermission" xml:space="preserve">
+    <value>ADMIN_QUYEN.DELETE_QUYEN</value>
+  </data>
 </root>

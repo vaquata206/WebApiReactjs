@@ -22,7 +22,7 @@ class CbbDepartments extends React.Component {
 
     componentWillMount() {
         this.setState({ loading: true });
-        axios.get(ApiPaths.GetDepartmentSelectItems).then(response => {
+        axios.get(ApiPaths.departments.getDepartmentSelectItems).then(response => {
 
             if (this.props.defaultOption) {
                 response.data.unshift({

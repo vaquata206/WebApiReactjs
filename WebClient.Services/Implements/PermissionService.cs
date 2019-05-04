@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
 using WebClient.Core.Helper;
 using WebClient.Core.Requests;
-using WebClient.Core.ViewModels;
 using WebClient.Repositories.Interfaces;
 using WebClient.Services.Interfaces;
 
@@ -75,10 +73,11 @@ namespace WebClient.Services.Implements
         /// <summary>
         /// Get list permission
         /// </summary>
+        /// <param name="appId">App id</param>
         /// <returns>list permission</returns>
-        public async Task<IEnumerable<Permission>> GetPermissions()
+        public async Task<IEnumerable<Permission>> GetPermissions(int appId)
         {
-            return await this.permissionRepository.GetPermissions();
+            return await this.permissionRepository.GetPermissions(appId);
         }
 
         /// <summary>

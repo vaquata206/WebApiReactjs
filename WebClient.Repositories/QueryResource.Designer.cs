@@ -340,6 +340,24 @@ namespace WebClient.Repositories {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADMIN_QUYEN.DELETE_QUYEN.
+        /// </summary>
+        internal static string Permission_DeletePermission {
+            get {
+                return ResourceManager.GetString("Permission_DeletePermission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ADMIN_QUYEN.GET_PERMISSIONS.
+        /// </summary>
+        internal static string Permission_GetPermissions {
+            get {
+                return ResourceManager.GetString("Permission_GetPermissions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ADMIN_QUYEN.SETDEPARTMENTS.
         /// </summary>
         internal static string Permission_SetDepartments {

@@ -28,7 +28,7 @@ class FeatureTree extends React.Component {
 
     loadDataFeature(appId) {
         this.setState({ loading: true });
-        axios.get(ApiPaths.GetFeatureNodes + "?id=" + (appId || 0)).then(response => {
+        axios.get(ApiPaths.features.getFeatureNodes + "?id=" + (appId || 0)).then(response => {
             let list = response.data;
             (list || []).forEach(value => {
                 value.icon = "treenode-folder";

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using WebClient.Core.Helper;
 using WebClient.Repositories.Interfaces;
@@ -37,10 +36,11 @@ namespace WebClient.Services.Implements
         /// Get id of permissions that a user can accepts
         /// </summary>
         /// <param name="userId">user id</param>
+        /// <param name="appId">App id</param>
         /// <returns>permission ids</returns>
-        public async Task<IEnumerable<int>> GetIdPermissionsOfUser(int userId)
+        public async Task<IEnumerable<int>> GetIdPermissionsOfUser(int userId, int appId)
         {
-            return await this.employeePermissionRepository.GetIdPermissionsOfUser(userId);
+            return await this.employeePermissionRepository.GetIdPermissionsOfUser(userId, appId);
         }
 
         public async Task SetFeaturesForEmployee(IEnumerable<int> ids, int idEmployee, int idUser)

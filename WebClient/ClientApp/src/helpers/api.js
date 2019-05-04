@@ -29,24 +29,25 @@ export function configAxios() {
 export const ApiPaths = {
     features: {
         getMenu: "api/feature/getmenu",
-        getFeature: "api/feature/GetFeature"
+        getFeature: "api/feature/GetFeature",
+        getFeatureNodes: "api/feature/GetAllNodes"
     },
     permissions: {
         GetAll: "api/permission/getAll",
         Get: "api/permission/get",
         Delete: "api/permission/delete",
-        Save: "api/permission/save"
+        Save: "api/permission/save",
+        GetUserPermissions: "api/permission/GetUserPermissions"
     },
-
-    GetFeatureNodes: "api/feature/GetAllNodes",
-
-    GetChildNodes: "api/department/getChildNodes",
-    GetDepartmentByParentId: "api/department/getDepartmentsByParent",
-    GetDepartmentById: "api/department/get",
-    GetDepartmentSelectItems: "api/department/getAllSelectItems",
-    SaveDepartment: "api/department/save",
-    DeleteDepartment: "api/department/delete",
-    UpdateEmailDepartment: "api/department/updateEmail",
+    departments: {
+        updateEmail: "api/department/updateEmail",
+        delete: "api/department/delete",
+        saveDepartment: "api/department/save",
+        getDepartmentSelectItems: "api/department/getAllSelectItems",
+        getDepartmentById: "api/department/get",
+        getDepartmentByParentId: "api/department/getDepartmentsByParent",
+        getChildNodes: "api/department/getChildNodes"
+    },
 
     GetEmployeesByDepartmentId: "api/employee/GetByDepartmentId",
     GetEmployeeByCode: "api/employee/Get",

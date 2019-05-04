@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebClient.Core.Requests;
 using WebClient.Extentions;
@@ -30,26 +27,37 @@ namespace WebClient.Controllers
         private IPermissionService permissionService;
 
         /// <summary>
+        /// Employee permission service
+        /// </summary>
+        private IEmployeePermissionService employeePermissionService;
+
+        /// <summary>
         /// A constructor
         /// </summary>
         /// <param name="permissionService">Permission service</param>
+        /// <param name="employeePermissionService">Employee permission service</param>
         /// <param name="authHelper">Auth helper</param>
-        public PermissionController(IPermissionService permissionService, AuthHelper authHelper)
+        public PermissionController(
+            IPermissionService permissionService, 
+            IEmployeePermissionService employeePermissionService, 
+            AuthHelper authHelper)
         {
             this.permissionService = permissionService;
+            this.employeePermissionService = employeePermissionService;
             this.authHelper = authHelper;
         }
 
         /// <summary>
         /// Get all permission
         /// </summary>
+        /// <param name="id">App id</param>
         /// <returns>List permission</returns>
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int id)
         {
             try
             {
-                var permissions = await this.permissionService.GetPermissions();
+                var permissions = await this.permissionService.GetPermissions(id);
                 return this.Ok(permissions);
             }
             catch (Exception ex)
@@ -70,6 +78,26 @@ namespace WebClient.Controllers
             {
                 var permission = await this.permissionService.GetPermissionByIdAsync(id);
                 return this.Ok(permission);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Get permission of user
+        /// </summary>
+        /// <param name="userId">Account Id</param>
+        /// <param name="appId">App id</param>
+        /// <returns>List ids</returns>
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetUserPermissions(int userId, int appId)
+        {
+            try
+            {
+                var ids = await this.employeePermissionService.GetIdPermissionsOfUser(userId, appId);
+                return this.Ok(ids);
             }
             catch (Exception ex)
             {

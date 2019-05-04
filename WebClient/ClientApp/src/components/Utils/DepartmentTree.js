@@ -19,7 +19,7 @@ class DepartmentTree extends React.Component {
         var parentId = (node || {}).id || 0;
 
         if (!this.props.showEmployee) {
-            return axios.get(ApiPaths.GetDepartmentByParentId + "?id=" + parentId).then(response => {
+            return axios.get(ApiPaths.departments.getDepartmentByParentId + "?id=" + parentId).then(response => {
                 var list = [];
                 response.data.forEach(value => {
                     list.push({
@@ -35,7 +35,7 @@ class DepartmentTree extends React.Component {
                 return list;
             });
         } else {
-            let url = (node || {}).typeNode === "Employee" ? ApiPaths.GetTreeNodeAccounts : ApiPaths.GetChildNodes;
+            let url = (node || {}).typeNode === "Employee" ? ApiPaths.GetTreeNodeAccounts : ApiPaths.departments.getChildNodes;
             return axios.get(url + "?id=" + parentId).then(response => {
                 response.data.forEach((value, index) => {
                     if (value.typeNode === "Department") {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebClient.Core.Entities;
 
@@ -11,8 +9,9 @@ namespace WebClient.Repositories.Interfaces
         /// <summary>
         /// Get list permission
         /// </summary>
+        /// <param name="appId">App Id</param>
         /// <returns>List permission</returns>
-        Task<IEnumerable<Permission>> GetPermissions();
+        Task<IEnumerable<Permission>> GetPermissions(int appId);
         
         /// <summary>
         /// Delete permission

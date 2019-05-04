@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
@@ -43,10 +42,11 @@ namespace WebClient.Repositories.Implements
         /// </summary>
         /// <param name="userId">user id</param>
         /// <returns>permission ids</returns>
-        public async Task<IEnumerable<int>> GetIdPermissionsOfUser(int userId)
+        public async Task<IEnumerable<int>> GetIdPermissionsOfUser(int userId, int appId)
         {
             var dyParam = new OracleDynamicParameters();
             dyParam.Add("P_ID_ND", OracleDbType.Int64, ParameterDirection.Input, userId);
+            dyParam.Add("P_ID_CHUONGTRINH", OracleDbType.Int64, ParameterDirection.Input, appId);
             dyParam.Add("RSOUT", OracleDbType.RefCursor, ParameterDirection.Output);
             return await this.DbConnection.QueryAsync<int>(
                 QueryResource.AccPermission_GetPermissionIdsUser, 

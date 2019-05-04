@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Oracle.ManagedDataAccess.Client;
-using WebClient.Core;
 using WebClient.Core.Entities;
 using WebClient.Repositories.Interfaces;
 
@@ -16,16 +13,19 @@ namespace WebClient.Repositories.Implements
         /// <summary>
         /// Get list permission
         /// </summary>
+        /// <param name="appId">App id</param>
         /// <returns>List permission</returns>
-        public async Task<IEnumerable<Permission>> GetPermissions()
+        public async Task<IEnumerable<Permission>> GetPermissions(int appId)
         {
-            using (var dbConnection = new OracleConnection(WebConfig.ConnectionString))
-            {
-                var query = @"SELECT Id_Quyen, Ma_Quyen, Ten_Quyen, Tinh_Trang, Ghi_Chu FROM DM_Quyen WHERE Tinh_Trang = 1";
+            var dyParam = new OracleDynamicParameters();
+            dyParam.Add("p_id_chuongtrinh", OracleDbType.Int64, ParameterDirection.Input, appId);
+            dyParam.Add("rsout", OracleDbType.RefCursor, ParameterDirection.Output);
 
-                var permissions = await dbConnection.QueryAsync<Permission>(query, commandType: System.Data.CommandType.Text);
-                return permissions;
-            }
+            var permissions = await this.DbConnection.QueryAsync<Permission>(
+                sql: QueryResource.Permission_GetPermissions,
+                param: dyParam,
+                commandType: System.Data.CommandType.StoredProcedure);
+            return permissions;
         }
 
         /// <summary>
@@ -35,21 +35,15 @@ namespace WebClient.Repositories.Implements
         /// <returns></returns>
         public async Task DeleteAsync(int permissionId)
         {
-            try
-            {
-                using (var dbConnection = new OracleConnection(WebConfig.ConnectionString))
-                {
-                    var query = @"ADMIN_QUYEN.DELETE_QUYEN";
-                    var dyParam = new OracleDynamicParameters();
 
-                    dyParam.Add("P_ID_QUYEN", OracleDbType.Int64, ParameterDirection.Input, permissionId);
-                    var permissions = await dbConnection.QueryAsync<Permission>(query, param: dyParam, commandType: System.Data.CommandType.StoredProcedure);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            var dyParam = new OracleDynamicParameters();
+
+            dyParam.Add("P_ID_QUYEN", OracleDbType.Int64, ParameterDirection.Input, permissionId);
+            var permissions = await this.DbConnection.QueryAsync<Permission>(
+                QueryResource.Permission_DeletePermission,
+                param: dyParam,
+                commandType: CommandType.StoredProcedure);
+
         }
 
         /// <summary>

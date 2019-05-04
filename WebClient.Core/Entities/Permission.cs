@@ -11,5 +11,6 @@ namespace WebClient.Core.Entities
         public string Ten_Quyen { get; set; }
         public int Tinh_Trang { get; set; }
         public string Ghi_Chu { get; set; }
+        public int Id_ChuongTrinh { get; set; }
     }
 }

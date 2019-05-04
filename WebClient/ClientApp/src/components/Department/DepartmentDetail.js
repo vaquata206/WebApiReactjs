@@ -41,7 +41,7 @@ class DepartmentDetail extends React.Component {
         const id = this.props.match.params.id;
         if (id) {
             this.setState({ loading: true });
-            axios.get(ApiPaths.GetDepartmentById + "?id=" + id).then(response => {
+            axios.get(ApiPaths.departments.getDepartmentById + "?id=" + id).then(response => {
                 this.setState({ department: response.data, isCreate: false });
             }).catch(error => {
                 this.boundActionCreators.showAlert({
@@ -85,7 +85,7 @@ class DepartmentDetail extends React.Component {
                     handle: () => {
                         this.boundActionCreators.hideModal();
                         this.setState({ loading: true });
-                        axios.post(ApiPaths.SaveDepartment, {
+                        axios.post(ApiPaths.departments.saveDepartment, {
                             Ma_DonVi: department.ma_DonVi,
                             Ten_DonVi: department.ten_DonVi,
                             Dia_Chi: department.dia_Chi,
@@ -138,7 +138,7 @@ class DepartmentDetail extends React.Component {
                     handle: () => {
                         this.boundActionCreators.hideModal();
                         this.setState({ loading: true });
-                        axios.post(ApiPaths.UpdateEmailDepartment, {
+                        axios.post(ApiPaths.departments.updateEmail, {
                             Ma_DonVi: department.ma_DonVi,
                             Email: department.email,
                             SMTP_Email: department.smtP_Email,
@@ -180,7 +180,7 @@ class DepartmentDetail extends React.Component {
                 handle: () => {
                     this.boundActionCreators.hideModal();
                     this.setState({ loading: true });
-                    axios.get(ApiPaths.DeleteDepartment + "?code=" + department.ma_DonVi).then(response => {
+                    axios.get(ApiPaths.departments.delete + "?code=" + department.ma_DonVi).then(response => {
                         this.boundActionCreators.showAlert({
                             variant: "success",
                             content: <p className="mb-0">Xóa đơn vị <strong>{department.ten_DonVi}</strong> thành công.</p>
